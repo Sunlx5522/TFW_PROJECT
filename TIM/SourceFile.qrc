@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>img2.png</file>
+        <file>user.png</file>
+        <file>duck1.gif</file>
+        <file>loginBackgrounf.png</file>
+        <file>start_gif.gif</file>
+        <file>qrCode.png</file>
+        <file>qrCode1.png</file>
+        <file>qrCode2.png</file>
+        <file>duck.gif</file>
+        <file>introduction.png</file>
+        <file>close.png</file>
+        <file>close1.png</file>
+        <file>close2.png</file>
+        <file>mim.png</file>
+        <file>mim1.png</file>
+        <file>mim2.png</file>
+        <file>ssetting.png</file>
+        <file>ssetting1.png</file>
+        <file>ssetting2.png</file>
+        <file>duck2.gif</file>
+        <file>duck3.gif</file>
+        <file>warning.png</file>
+    </qresource>
+</RCC>
