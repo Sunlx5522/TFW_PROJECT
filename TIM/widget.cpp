@@ -239,8 +239,7 @@ Widget::Widget(QWidget *parent)
     QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
 
     client=new QTcpSocket(this);
-
-
+    connect(client,&QTcpSocket::readyRead, this, &Widget::readMessage);
     startMovie->start();
 
 
@@ -383,6 +382,20 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             }
             else
             {
+                         setEnabled(false);
+                         ui->rememberPasssword->removeEventFilter(this);
+                         ui->signUp->removeEventFilter(this);
+                         ui->qrLabel->removeEventFilter(this);
+                         ui->mim->removeEventFilter(this);
+                         ui->setting->removeEventFilter(this);
+                         ui->close->removeEventFilter(this);
+                         ui->passwordBack->removeEventFilter(this);
+                         ui->logInButton->removeEventFilter(this);
+                         ui->return_back1->removeEventFilter(this);
+                         ui->getVerificationCode->removeEventFilter(this);
+                         ui->next1->removeEventFilter(this);
+                         ui->duckLabel->hide();
+                         ui->duckLabel->update();
                          QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
                          client->abort();
                          client->connectToHost("127.0.0.1",5555);
@@ -406,11 +419,9 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                          msgbox.addButton(QMessageBox::Ok);
                          msgbox.button(QMessageBox::Ok)->hide();
                          msgbox.exec();
-                         bool connectFlag = client->waitForConnected(1000);
+                         bool connectFlag = client->waitForConnected(10000);
                          if(connectFlag)
                          {
-                             msgbox.hide();
-                             msgbox.close();
                              QString det1="链接成功";
                              det1 = tr("<font size='6' color='white'>") + det1;
                              det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
@@ -430,12 +441,31 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                              msgbox1.addButton(QMessageBox::Ok);
                              msgbox1.button(QMessageBox::Ok)->hide();
                              msgbox1.exec();
-                             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
+
+                             QString det2="正在检测账号与密码";
+                             det2 = tr("<font size='6' color='white'>") + det2;
+                             det2 += tr("</font>");
+                             QMessageBox msgbox2(QMessageBox::Information,"",det2);
+                             msgbox2.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
+                             msgbox2.setWindowFlags(Qt::FramelessWindowHint | windowFlags());
+                             QLabel *Lable3;
+                             Lable3=new QLabel(this);
+                             Lable3->resize(200,50);
+                             Lable3->setGeometry(380,380,200,50);
+                             msgbox2.setAttribute(Qt::WA_TranslucentBackground);                          //把窗口背景设置为透明;
+                             QPoint globalPos2 = Lable3->mapToGlobal(QPoint(0, 0));
+                             msgbox2.move(globalPos2.x(),globalPos2.y());
+                             //qDebug() << msgbox.rect().width()<< endl;
+                             //qDebug() << msgbox.rect().height()<< endl;
+                             QTimer::singleShot(3000,&msgbox2,SLOT(accept()));
+                             msgbox2.addButton(QMessageBox::Ok);
+                             msgbox2.button(QMessageBox::Ok)->hide();
+                             msgbox2.exec();
+                             commitMessage();
+
                          }
                          else
                          {
-                             msgbox.hide();
-                             msgbox.close();
                              QString det1="链接失败";
                              det1 = tr("<font size='6' color='white'>") + det1;
                              det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
@@ -456,6 +486,18 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                              msgbox1.button(QMessageBox::Ok)->hide();
                              msgbox1.exec();
                              QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
+                             setEnabled(true);
+                             ui->rememberPasssword->installEventFilter(this);
+                             ui->signUp->installEventFilter(this);
+                             ui->qrLabel->installEventFilter(this);
+                             ui->mim->installEventFilter(this);
+                             ui->setting->installEventFilter(this);
+                             ui->close->installEventFilter(this);
+                             ui->passwordBack->installEventFilter(this);
+                             ui->logInButton->installEventFilter(this);
+                             ui->return_back1->installEventFilter(this);
+                             ui->getVerificationCode->installEventFilter(this);
+                             ui->next1->installEventFilter(this);
                          }
             }
         }
@@ -807,6 +849,126 @@ void Widget::networkStationUpdate()
     {
         ui->netWorkStation->setText("网络连接状态：未连接");
     }
+}
+
+void Widget::commitMessage(){
+    QString account = ui->accountLineEdit->text();
+    QString password = ui->passwordLineEdit->text();
+    ui->accountLineEdit->clear();
+    ui->passwordLineEdit->clear();
+    client->write(account.toUtf8() + " " + password.toUtf8());
+}
+
+void Widget::readMessage(){
+    loginSuccessFlag=false;
+    QString str;
+    str = client->readAll();
+    if(str == "loginSuccess"){
+        loginSuccessFlag = true;
+    }else if(str == "loginFail"){
+        loginSuccessFlag = false;
+    }else if(str == "AlreadyOnline"){
+        loginSuccessFlag = false;
+    }
+
+    QLabel *thinkLable;
+    thinkLable=new QLabel(this);
+    thinkLable->resize(512,256);
+    thinkLable->setScaledContents(true);
+    thinkLable->setGeometry(444,392,512,256);
+    QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
+    thinkLable->show();
+    //ui->gridLayout->addWidget(thinkLable);
+    // 设置布局管理器的对齐方式为居中
+    think = new QMovie(":/new/prefix1/duck3.gif");
+    think->setSpeed(300);
+    thinkLable->setMovie(think);
+    think->start();
+
+    QObject::connect(think, &QMovie::frameChanged, [=](int frameNumber) {
+        // GIF 动画 执行一次就结束
+        if (frameNumber == think->frameCount() - 1) {
+            think->stop();
+            delete thinkLable;
+            if(loginSuccessFlag)
+            {
+                QString det1="登录成功";
+                det1 = tr("<font size='6' color='white'>") + det1;
+                det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
+                QMessageBox msgbox1(QMessageBox::Information,"",det1);
+                msgbox1.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
+                msgbox1.setWindowFlags(Qt::FramelessWindowHint | windowFlags());
+                QLabel *Lable2;
+                Lable2=new QLabel(this);
+                Lable2->resize(200,50);
+                Lable2->setGeometry(380,380,200,50);
+                msgbox1.setAttribute(Qt::WA_TranslucentBackground);                          //把窗口背景设置为透明;
+                QPoint globalPos1 = Lable2->mapToGlobal(QPoint(0, 0));
+                msgbox1.move(globalPos1.x(),globalPos1.y());
+                //qDebug() << msgbox.rect().width()<< endl;
+                //qDebug() << msgbox.rect().height()<< endl;
+                QTimer::singleShot(3000,&msgbox1,SLOT(accept()));
+                msgbox1.addButton(QMessageBox::Ok);
+                msgbox1.button(QMessageBox::Ok)->hide();
+                msgbox1.exec();
+                QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
+                setEnabled(true);
+                ui->rememberPasssword->installEventFilter(this);
+                ui->signUp->installEventFilter(this);
+                ui->qrLabel->installEventFilter(this);
+                ui->mim->installEventFilter(this);
+                ui->setting->installEventFilter(this);
+                ui->close->installEventFilter(this);
+                ui->passwordBack->installEventFilter(this);
+                ui->logInButton->installEventFilter(this);
+                ui->return_back1->installEventFilter(this);
+                ui->getVerificationCode->installEventFilter(this);
+                ui->next1->installEventFilter(this);
+                ui->duckLabel->show();
+                ui->duckLabel->update();
+
+            }
+            else
+            {
+                QString det1="用户名或密码错误";
+                det1 = tr("<font size='6' color='white'>") + det1;
+                det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
+                QMessageBox msgbox1(QMessageBox::Information,"",det1);
+                msgbox1.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
+                msgbox1.setWindowFlags(Qt::FramelessWindowHint | windowFlags());
+                QLabel *Lable2;
+                Lable2=new QLabel(this);
+                Lable2->resize(200,50);
+                Lable2->setGeometry(380,380,200,50);
+                msgbox1.setAttribute(Qt::WA_TranslucentBackground);                          //把窗口背景设置为透明;
+                QPoint globalPos1 = Lable2->mapToGlobal(QPoint(0, 0));
+                msgbox1.move(globalPos1.x(),globalPos1.y());
+                //qDebug() << msgbox.rect().width()<< endl;
+                //qDebug() << msgbox.rect().height()<< endl;
+                QTimer::singleShot(3000,&msgbox1,SLOT(accept()));
+                msgbox1.addButton(QMessageBox::Ok);
+                msgbox1.button(QMessageBox::Ok)->hide();
+                msgbox1.exec();
+                QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
+                setEnabled(true);
+                ui->rememberPasssword->installEventFilter(this);
+                ui->signUp->installEventFilter(this);
+                ui->qrLabel->installEventFilter(this);
+                ui->mim->installEventFilter(this);
+                ui->setting->installEventFilter(this);
+                ui->close->installEventFilter(this);
+                ui->passwordBack->installEventFilter(this);
+                ui->logInButton->installEventFilter(this);
+                ui->return_back1->installEventFilter(this);
+                ui->getVerificationCode->installEventFilter(this);
+                ui->next1->installEventFilter(this);
+                ui->duckLabel->show();
+                ui->duckLabel->update();
+            }
+
+        }
+    });
+
 }
 
 

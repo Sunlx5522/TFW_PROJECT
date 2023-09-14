@@ -75,7 +75,10 @@ public:
 
 
     bool networkAbleFlag=false;
+    bool loginSuccessFlag=false;
     void networkStationUpdate();
+    void commitMessage();
+    void readMessage();
 
     QTcpSocket* client;
 
