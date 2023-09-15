@@ -166,12 +166,13 @@ Widget::~Widget()
 {
 
     delete ui;
-    delete server_news;
-    delete server_check;
-    delete server_surface;
     qDebug() << "释放server";
 
-    delete think;                                                                                  //开头gif播放
+    server_check->close();
+    server_news->close();
+    server_surface->close();
+    server_Chatnews->close();
+                                                                                  //开头gif播放
     delete animation ;                                                                             //拖动动画
     delete animation1;                                                                             //最小化动画
     delete animation2;                                                                             //关闭动画

@@ -498,6 +498,8 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                              ui->return_back1->installEventFilter(this);
                              ui->getVerificationCode->installEventFilter(this);
                              ui->next1->installEventFilter(this);
+                             ui->duckLabel->show();
+                             ui->duckLabel->update();
                          }
             }
         }
