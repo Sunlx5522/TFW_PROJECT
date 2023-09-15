@@ -127,17 +127,7 @@ Widget::Widget(QWidget *parent)
 
     //实例化network
 
-    server_news = new QTcpServer(this);
-    client_news = new QTcpSocket(this);
-    server_check = new QTcpServer(this);
-    client_check = new QTcpSocket(this);
-    server_surface = new QTcpServer(this);
-    client_surface = new QTcpSocket(this);
-    server_Chatnews = new QTcpServer(this);
-    client_Chatnews = new QTcpSocket(this);
-    clients_news = new QList<QTcpSocket *>;
-    clients_surface = new QList<QTcpSocket *>;
-    clients_Chatnews =new QList<QTcpSocket *>;
+
 
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection); // 或 QAbstractItemView::MultiSelection
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectItems);
@@ -168,27 +158,55 @@ Widget::~Widget()
     delete ui;
     qDebug() << "释放server";
 
-    server_check->close();
-    server_news->close();
-    server_surface->close();
-    server_Chatnews->close();
-                                                                                  //开头gif播放
     delete animation ;                                                                             //拖动动画
     delete animation1;                                                                             //最小化动画
     delete animation2;                                                                             //关闭动画
     delete animation3;                                                                             //启动动画
     delete blureffect1; 
-    delete server_check;
-    delete client_check;
-    delete server_news;
-    delete client_news;
-    delete clients_news;
-    delete server_surface;
-    delete client_surface;
-    delete clients_surface;
-    delete server_Chatnews;
-    delete client_Chatnews;
-    delete clients_Chatnews;
+    if(listenFlag_check == false && listenFlag_news == false&&listenFlag_surface == false &&listenFlag_Chatnews == false)
+    {
+        ;
+    }
+    else
+    {
+        listenFlag_check = false;
+        listenFlag_news = false;
+        listenFlag_surface = false;
+        listenFlag_Chatnews = false;
+        if(server_news){delete server_news;}
+        if(client_news){delete client_news;}
+        if(server_check){delete server_check;}
+        if(server_surface){delete server_surface;}
+        if(client_surface){delete client_surface;}
+        if(server_Chatnews){delete server_Chatnews;}
+        if(client_Chatnews){delete client_Chatnews;}
+        // 删除clients_news中的所有QTcpSocket对象
+        for (int i = 0; i < clients_news->size(); ++i) {
+            delete (*clients_news)[i];
+        }
+        if(clients_news){delete clients_news;}
+        // 删除clients_surface中的所有QTcpSocket对象
+        for (int i = 0; i < clients_surface->size(); ++i) {
+            delete (*clients_surface)[i];
+        }
+        if(clients_surface){delete clients_surface;}
+        // 删除clients_Chatnews中的所有QTcpSocket对象
+        for (int i = 0; i < clients_Chatnews->size(); ++i) {
+            delete (*clients_Chatnews)[i];
+        }
+        if(clients_Chatnews){delete clients_Chatnews;}
+        server_news=nullptr;
+        client_news=nullptr;
+        server_check=nullptr;
+        client_check=nullptr;
+        server_surface=nullptr;
+        client_surface=nullptr;
+        server_Chatnews=nullptr;
+        client_Chatnews=nullptr;
+        clients_news=nullptr;
+        clients_surface=nullptr;
+        clients_Chatnews=nullptr;
+    }
 }
 
 void Widget::shouError()
@@ -229,9 +247,17 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             img->load(":/new/prefix1/close.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img));                                        //将图片放入label，使用setPixmap,注意指针*img
             setEnabled(false);
-            ui->mim->removeEventFilter(this);
-            ui->close->removeEventFilter(this);
-            ui->logInButton->removeEventFilter(this);
+            ui->mim->removeEventFilter(this);                                                             //将qlable设置点击事件
+            ui->close->removeEventFilter(this);                                                           //将qlable设置点击事件
+            ui->userView->removeEventFilter(this);                                                        //将qlable设置点击事件
+            ui->tableView->removeEventFilter(this);                                                       //将qlable设置点击事件
+            ui->pushButton->removeEventFilter(this);                                                      //将qlable设置点击事件
+            ui->returnBack->removeEventFilter(this);                                                      //将qlable设置点击事件
+            ui->send_button->removeEventFilter(this);                                                     //将qlable设置点击事件
+            ui->logInButton->removeEventFilter(this);                                                     //将qlable设置点击事件
+            ui->startButton->removeEventFilter(this);                                                     //将qlable设置点击事件
+            ui->close_button->removeEventFilter(this);                                                    //将qlable设置点击事件
+            ui->clear_button->removeEventFilter(this);                                                    //将qlable设置点击事件
             animation2->start();
             return true;}
         else if(event->type() == QEvent::MouseMove)
@@ -450,6 +476,18 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             }
             else
             {
+
+            server_news = new QTcpServer(this);
+            client_news = new QTcpSocket(this);
+            server_check = new QTcpServer(this);
+            client_check = new QTcpSocket(this);
+            server_surface = new QTcpServer(this);
+            client_surface = new QTcpSocket(this);
+            server_Chatnews = new QTcpServer(this);
+            client_Chatnews = new QTcpSocket(this);
+            clients_news = new QList<QTcpSocket *>;
+            clients_surface = new QList<QTcpSocket *>;
+            clients_Chatnews =new QList<QTcpSocket *>;
             //监听任何连接上5555端口的ip, 成功返回true, 用于账号检验
             listenFlag_check = server_check->listen(QHostAddress::Any, 5555);
             //监听任何连接上6666端口的ip，成功返回true，用于转发消息
@@ -509,10 +547,40 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             listenFlag_news = false;
             listenFlag_surface = false;
             listenFlag_Chatnews = false;
-            server_check->close();
-            server_news->close();
-            server_surface->close();
-            server_Chatnews->close();
+            if(server_news){delete server_news;}
+            if(client_news){delete client_news;}
+            if(server_check){delete server_check;}
+            if(server_surface){delete server_surface;}
+            if(client_surface){delete client_surface;}
+            if(server_Chatnews){delete server_Chatnews;}
+            if(client_Chatnews){delete client_Chatnews;}
+            // 删除clients_news中的所有QTcpSocket对象
+            for (int i = 0; i < clients_news->size(); ++i) {
+                delete (*clients_news)[i];
+            }
+            if(clients_news){delete clients_news;}
+            // 删除clients_surface中的所有QTcpSocket对象
+            for (int i = 0; i < clients_surface->size(); ++i) {
+                delete (*clients_surface)[i];
+            }
+            if(clients_surface){delete clients_surface;}
+            // 删除clients_Chatnews中的所有QTcpSocket对象
+            for (int i = 0; i < clients_Chatnews->size(); ++i) {
+                delete (*clients_Chatnews)[i];
+            }
+            if(clients_Chatnews){delete clients_Chatnews;}
+            server_news=nullptr;
+            client_news=nullptr;
+            server_check=nullptr;
+            client_check=nullptr;
+            server_surface=nullptr;
+            client_surface=nullptr;
+            server_Chatnews=nullptr;
+            client_Chatnews=nullptr;
+            clients_news=nullptr;
+            clients_surface=nullptr;
+            clients_Chatnews=nullptr;
+
             ui->tip_Label->setText("服务器状态：关闭");
             ui->display_screen->append("关闭端口：5555 6666 7777 8888");
             ui->display_screen->append("成功关闭服务器");
