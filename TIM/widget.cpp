@@ -239,6 +239,7 @@ Widget::Widget(QWidget *parent)
     QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
 
     client=new QTcpSocket(this);
+    client1=new QTcpSocket(this);
     connect(client,&QTcpSocket::readyRead, this, &Widget::readMessage);
     startMovie->start();
 
@@ -247,6 +248,8 @@ Widget::Widget(QWidget *parent)
 //析构函数
 Widget::~Widget()
 {
+    delete client;
+    delete client1;
     delete animation;                                                                 //启动动画前的一段动画
     delete animation1;                                                                //启动动画
     delete animation2;                                                                //拖动动画
@@ -419,14 +422,14 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                          msgbox.addButton(QMessageBox::Ok);
                          msgbox.button(QMessageBox::Ok)->hide();
                          msgbox.exec();
-                         bool connectFlag = client->waitForConnected(10000);
+                         connectFlag = client->waitForConnected(10000);
                          if(connectFlag)
                          {
                              QString det1="链接成功";
                              det1 = tr("<font size='6' color='white'>") + det1;
                              det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                              QMessageBox msgbox1(QMessageBox::Information,"",det1);
-                             msgbox1.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
+                             msgbox1.setIconPixmap(QPixmap(":/new/prefix1/welcome.png"));
                              msgbox1.setWindowFlags(Qt::FramelessWindowHint | windowFlags());
                              QLabel *Lable2;
                              Lable2=new QLabel(this);
@@ -461,6 +464,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                              msgbox2.addButton(QMessageBox::Ok);
                              msgbox2.button(QMessageBox::Ok)->hide();
                              msgbox2.exec();
+                             myAccount=ui->accountLineEdit->text();
                              commitMessage();
 
                          }
@@ -756,6 +760,10 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
     else if(qobject_cast<QLabel*>(obj) == ui->close)
     {
         if(event->type() == QEvent::MouseButtonRelease){
+            if(connectFlag)
+            {
+                commitMessage1("logout");
+            }
             setEnabled(false);
             ui->rememberPasssword->removeEventFilter(this);
             ui->signUp->removeEventFilter(this);
@@ -894,11 +902,12 @@ void Widget::readMessage(){
             delete thinkLable;
             if(loginSuccessFlag)
             {
+                client1->connectToHost("127.0.0.1" ,7777);
                 QString det1="登录成功";
                 det1 = tr("<font size='6' color='white'>") + det1;
                 det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                 QMessageBox msgbox1(QMessageBox::Information,"",det1);
-                msgbox1.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
+                msgbox1.setIconPixmap(QPixmap(":/new/prefix1/welcome.png"));
                 msgbox1.setWindowFlags(Qt::FramelessWindowHint | windowFlags());
                 QLabel *Lable2;
                 Lable2=new QLabel(this);
@@ -971,6 +980,25 @@ void Widget::readMessage(){
         }
     });
 
+}
+
+void Widget::commitMessage1(QString Msg)
+{
+    qDebug() << "发送消息";
+    if(Msg == "logout"){
+        //初始化界面
+        QString string = "logout|" + myAccount;
+        QByteArray message;
+        //以只读打开QByteArray，并设置版本，服务端客户端要一致
+        QDataStream out(&message,QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_5_14);
+        //写入输出流
+        out << string;
+        qDebug() << "SelectUserInterface::sendMessage:" << string;
+        //发送信息
+        client1->write(message);
+    }
+    qDebug() << "发送完成";
 }
 
 

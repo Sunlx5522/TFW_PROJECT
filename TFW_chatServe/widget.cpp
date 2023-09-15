@@ -177,7 +177,6 @@ Widget::~Widget()
         if(client_news){delete client_news;}
         if(server_check){delete server_check;}
         if(server_surface){delete server_surface;}
-        if(client_surface){delete client_surface;}
         if(server_Chatnews){delete server_Chatnews;}
         if(client_Chatnews){delete client_Chatnews;}
         // 删除clients_news中的所有QTcpSocket对象
@@ -480,7 +479,6 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             server_news = new QTcpServer(this);
             client_news = new QTcpSocket(this);
             server_check = new QTcpServer(this);
-            client_check = new QTcpSocket(this);
             server_surface = new QTcpServer(this);
             client_surface = new QTcpSocket(this);
             server_Chatnews = new QTcpServer(this);
@@ -551,7 +549,6 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             if(client_news){delete client_news;}
             if(server_check){delete server_check;}
             if(server_surface){delete server_surface;}
-            if(client_surface){delete client_surface;}
             if(server_Chatnews){delete server_Chatnews;}
             if(client_Chatnews){delete client_Chatnews;}
             // 删除clients_news中的所有QTcpSocket对象

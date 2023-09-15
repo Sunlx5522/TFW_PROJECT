@@ -22,5 +22,6 @@
         <file>duck2.gif</file>
         <file>duck3.gif</file>
         <file>warning.png</file>
+        <file>welcome.png</file>
     </qresource>
 </RCC>

@@ -73,14 +73,18 @@ public:
     void showEvent(QShowEvent *event);                                                //窗口最小化更改回透明度为1 辅助函数
     void changeEvent( QEvent* e );                                                    //窗口最小化更改回透明度为1
 
+    QString myAccount;
 
     bool networkAbleFlag=false;
     bool loginSuccessFlag=false;
+    bool connectFlag=false;
     void networkStationUpdate();
     void commitMessage();
+    void commitMessage1(QString Msg);
     void readMessage();
 
     QTcpSocket* client;
+    QTcpSocket* client1;
 
 private:
 
