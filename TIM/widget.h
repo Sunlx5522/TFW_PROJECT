@@ -77,6 +77,7 @@ public:
 
     bool networkAbleFlag=false;
     bool loginSuccessFlag=false;
+    bool AlreadyOnlineFlag=false;
     bool connectFlag=false;
     void networkStationUpdate();
     void commitMessage();
