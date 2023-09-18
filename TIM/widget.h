@@ -29,6 +29,7 @@ public:
 
     ~Widget();
 
+
     void mousePressEvent(QMouseEvent *event) override                                 //实现窗口拖动
     {
         if (event->button() == Qt::LeftButton)
@@ -83,6 +84,7 @@ public:
     void commitMessage();
     void commitMessage1(QString Msg);
     void readMessage();
+    void refresh();
 
     QTcpSocket* client;
     QTcpSocket* client1;

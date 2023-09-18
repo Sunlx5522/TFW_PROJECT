@@ -643,6 +643,19 @@ border: 1px solid rgba(220,220,220, 200);
          </spacer>
         </item>
         <item>
+         <spacer name="verticalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>3</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QPushButton" name="startButton">
           <property name="minimumSize">
            <size>
@@ -951,6 +964,19 @@ border-style:inset;/*边框设置*/
          </widget>
         </item>
         <item>
+         <spacer name="verticalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>3</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <spacer name="verticalSpacer_9">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -1092,6 +1118,9 @@ QTableView QScrollBar::up-arrow:vertical, QTableView QScrollBar::down-arrow:vert
 
 
 </string>
+      </property>
+      <property name="gridStyle">
+       <enum>Qt::CustomDashLine</enum>
       </property>
       <property name="sortingEnabled">
        <bool>true</bool>

@@ -1,6 +1,11 @@
 #include "heartbeat.h"
+#include"address.h"
 #include"widget.h"
 extern Widget* ww;
+
+extern QString internetRemoteAddress;
+extern QString serveRemoteAddress;
+
 HeartBeat::HeartBeat(QObject* parent) :
     QObject(parent),
     m_manager(new QNetworkAccessManager(this))
@@ -11,7 +16,7 @@ HeartBeat::HeartBeat(QObject* parent) :
 
 void HeartBeat::checkNetworkStatus()
 {
-    QNetworkReply* reply = m_manager->get(QNetworkRequest(QUrl("http://www.baidu.com")));
+    QNetworkReply* reply = m_manager->get(QNetworkRequest(QUrl(internetRemoteAddress)));
     connect(reply, &QNetworkReply::finished, [reply]() {
         if (reply->error() == QNetworkReply::NoError) {
             int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();

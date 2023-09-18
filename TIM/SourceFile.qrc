@@ -23,5 +23,7 @@
         <file>duck3.gif</file>
         <file>warning.png</file>
         <file>welcome.png</file>
+        <file>addressSettingBackgrond.png</file>
     </qresource>
+    <qresource prefix="/new/prefix2"/>
 </RCC>
