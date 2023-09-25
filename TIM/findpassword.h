@@ -26,6 +26,8 @@ private:
     QString passwordp1;
     QString passwordp2;
     QString passwordp3;
+    QString newpassword1;
+    QString newpassword2;
 signals:
     void sendFindClose(bool);
 private slots:

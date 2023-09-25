@@ -104,7 +104,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/new/prefix1/ssetting.png</pixmap>
+          <pixmap resource="SourceFile.qrc">:/new/prefix1/ssetting.png</pixmap>
          </property>
         </widget>
        </item>
@@ -133,7 +133,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/mim.png</pixmap>
+          <pixmap resource="SourceFile.qrc">:/new/prefix1/mim.png</pixmap>
          </property>
         </widget>
        </item>
@@ -161,7 +161,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/close.png</pixmap>
+          <pixmap resource="SourceFile.qrc">:/new/prefix1/close.png</pixmap>
          </property>
         </widget>
        </item>
@@ -198,7 +198,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/new/prefix1/img2.png</pixmap>
+          <pixmap resource="SourceFile.qrc">:/new/prefix1/img2.png</pixmap>
          </property>
         </widget>
        </item>
@@ -323,7 +323,7 @@ border: 1px solid rgba(220,220,220, 200);
           </property>
           <property name="styleSheet">
            <string notr="true">/*qlable 自定义点击按钮 找回密码*/
-color:#FFE4E1;/*设置字体颜色 以备不时之需*/</string>
+color:#DCDCDC;/*设置字体颜色 以备不时之需*/</string>
           </property>
           <property name="text">
            <string>网络连接状态：未连接</string>
@@ -699,7 +699,7 @@ border-style:inset;/*边框设置*/
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap>:/new/prefix1/qrCode.png</pixmap>
+            <pixmap resource="SourceFile.qrc">:/new/prefix1/qrCode.png</pixmap>
            </property>
           </widget>
          </item>
@@ -784,60 +784,40 @@ color:#4169E1;/*设置字体颜色 以备不时之需*/</string>
          </item>
         </layout>
        </widget>
-       <widget class="QFrame" name="frame_2">
+       <widget class="QLabel" name="userImage">
         <property name="geometry">
          <rect>
-          <x>120</x>
+          <x>130</x>
           <y>20</y>
           <width>100</width>
           <height>100</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
         <property name="styleSheet">
-         <string notr="true">QFrame#frame_2{
+         <string notr="true">
+/*用户头像*/
 border-style: outset;/*设置边框*/
-border: 4px solid #BEBEBE;
-border-radius:50px;
-} </string>
+border: 3px solid #BEBEBE;
+border-radius:50px;</string>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+        <property name="text">
+         <string/>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="pixmap">
+         <pixmap resource="SourceFile.qrc">:/new/prefix1/user.png</pixmap>
         </property>
-        <widget class="QLabel" name="userImage">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>100</width>
-           <height>100</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">/*用户头像*/
-</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/user.png</pixmap>
-         </property>
-        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="page_2">
@@ -1256,6 +1236,8 @@ background-color:rgba(135,206,250, 255);
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="SourceFile.qrc"/>
+ </resources>
  <connections/>
 </ui>

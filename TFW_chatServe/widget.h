@@ -3,6 +3,7 @@
 
 #include <QMovie>
 #include <QWidget>
+#include<QLineEdit>
 #include <QCloseEvent>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
@@ -84,6 +85,7 @@ public:
 
     void addTable(QSqlQueryModel*);
     void addTable_s(QSqlQueryModel*);
+    void setplacehodetext(QLineEdit*);
 
     bool networkAbleFlag=false;
 

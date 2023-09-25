@@ -28,6 +28,7 @@
         <file>final_2.png</file>
         <file>findPassword.png</file>
         <file>start_gif.gif</file>
+        <file>img2_s.png</file>
     </qresource>
     <qresource prefix="/new/prefix2">
         <file>image/head (1).JPG</file>

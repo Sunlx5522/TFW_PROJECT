@@ -125,7 +125,7 @@ void qrcode::slot_GenerateQRCode()
     QPixmap qrPixmap;
     int width = ui->QRlabel->width();
     int height = ui->QRlabel->height();
-    GernerateQRCode("https://tfw.cirno.fun/", qrPixmap, 2);
+    GernerateQRCode("https://grounded-screen-774762.framer.app/", qrPixmap, 2);
     qrPixmap = qrPixmap.scaled(QSize(width, height),Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     ui->QRlabel->setPixmap(qrPixmap);
   }

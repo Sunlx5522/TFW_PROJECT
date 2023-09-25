@@ -25,7 +25,7 @@
 #include <QParallelAnimationGroup>                                                                 //动画群盒子头文件
 #include <QGraphicsDropShadowEffect>                                                               //显卡模糊显示头文件
 #include <QRegularExpressionValidator>                                                             //qt规范表达
-
+extern UserList * uu;
 extern QApplication a;                                                                             //应用名
 
 Widget::Widget(QWidget *parent)
@@ -152,11 +152,22 @@ Widget::Widget(QWidget *parent)
 
     think = new QMovie();
     proxyModel = new QSortFilterProxyModel(this);
+    setplacehodetext(ui->accountLineEdit);
+    setplacehodetext(ui->passwordLineEdit);
     animation3->start();                                                                           //渐变动画，程序正式启动
 
 
 
 }
+
+void Widget::setplacehodetext(QLineEdit *a)
+{
+    QPalette palette = a->palette();
+    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#FFFAFA");
+    a->setPalette(palette);
+}
+
+
 
 //析构函数
 Widget::~Widget()
@@ -1278,6 +1289,43 @@ void Widget::readMessage_surface(){
             }
         }
     }
+    else if(flag == "changepassword")
+    {
+        ui->display_screen->append("修改密码");
+        ui->display_screen->append("请求信息:"+account);
+        QString tmp=account;
+        QStringList parts = tmp.split("___");
+        ui->display_screen->append(parts[0]);
+        ui->display_screen->append(parts[1]);
+        user->query->exec("select * from User");
+
+
+
+        QSqlQuery readQuery;
+        readQuery.exec("select * from User");
+
+        QSqlQuery updateQuery;
+
+        while(readQuery.next()){
+            if(readQuery.value(0).toString()==parts[0])
+            {
+                ui->display_screen->append(readQuery.value(0).toString());
+                ui->display_screen->append(readQuery.value(1).toString());
+                ui->display_screen->append(readQuery.value(2).toString());
+                updateQuery.prepare("UPDATE User SET password = :ps WHERE account = :account");
+                updateQuery.bindValue(":ps", parts[1]);
+                updateQuery.bindValue(":account", parts[0]);
+                updateQuery.exec();
+                uu->model->setQuery("select * from User");
+            }
+
+        }
+
+       ui->display_screen->append("修改成功");
+       initMsg = "changepassword|" + parts[0];
+       sendMessage_surface(initMsg);
+
+    }
     qDebug() << "Server_read:" << message;
     qDebug() << "readMessage_surface:读取完成";
 }
@@ -1294,7 +1342,7 @@ void Widget::sendMessage_surface(QString Msg){
      QString flag;
      flag = Msg.section('|', 0, 0);
      qDebug() << "信息为：" << Msg;
-     if(flag != "initSurface" && flag != "logout" &&
+     if(flag != "initSurface" && flag != "logout" &&flag != "changepassword" &&
             flag != "findpassword" && flag != "register"){
         qDebug() << "sendMessage_surface:错误信息,不发送";
         qDebug() << "信息为:" << Msg;

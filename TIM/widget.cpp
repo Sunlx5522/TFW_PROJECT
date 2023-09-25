@@ -27,6 +27,7 @@
 #include "widget.h"                                                                   //登陆界面头文件
 #include "qrcode.h"
 #include <QPainter>
+#include <QPalette>
 #include <QFuture>
 #include <QObject>                                                                     //QObject 头文件引用
 #include <QPixmap>                                                                     //qlable 图片渲染
@@ -38,6 +39,7 @@
 #include <QSize>
 #include <QImage>
 #include <QTimer>
+#include <QIcon>
 #include "initsurface.h"
 #include "findpassword.h"
 extern Widget* ww;
@@ -445,12 +447,60 @@ Widget::Widget(QWidget *parent)
 
 
     think = new QMovie(":/new/prefix1/duck3.gif");
+
+    setplacehodetext(ui->accountLineEdit);
+    setplacehodetext(ui->passwordLineEdit);
+
+    systemtrayicon = new QSystemTrayIcon(this);
+    QIcon icon = QIcon(":/new/prefix1/img2_s.png");
+    //添加图标
+    systemtrayicon->setIcon(icon);
+    systemtrayicon->setToolTip(QObject::trUtf8("TFW"));
+        //显示图标
+
+    menu = new QMenu(this);
+    m_pShowAction = new QAction("打开主界面");
+    m_pCloseAction = new QAction("退出");
+    menu->addAction(m_pShowAction);
+    menu->addSeparator();
+    menu->addAction(m_pCloseAction);
+    systemtrayicon->setContextMenu(menu);
+    connect(m_pShowAction,SIGNAL(triggered(bool)),this,SLOT(showwidget()));
+    connect(m_pCloseAction,SIGNAL(triggered(bool)),this,SLOT(closewidget()));
+
+
+
+
+
+
+
+    systemtrayicon->show();
+
+
+
+
+
     startMovie->start();
 
 
 }
 
+void Widget::setplacehodetext(QLineEdit *a)
+{
+    QPalette palette = a->palette();
+    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#FFFAFA");
+    a->setPalette(palette);
+}
 
+void Widget::showwidget()
+{
+    this->show();
+}
+
+void Widget::closewidget()
+{
+    this->close();
+}
 
 //析构函数
 Widget::~Widget()
@@ -845,6 +895,10 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
     else if(qobject_cast<QLabel*>(obj) == ui->signUp)
     {
         if(event->type() == QEvent::MouseButtonRelease){
+            setplacehodetext(ui->nameLineEdit);
+            setplacehodetext(ui->signUpPasswordLineEdit1);
+            setplacehodetext(ui->signUpPasswordLineEdit2);
+            setplacehodetext(ui->phoneNumber);
 
 
             ui->return_back1->removeEventFilter(this);
@@ -1190,6 +1244,7 @@ void Widget::readMessage(){
     }else if(str == "loginFail"){
         loginSuccessFlag = false;
     }else if(str == "AlreadyOnline"){
+        loginSuccessFlag = true;
         AlreadyOnlineFlag=true;
     }
 
@@ -1267,6 +1322,10 @@ void Widget::readMessage(){
 
                 client1->connectToHost(serveRemoteAddress ,7777);
                 QString det1="登录成功";
+
+                QIcon icon = QIcon(":/new/prefix1/img2.png");
+                //添加图标
+                systemtrayicon->setIcon(icon);
 
                 QString fileName = QCoreApplication::applicationDirPath();
                         //用户目录

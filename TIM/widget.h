@@ -8,13 +8,16 @@
 #include <QGraphicsBlurEffect>                                                        //显卡渲染头文件
 #include <QPropertyAnimation>                                                          //动画事件头文件
 #include <QMouseEvent>                                                                //鼠标事件头文件
+#include <qsystemtrayicon.h>
 #include <QCloseEvent>                                                                 //关闭事件头文件
 #include <QTcpServer>
+#include <QLineEdit>
 #include <QTcpSocket>
 #include <QHostInfo>
 #include <QWidget>                                                                    //widget相关头文件
 #include <QPainter>
 #include <QMovie>
+#include <QMenu>
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -83,6 +86,9 @@ public:
     QString myPassword;
     void shouError();
 
+    void setplacehodetext(QLineEdit*);
+
+
     bool networkAbleFlag=false;
     bool loginSuccessFlag=false;
     bool AlreadyOnlineFlag=false;
@@ -100,6 +106,8 @@ public:
 
 private slots:
     void on_rememberPasssword_stateChanged(int arg1);
+    void showwidget();
+    void closewidget();
 
 private:
 
@@ -131,7 +139,14 @@ private:
 
     QMovie *think;
 
-    Ui::Widget *ui;                                                                   //ui声明
+   QMenu * menu;
+   QAction *m_pShowAction;
+   QAction *m_pCloseAction;
+   QSystemTrayIcon  * systemtrayicon;  //系统托盘
+   Ui::Widget *ui;
+
+
+                                                                    //ui声明
 
 
 
