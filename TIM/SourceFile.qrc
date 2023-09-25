@@ -4,12 +4,9 @@
         <file>user.png</file>
         <file>duck1.gif</file>
         <file>loginBackgrounf.png</file>
-        <file>start_gif.gif</file>
         <file>qrCode.png</file>
         <file>qrCode1.png</file>
         <file>qrCode2.png</file>
-        <file>duck.gif</file>
-        <file>introduction.png</file>
         <file>close.png</file>
         <file>close1.png</file>
         <file>close2.png</file>
@@ -24,6 +21,46 @@
         <file>warning.png</file>
         <file>welcome.png</file>
         <file>addressSettingBackgrond.png</file>
+        <file>qrcodeBackgrond.png</file>
+        <file>introduction.png</file>
+        <file>duck.gif</file>
+        <file>final_1.png</file>
+        <file>final_2.png</file>
+        <file>findPassword.png</file>
+        <file>start_gif.gif</file>
     </qresource>
-    <qresource prefix="/new/prefix2"/>
+    <qresource prefix="/new/prefix2">
+        <file>image/head (1).JPG</file>
+        <file>image/head (2).JPG</file>
+        <file>image/head (3).JPG</file>
+        <file>image/head (4).JPG</file>
+        <file>image/head (5).JPG</file>
+        <file>image/head (6).JPG</file>
+        <file>image/head (7).JPG</file>
+        <file>image/head (8).JPG</file>
+        <file>image/head (9).JPG</file>
+        <file>image/head (10).JPG</file>
+        <file>image/head (11).JPG</file>
+        <file>image/head (12).JPG</file>
+        <file>image/head (13).JPG</file>
+        <file>image/head (14).JPG</file>
+        <file>image/head (15).JPG</file>
+        <file>image/head (16).JPG</file>
+        <file>image/head (17).JPG</file>
+        <file>image/head (18).JPG</file>
+        <file>image/head (19).JPG</file>
+        <file>image/head (20).JPG</file>
+        <file>image/head (21).JPG</file>
+        <file>image/head (22).JPG</file>
+        <file>image/head (23).JPG</file>
+        <file>image/head (24).JPG</file>
+        <file>image/head (25).JPG</file>
+        <file>image/head (26).JPG</file>
+        <file>image/head (27).JPG</file>
+        <file>image/head (28).JPG</file>
+        <file>image/head (29).JPG</file>
+        <file>image/head (30).JPG</file>
+        <file>image/head (31).JPG</file>
+        <file>image/head (32).JPG</file>
+    </qresource>
 </RCC>

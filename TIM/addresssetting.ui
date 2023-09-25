@@ -170,16 +170,16 @@ border: 1px solid rgba(70,130,180, 80);</string>
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/;
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -227,10 +227,11 @@ border-style:inset;/*边框设置*/
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -286,16 +287,16 @@ background-color:rgba(135,206,250, 255);
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/;
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -418,16 +419,16 @@ border: 1px solid rgba(70,130,180, 80);</string>
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/;
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -475,10 +476,11 @@ border-style:inset;/*边框设置*/
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -534,16 +536,16 @@ background-color:rgba(135,206,250, 255);
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/;
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -589,13 +591,11 @@ border-style:inset;/*边框设置*/
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="SourceFile.qrc">:/new/prefix1/close.png</pixmap>
+     <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/close.png</pixmap>
     </property>
    </widget>
   </widget>
  </widget>
- <resources>
-  <include location="SourceFile.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

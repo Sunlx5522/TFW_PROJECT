@@ -102,14 +102,15 @@ Widget::Widget(QWidget *parent)
     ui->mim->setScaledContents(true);                                                              //控件图片自适应大小
     ui->close->setScaledContents(true);                                                            //控件图片自适应大小
     ui->userImage->setScaledContents(true);                                                        //控件图片自适应大小
+    ui->search->setScaledContents(true);                                                        //控件图片自适应大小
 
     ui->mim->setAttribute(Qt::WA_Hover,true);                                                      //开启悬停事件
     ui->close->setAttribute(Qt::WA_Hover,true);                                                    //开启悬停事件
+    ui->search->setAttribute(Qt::WA_Hover,true);                                                   //开启悬停事件
 
     ui->mim->installEventFilter(this);                                                             //将qlable设置点击事件
     ui->close->installEventFilter(this);                                                           //将qlable设置点击事件
-    ui->userView->installEventFilter(this);                                                        //将qlable设置点击事件
-    ui->tableView->installEventFilter(this);                                                       //将qlable设置点击事件
+    ui->userView->installEventFilter(this);                                                        //将qlable设置点击事件ui->tableView->installEventFilter(this);                                                       //将qlable设置点击事件
     ui->pushButton->installEventFilter(this);                                                      //将qlable设置点击事件
     ui->returnBack->installEventFilter(this);                                                      //将qlable设置点击事件
     ui->send_button->installEventFilter(this);                                                     //将qlable设置点击事件
@@ -117,7 +118,8 @@ Widget::Widget(QWidget *parent)
     ui->startButton->installEventFilter(this);                                                     //将qlable设置点击事件
     ui->close_button->installEventFilter(this);                                                    //将qlable设置点击事件
     ui->clear_button->installEventFilter(this);                                                    //将qlable设置点击事件
-
+    ui->search->installEventFilter(this);                                                          //将qlable设置点击事件
+    ui->returnToSum->installEventFilter(this);                                                     //将qlable设置点击事件
 
     blureffect1=new QGraphicsBlurEffect;                                                           //模糊特效
     blureffect1->setBlurRadius(10);	                                                               //数值越大，越模糊
@@ -133,22 +135,27 @@ Widget::Widget(QWidget *parent)
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectItems);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+
+
     contextMenu = new QMenu(ui->tableView);
+    contextMenu->setStyleSheet("QMenu { background-color: #AEEEEE; /* 背景色 */ }");
     copyAction  = new QAction("复制", ui->tableView);
+
     contextMenu->addAction(copyAction);
 
-    QObject::connect(copyAction, &QAction::triggered, [=]() {
-        QModelIndexList indexes = ui->tableView->selectionModel()->selectedIndexes();
-        if (!indexes.isEmpty()) {
-            QString text;
-            for (const QModelIndex &index : indexes) {
-                text += index.data().toString() + "\t";
-            }
-            text.chop(1); // 移除最后一个制表符
-            QApplication::clipboard()->setText(text);
-        }
-    });
+    QObject::connect(copyAction, &QAction::triggered, this, &Widget::onCopyActionTriggered);
+    connect(ui->tableView, &QWidget::customContextMenuRequested, this, &Widget::showContextMenu);
+
+
+
+    think = new QMovie();
+    proxyModel = new QSortFilterProxyModel(this);
     animation3->start();                                                                           //渐变动画，程序正式启动
+
+
+
 }
 
 //析构函数
@@ -163,6 +170,8 @@ Widget::~Widget()
     delete animation2;                                                                             //关闭动画
     delete animation3;                                                                             //启动动画
     delete blureffect1; 
+    delete think;
+    delete proxyModel;
     if(listenFlag_check == false && listenFlag_news == false&&listenFlag_surface == false &&listenFlag_Chatnews == false)
     {
         ;
@@ -249,7 +258,6 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             ui->mim->removeEventFilter(this);                                                             //将qlable设置点击事件
             ui->close->removeEventFilter(this);                                                           //将qlable设置点击事件
             ui->userView->removeEventFilter(this);                                                        //将qlable设置点击事件
-            ui->tableView->removeEventFilter(this);                                                       //将qlable设置点击事件
             ui->pushButton->removeEventFilter(this);                                                      //将qlable设置点击事件
             ui->returnBack->removeEventFilter(this);                                                      //将qlable设置点击事件
             ui->send_button->removeEventFilter(this);                                                     //将qlable设置点击事件
@@ -258,7 +266,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             ui->close_button->removeEventFilter(this);                                                    //将qlable设置点击事件
             ui->clear_button->removeEventFilter(this);                                                    //将qlable设置点击事件
             animation2->start();
-            return true;}
+        }
         else if(event->type() == QEvent::MouseMove)
         {
             return true;
@@ -268,21 +276,21 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             QImage *img=new QImage;                                                                //新建一个image对象
             img->load(":/new/prefix1/close2.png");                                                 //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img));                                        //将图片放入label，使用setPixmap,注意指针*img
-            return true;
+
         }
         else if(event->type() == QEvent::HoverEnter)
         {
             QImage *img=new QImage;                                                                 //新建一个image对象
             img->load(":/new/prefix1/close1.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img));                                         //将图片放入label，使用setPixmap,注意指针*img
-            return true;
+
         }
         else if(event->type() == QEvent::HoverLeave)
         {
             QImage *img=new QImage;                                                                //新建一个image对象
             img->load(":/new/prefix1/close.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img));                                        //将图片放入label，使用setPixmap,注意指针*img
-            return true;
+
         }
     }
 
@@ -308,12 +316,22 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             b = reinterpret_cast<unsigned char*>(b2.data());
             MD5Function (a,a1);
             MD5Function (b,b1);
-            QLabel *thinkLable;
 
+            QLabel *thinkLable;
             thinkLable=new QLabel(this);
-            thinkLable->resize(512,256);
+
+            QSize size(512,256);
+            thinkLable->setFixedSize(size);
             thinkLable->setScaledContents(true);
+
             thinkLable->setGeometry(244,372,512,256);
+
+            QGraphicsDropShadowEffect *shadow_effect;
+            shadow_effect=new QGraphicsDropShadowEffect(this);
+            shadow_effect->setOffset(0, 0);
+            shadow_effect->setColor(QColor(0,0,0, 255));//黑色
+            shadow_effect->setBlurRadius(20);
+            thinkLable->setGraphicsEffect(shadow_effect);
 
             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
 
@@ -321,9 +339,11 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
 
             //ui->gridLayout->addWidget(thinkLable);
             // 设置布局管理器的对齐方式为居中
-
-            think = new QMovie(":/new/prefix1/duck.gif");
-            think->setSpeed(300);
+            delete think;
+            think = new QMovie();
+            think->setScaledSize(thinkLable->size());
+            think->setFileName(":/new/prefix1/duck.gif");
+            think->setSpeed(200);
             thinkLable->setMovie(think);
             think->start();
             setEnabled(false);
@@ -335,6 +355,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                 // GIF 动画 执行一次就结束
                 if (frameNumber == think->frameCount() - 1) {
                     think->stop();
+                    delete shadow_effect;
                     delete thinkLable;
                     if(networkAbleFlag)
                     {
@@ -475,7 +496,6 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             }
             else
             {
-
             server_news = new QTcpServer(this);
             client_news = new QTcpSocket(this);
             server_check = new QTcpServer(this);
@@ -525,6 +545,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             }
             }
         }
+
     }
 
     else if(qobject_cast<QPushButton*>(obj) == ui->close_button)
@@ -618,6 +639,8 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonRelease)
         {
+            ui->userView->removeEventFilter(this);
+            ui->returnBack->removeEventFilter(this);
             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
             int currentIndex = ui->stackedWidget->currentIndex();
             int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
@@ -641,9 +664,12 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             group->start();
             QObject::connect(animation2, &QPropertyAnimation::finished, [=](){
             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
+            ui->userView->installEventFilter(this);
+            ui->returnBack->installEventFilter(this);
             });
             group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
         }
+
     }
 
 
@@ -671,7 +697,22 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
               qDebug() << "群发失败";
             }
         }
+
     }
+
+    else if(qobject_cast<QPushButton*>(obj) == ui->returnToSum)
+    {
+        if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+        else if(event->type() == QEvent::MouseButtonRelease)
+        {
+            ui->tableView->setModel(user->model);
+        }
+
+    }
+
 
     else if(qobject_cast<QPushButton*>(obj) == ui->returnBack)
     {
@@ -681,6 +722,8 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonRelease)
         {
+            ui->userView->removeEventFilter(this);
+            ui->returnBack->removeEventFilter(this);
             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
             int currentIndex = ui->stackedWidget->currentIndex();
             int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
@@ -704,9 +747,12 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             group->start();
             QObject::connect(animation2, &QPropertyAnimation::finished, [=](){
             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
+            ui->userView->installEventFilter(this);
+            ui->returnBack->installEventFilter(this);
             });
             group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
         }
+
     }
 
 
@@ -716,8 +762,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             QImage *img=new QImage;                                                                //新建一个image对象
             img->load(":/new/prefix1/mim.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
-            animation1->start();
-            return true;}
+            animation1->start();}
         else if(event->type() == QEvent::MouseMove)
         {
             return true;
@@ -728,7 +773,6 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
 
             img->load(":/new/prefix1/mim2.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
-            return true;
         }
         else if(event->type() == QEvent::HoverEnter)
         {
@@ -736,7 +780,6 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
 
             img->load(":/new/prefix1/mim1.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
-            return true;
 
         }
         else if(event->type() == QEvent::HoverLeave)
@@ -744,19 +787,56 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             QImage *img=new QImage;                                                                //新建一个image对象
             img->load(":/new/prefix1/mim.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
-            return true;
         }
     }
 
 
-    else if(obj == ui->tableView && event->type() == QEvent::ContextMenu)
+    else if(qobject_cast<QLabel*>(obj) == ui->search)
     {
-        QContextMenuEvent *contextEvent = static_cast<QContextMenuEvent *>(event);
-                if (ui->tableView->indexAt(contextEvent->pos()).isValid()) {
-                    contextMenu->exec(contextEvent->globalPos());
-                    return true;
-                }
+        if(event->type() == QEvent::MouseButtonRelease){
+            QImage *img=new QImage;                                                                //新建一个image对象
+            img->load(":/new/prefix1/search.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            ui->tableView->setModel(proxyModel);
+            QString r1;
+            r1=ui->searchLineEdit_2->text();
+            QRegExp rx(r1);  //
+            proxyModel->setFilterRegExp(rx);
+            proxyModel->setFilterKeyColumn(0);  // 假设 name 字段是第二列
+
+
+            }
+        else if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+        else if(event->type() == QEvent::MouseButtonPress)
+        {
+            QImage *img=new QImage;                                                                //新建一个image对象
+
+            img->load(":/new/prefix1/search2.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+        }
+        else if(event->type() == QEvent::HoverEnter)
+        {
+            QImage *img=new QImage;                                                                //新建一个image对象
+
+            img->load(":/new/prefix1/search1.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+
+        }
+        else if(event->type() == QEvent::HoverLeave)
+        {
+            QImage *img=new QImage;                                                                //新建一个image对象
+            img->load(":/new/prefix1/search.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+        }
     }
+
+
+
+
+
 
     return QWidget::eventFilter(obj, event);  // 对于其他事件，继续默认处理;
 
@@ -1120,16 +1200,30 @@ void Widget::readMessage_surface(){
             if(account == initAccount){
                 QString accountTemp = user->query->value(0).toString();
                 QString nameTemp = user->query->value(1).toString();
+                QString tmp;
+                char a1[512];
+                unsigned char *a;
+                tmp=user->query->value(2).toString();
+                QByteArray a2=tmp.toUtf8();
+                a = reinterpret_cast<unsigned char*>(a2.data());
+                MD5Function (a,a1);
+                QString passwordTemp=QString::fromLocal8Bit(a1,512);
+
                 QString signTemp = user->query->value(3).toString();
                 QString headTemp = user->query->value(4).toString();
+                QString phoneTemp = user->query->value(5).toString();
+                QString birthdayTemp = user->query->value(7).toString();
+                QString localTemp = user->query->value(8).toString();
+                QString tagtTemp = user->query->value(9).toString();
+                QString vipTemp = user->query->value(10).toString();
                 initMsg = "initSurface|" + accountTemp + "|" + nameTemp + "|"
-                        + signTemp + "|" + headTemp;
+                        + passwordTemp + "|" + signTemp+ "|"+ headTemp + "|"+ phoneTemp + "|"+ birthdayTemp + "|"+ localTemp + "|"+ tagtTemp + "|"+ vipTemp;
                 qDebug() << "界面初始化消息:" << initMsg;
                 sendMessage_surface(initMsg);                       //发送初始化消息
                 break;
             }
         }
-        ui->display_screen->append("登陆成功！");
+        ui->display_screen->append("登录成功！");
     }else if(flag == "logout"){
         ui->display_screen->append("请求退出");
         ui->display_screen->append("退出账号：" + account);
@@ -1159,7 +1253,6 @@ void Widget::readMessage_surface(){
     }else if(flag == "findpassword"){
         qDebug() << "找回密码";
         ui->display_screen->append("找回密码");
-        ui->display_screen->setAlignment(Qt::AlignCenter);
         QString initAccount;
         //数据库查找
         user->query->exec("select * from User");
@@ -1168,13 +1261,18 @@ void Widget::readMessage_surface(){
             if(account == initAccount){
                 QString accountTemp = user->query->value(0).toString();
                 QString password = user->query->value(2).toString();
-                initMsg = "findpassword|" + accountTemp + "|" + password + "|"
-                        + "null" + "|" + "null";
+                QString p1=user->query->value(13).toString();
+                QString p2=user->query->value(14).toString();
+                QString p3=user->query->value(15).toString();
+                initMsg = "findpassword|" + accountTemp +"|"+password+ "|" + p1 + "|"
+                        + p2 + "|" + p3;
                 qDebug() << "账号:" << accountTemp;
                 qDebug() << "找回密码:" << password;
-                qDebug() << "找回成功";
+                qDebug() << "找回操作完成";
                 ui->display_screen->append("账号:"+account);
                 ui->display_screen->append("找回密码:"+password);
+                ui->display_screen->append("返回信息");
+                ui->display_screen->append(initMsg);
                 sendMessage_surface(initMsg);                       //发送初始化消息
                 break;
             }
@@ -1211,6 +1309,7 @@ void Widget::sendMessage_surface(QString Msg){
      //遍历客户端，套接字写入
      for (int i = 0;i < clients_surface->length();i++)
      {
+         qDebug() << clients_surface->length();
          clients_surface->at(i)->write(message);
      }
      qDebug() << "Server_send:" <<Msg;
@@ -1241,6 +1340,27 @@ void Widget::destoryServer_check(){
      ui->tableView->setModel(a);
  }
 
+ void Widget::addTable_s(QSqlQueryModel *a)
+ {
+     proxyModel->setSourceModel(a);  // yourOriginalModel 是你原来设置给 QTableView 的 Model
+ }
 
 
+void Widget::onCopyActionTriggered()
+{
+    QModelIndexList indexes = ui->tableView->selectionModel()->selectedIndexes();
 
+        qDebug() << "Selected indexes: " << indexes;
+    if (!indexes.isEmpty()) {
+        QString text;
+        for (const QModelIndex &index : indexes) {
+            text += index.data().toString() + "\t";
+        }
+        text.chop(1); // 移除最后一个制表符
+        QApplication::clipboard()->setText(text);
+    }
+}
+void Widget::showContextMenu(const QPoint &pos) {
+    qDebug() << "Context menu should be shown at: " << pos;
+    contextMenu->exec(ui->tableView->mapToGlobal(pos)+ QPoint(30, 30));
+}

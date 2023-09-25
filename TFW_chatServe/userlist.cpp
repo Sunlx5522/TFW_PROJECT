@@ -2,6 +2,7 @@
 extern Widget *ww;
 #include "userlist.h"
 
+#include "heartbeat.h"
 #include <QMessageBox>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -13,6 +14,9 @@ extern Widget *ww;
 #include <QSqlQueryModel>
 #include <QDebug>
 #include <QTime>
+#include <QTextStream>
+#include <QFile>
+#include <QDir>
 
 
 UserList::UserList()
@@ -28,42 +32,197 @@ UserList::UserList()
     query->exec("create table User("                                                               //构建用户数据表格
                 "account varchar(25) primary key,"                                                 //用户账号
                 "name varchar(25) not null,"                                                       //用户昵称
-                "password varchar(20) not null,"                                                   //用户密码
+                "password varchar(25) not null,"                                                   //用户密码
                 "sign varchar(25),"                                                                //个性签名
-                "headImage varchar(10),"                                                           //头像图片名称
+                "headImage varchar(25),"                                                           //头像图片名称
+                "phoneNumber varchar(25),"
                 "state bit default 0,"
                 "birthDay varchar(25),"
                 "localPlace varchar(25),"
                 "Tagt varchar(25),"
-                "VIP_Level varchar(25))");                                                           //用户状态
+                "VIP_Level varchar(25),"
+                "signUpDate varchar(25),"
+                "ban bit default 0,"
+                "passwordq1 varchar(25),"
+                "passwordq2 varchar(25),"
+                "passwordq3 varchar(25))");
                                                                                                    //其余特定数据待添加（用户和群组列表最重要）
-    query->exec("insert into User values('a','a','123','I am a','head1.png',0,'2004_1_23','ChangChun','0','0')");                  //26个原始用户，便于调试
-    query->exec("insert into User values('b','b','123','I am b','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('c','c','123','I am c','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('d','d','123','I am d','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('e','e','123','I am e','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('f','f','123','I am f','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('g','g','123','I am g','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('h','h','123','I am h','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('i','i','123','I am i','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('j','j','123','I am j','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('k','k','123','I am k','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('l','l','123','I am l','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('m','m','123','I am m','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('n','n','123','I am n','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('o','o','123','I am o','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('p','p','123','I am p','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('q','q','123','I am q','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('r','r','123','I am r','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('s','s','123','I am s','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('t','t','123','I am t','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('u','u','123','I am u','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('v','v','123','I am v','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('w','w','123','I am w','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('x','x','123','I am x','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('y','y','123','I am y','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('z','z','123','I am z','head1.png',0,'2004_1_23','ChangChun','0','0')");
-    query->exec("insert into User values('3096961672','孙立鑫','55220329','心似烟火','head1.png',0,'2004_1_23','ChangChun','0','10')");
+    query->exec("insert into User values('a','a','123','I am a','head (1).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");                  //4个原始用户，便于调试
+
+    {
+        QString fileName = QCoreApplication::applicationDirPath();
+                //用户目录
+        QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                //创建用户文件夹
+        fileName = fileName + add +QString("//%1").arg("a");
+                //信息保存
+        QDir * file = new QDir;
+                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+    bool exist_1 = file->exists(fileName);
+    if(exist_1)
+    {
+        qDebug()<<"已存在";
+    }
+    else
+    {
+        bool ok = file->mkpath(fileName);
+                    if(ok)
+                    {
+                         QFile file(fileName +"//friendsData.txt");
+                         qDebug()<<fileName +"//friendsData.txt";
+                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                         {
+                           qDebug()<<"txt文件创建成功";
+                         }
+                          file.close();
+
+                          QFile file1(fileName +"//groupsData.txt");
+                          qDebug()<<fileName +"//groupsData.txt";
+                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                          {
+                            qDebug()<<"txt文件创建成功";
+                          }
+                           file1.close();
+
+                      }
+                    else
+                    {
+                        qDebug()<<"未创建成功";
+                    }
+    }
+    }
+
+
+    query->exec("insert into User values('b','b','123','I am b','head (2).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");
+    {
+        QString fileName = QCoreApplication::applicationDirPath();
+                //用户目录
+        QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                //创建用户文件夹
+        fileName = fileName + add +QString("//%1").arg("b");
+                //信息保存
+        QDir * file = new QDir;
+                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+    bool exist_1 = file->exists(fileName);
+    if(exist_1)
+    {
+        qDebug()<<"已存在";
+    }
+    else
+    {
+        bool ok = file->mkpath(fileName);
+                    if(ok)
+                    {
+                         QFile file(fileName +"//friendsData.txt");
+                         qDebug()<<fileName +"//friendsData.txt";
+                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                         {
+                           qDebug()<<"txt文件创建成功";
+                         }
+                          file.close();
+
+                          QFile file1(fileName +"//groupsData.txt");
+                          qDebug()<<fileName +"//groupsData.txt";
+                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                          {
+                            qDebug()<<"txt文件创建成功";
+                          }
+                           file1.close();
+
+                      }
+                    else
+                    {
+                        qDebug()<<"未创建成功";
+                    }
+    }
+    }
+
+    query->exec("insert into User values('c','c','123','I am c','head (3).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");
+    {
+        QString fileName = QCoreApplication::applicationDirPath();
+                //用户目录
+        QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                //创建用户文件夹
+        fileName = fileName + add +QString("//%1").arg("c");
+                //信息保存
+        QDir * file = new QDir;
+                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+    bool exist_1 = file->exists(fileName);
+    if(exist_1)
+    {
+        qDebug()<<"已存在";
+    }
+    else
+    {
+        bool ok = file->mkpath(fileName);
+                    if(ok)
+                    {
+                         QFile file(fileName +"//friendsData.txt");
+                         qDebug()<<fileName +"//friendsData.txt";
+                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                         {
+                           qDebug()<<"txt文件创建成功";
+                         }
+                          file.close();
+
+                          QFile file1(fileName +"//groupsData.txt");
+                          qDebug()<<fileName +"//groupsData.txt";
+                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                          {
+                            qDebug()<<"txt文件创建成功";
+                          }
+                           file1.close();
+
+                      }
+                    else
+                    {
+                        qDebug()<<"未创建成功";
+                    }
+    }
+    }
+    query->exec("insert into User values('d','d','123','I am d','head (4).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");
+    {
+        QString fileName = QCoreApplication::applicationDirPath();
+                //用户目录
+        QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                //创建用户文件夹
+        fileName = fileName + add +QString("//%1").arg("d");
+                //信息保存
+        QDir * file = new QDir;
+                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+    bool exist_1 = file->exists(fileName);
+    if(exist_1)
+    {
+        qDebug()<<"已存在";
+    }
+    else
+    {
+        bool ok = file->mkpath(fileName);
+                    if(ok)
+                    {
+                         QFile file(fileName +"//friendsData.txt");
+                         qDebug()<<fileName +"//friendsData.txt";
+                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                         {
+                           qDebug()<<"txt文件创建成功";
+                         }
+                          file.close();
+
+                          QFile file1(fileName +"//groupsData.txt");
+                          qDebug()<<fileName +"//groupsData.txt";
+                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                          {
+                            qDebug()<<"txt文件创建成功";
+                          }
+                           file1.close();
+
+                      }
+                    else
+                    {
+                        qDebug()<<"未创建成功";
+                    }
+    }
+    }
     //得到指向数据库的指针
     db = QSqlDatabase::database();                                                                 //获取数据库指针
     //数据库模型视图
@@ -75,13 +234,57 @@ UserList::UserList()
     model->setHeaderData(2,Qt::Horizontal,"密码");
     model->setHeaderData(3,Qt::Horizontal,"个性签名");
     model->setHeaderData(4,Qt::Horizontal,"头像");
-    model->setHeaderData(5,Qt::Horizontal,"在线状态");
-    model->setHeaderData(6,Qt::Horizontal,"生日");
+    model->setHeaderData(5,Qt::Horizontal,"电话号码+86");
+    model->setHeaderData(6,Qt::Horizontal,"在线状态");
+    model->setHeaderData(7,Qt::Horizontal,"生日");
     model->setHeaderData(8,Qt::Horizontal,"所在地");
-    model->setHeaderData(7,Qt::Horizontal,"T龄");
-    model->setHeaderData(9,Qt::Horizontal,"VIP级别");
+    model->setHeaderData(9,Qt::Horizontal,"T龄");
+    model->setHeaderData(10,Qt::Horizontal,"VIP级别");
+    model->setHeaderData(11,Qt::Horizontal,"注册日期");
+    model->setHeaderData(12,Qt::Horizontal,"封禁状态");
+    model->setHeaderData(13,Qt::Horizontal,"密保1");
+    model->setHeaderData(14,Qt::Horizontal,"密保2");
+    model->setHeaderData(15,Qt::Horizontal,"密保3");
     //设置视图
+
+
+
+
+    QSqlQuery readQuery;
+    readQuery.exec("select * from User");
+
+    QSqlQuery updateQuery;
+
+    while(readQuery.next()){
+        QString signUpDateString = readQuery.value(11).toString();
+        QStringList parts = signUpDateString.split('_');
+        int year = parts[0].toInt();
+        int month = parts[1].toInt();
+        int day = parts[2].toInt();
+        QDate signUpDate(year, month, day);
+
+        QDate currentDate = QDate::currentDate();
+        int days = signUpDate.daysTo(currentDate); // 这就是T龄
+
+        // 将T龄转换为字符串
+        QString daysString = QString::number(days);
+
+        updateQuery.prepare("UPDATE User SET Tagt = :days WHERE account = :account");
+        updateQuery.bindValue(":days", daysString);
+        updateQuery.bindValue(":account", readQuery.value(0).toString());
+
+        if(!updateQuery.exec()) {
+            // 在这里处理错误
+            qDebug() << "Update failed: " << updateQuery.lastError();
+        }
+        qDebug() << readQuery.value(0).toString()<< daysString;
+    }
+
+    model->setQuery("select * from User");
+
+
     ww->addTable(model);
+    ww->addTable_s(model);
 }
 
 int UserList::CheckUser(QString account, QString password){
@@ -91,13 +294,12 @@ int UserList::CheckUser(QString account, QString password){
         QString RealPassword = query->value(2).toString();
         if(account == RealAccount && password == RealPassword){
             //不能重复登陆
-            if(query->value(5).toString() == "1"){
+            if(query->value(6).toString() == "1"){
                 return 2;
             }
             //更新模型视图
             model->setQuery("update user set state = 1 where account = '" + account + "'");
             model->setQuery("select * from User");
-            ww->addTable(model);                                                                   //刷新屏幕数据
             return 1;
         }
     }
@@ -180,4 +382,38 @@ UserList::~UserList()
 {
     delete model;
     delete query;
+}
+
+void UserList::tageUpdate()
+{
+    QSqlQuery readQuery;
+    readQuery.exec("select * from User");
+
+    QSqlQuery updateQuery;
+
+    while(readQuery.next()){
+        QString signUpDateString = readQuery.value(11).toString();
+        QStringList parts = signUpDateString.split('_');
+        int year = parts[0].toInt();
+        int month = parts[1].toInt();
+        int day = parts[2].toInt();
+        QDate signUpDate(year, month, day);
+
+        QDate currentDate = QDate::currentDate();
+        int days = signUpDate.daysTo(currentDate); // 这就是T龄
+
+        // 将T龄转换为字符串
+        QString daysString = QString::number(days);
+
+        updateQuery.prepare("UPDATE User SET Tagt = :days WHERE account = :account");
+        updateQuery.bindValue(":days", daysString);
+        updateQuery.bindValue(":account", readQuery.value(0).toString());
+
+        if(!updateQuery.exec()) {
+            // 在这里处理错误
+            qDebug() << "Update failed: " << updateQuery.lastError();
+        }
+        qDebug() << readQuery.value(0).toString()<< daysString;
+    }
+     model->setQuery("select * from User");
 }

@@ -104,7 +104,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="SourceFile.qrc">:/new/prefix1/ssetting.png</pixmap>
+          <pixmap>:/new/prefix1/ssetting.png</pixmap>
          </property>
         </widget>
        </item>
@@ -133,7 +133,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="SourceFile.qrc">:/new/prefix1/mim.png</pixmap>
+          <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/mim.png</pixmap>
          </property>
         </widget>
        </item>
@@ -161,7 +161,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="SourceFile.qrc">:/new/prefix1/close.png</pixmap>
+          <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/close.png</pixmap>
          </property>
         </widget>
        </item>
@@ -198,7 +198,7 @@ border-radius:5px;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="SourceFile.qrc">:/new/prefix1/img2.png</pixmap>
+          <pixmap>:/new/prefix1/img2.png</pixmap>
          </property>
         </widget>
        </item>
@@ -285,9 +285,6 @@ border: 1px solid rgba(220,220,220, 200);
           <property name="text">
            <string/>
           </property>
-          <property name="pixmap">
-           <pixmap resource="SourceFile.qrc">:/new/prefix1/duck.gif</pixmap>
-          </property>
          </widget>
          <widget class="QLabel" name="netWorkStation">
           <property name="geometry">
@@ -349,43 +346,6 @@ color:#FFE4E1;/*设置字体颜色 以备不时之需*/</string>
        <number>0</number>
       </property>
       <widget class="QWidget" name="page">
-       <widget class="QWidget" name="gridLayoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>120</x>
-          <y>10</y>
-          <width>121</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="userImage">
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>100</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>100</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">/*用户头像*/</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="SourceFile.qrc">:/new/prefix1/user.png</pixmap>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
        <widget class="QWidget" name="verticalLayoutWidget_2">
         <property name="geometry">
          <rect>
@@ -435,10 +395,11 @@ color:#FFE4E1;/*设置字体颜色 以备不时之需*/</string>
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -495,14 +456,15 @@ background-color:rgba(135,206,250, 255);
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">/*文本输入框 账号输入*/
+            <string notr="true"> /*文本输入框 账号输入*/
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -676,16 +638,16 @@ color:#FFE4E1;/*设置字体颜色 以备不时之需*/</string>
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/  
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -737,7 +699,7 @@ border-style:inset;/*边框设置*/
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="SourceFile.qrc">:/new/prefix1/qrCode.png</pixmap>
+            <pixmap>:/new/prefix1/qrCode.png</pixmap>
            </property>
           </widget>
          </item>
@@ -822,6 +784,61 @@ color:#4169E1;/*设置字体颜色 以备不时之需*/</string>
          </item>
         </layout>
        </widget>
+       <widget class="QFrame" name="frame_2">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>20</y>
+          <width>100</width>
+          <height>100</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QFrame#frame_2{
+border-style: outset;/*设置边框*/
+border: 4px solid #BEBEBE;
+border-radius:50px;
+} </string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QLabel" name="userImage">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>100</width>
+           <height>100</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">/*用户头像*/
+</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/user.png</pixmap>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="page_2">
        <widget class="QPushButton" name="return_back1">
@@ -858,16 +875,16 @@ color:#4169E1;/*设置字体颜色 以备不时之需*/</string>
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/;
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -914,16 +931,16 @@ border-style:inset;/*边框设置*/
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/;
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -942,23 +959,10 @@ border-style:inset;/*边框设置*/
           <x>10</x>
           <y>20</y>
           <width>341</width>
-          <height>331</height>
+          <height>401</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <spacer name="verticalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
          <item>
           <widget class="QLineEdit" name="nameLineEdit">
            <property name="minimumSize">
@@ -988,10 +992,11 @@ border-style:inset;/*边框设置*/
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -1003,7 +1008,7 @@ background-color:rgba(135,206,250, 255);
             <string/>
            </property>
            <property name="maxLength">
-            <number>10</number>
+            <number>12</number>
            </property>
            <property name="placeholderText">
             <string>昵称</string>
@@ -1055,10 +1060,11 @@ background-color:rgba(135,206,250, 255);
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -1125,10 +1131,11 @@ background-color:rgba(135,206,250, 255);
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -1195,10 +1202,11 @@ background-color:rgba(135,206,250, 255);
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -1219,7 +1227,7 @@ background-color:rgba(135,206,250, 255);
             <enum>QLineEdit::Normal</enum>
            </property>
            <property name="placeholderText">
-            <string>手机号</string>
+            <string>+86 手机号</string>
            </property>
            <property name="clearButtonEnabled">
             <bool>true</bool>
@@ -1227,7 +1235,7 @@ background-color:rgba(135,206,250, 255);
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_8">
+          <spacer name="verticalSpacer_4">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -1241,135 +1249,6 @@ background-color:rgba(135,206,250, 255);
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="horizontalLayoutWidget_9">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>350</y>
-          <width>341</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_10">
-         <item>
-          <widget class="QLineEdit" name="verificationCode">
-           <property name="minimumSize">
-            <size>
-             <width>185</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Arial</family>
-             <pointsize>15</pointsize>
-             <italic>true</italic>
-            </font>
-           </property>
-           <property name="cursor">
-            <cursorShape>IBeamCursor</cursorShape>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"> /*文本输入框 账号输入*/
-QLineEdit{
-/*非悬浮时颜色设置*/
-color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
-border-style:outset;/*设置边框*/
-border-radius:5px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
-}
-QLineEdit::hover
-{
-/*悬浮时颜色设置*/
-background-color:rgba(135,206,250, 255);
-}</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="maxLength">
-            <number>4</number>
-           </property>
-           <property name="placeholderText">
-            <string>验证码</string>
-           </property>
-           <property name="clearButtonEnabled">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="getVerificationCode">
-           <property name="minimumSize">
-            <size>
-             <width>81</width>
-             <height>35</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>16</pointsize>
-            </font>
-           </property>
-           <property name="cursor">
-            <cursorShape>PointingHandCursor</cursorShape>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">/*登录按钮*/
-QPushButton{
-/*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/;
-border-style:inset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
-}
-
-QPushButton:hover{
-/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
-background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
-}
-QPushButton:pressed{
-/*按压时设置*/
-background-color:rgba(173,216,230, 255);
-/*背景颜色设置*/
-border-style:inset;/*边框设置*/
-}</string>
-           </property>
-           <property name="text">
-            <string>获取验证码</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
       </widget>
       <widget class="QWidget" name="page_3"/>
      </widget>
@@ -1377,8 +1256,6 @@ border-style:inset;/*边框设置*/
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="SourceFile.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

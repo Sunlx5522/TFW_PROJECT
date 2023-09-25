@@ -19,6 +19,7 @@ public:
     QSqlDatabase db;                                                                               //数据库
     QSqlQuery *query;                                                                              //数据库操作指针
     QSqlQueryModel *model;                                                                         //数据库模型
+    void tageUpdate();
     QString addUser(QString message);                                                              //添加用户函数
     int CheckUser(QString account, QString password);                                              //用户状态检查
     void initDB();

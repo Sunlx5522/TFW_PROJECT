@@ -252,10 +252,11 @@ border: 1px solid rgba(220,220,220, 200);
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -312,10 +313,11 @@ background-color:rgba(135,206,250, 255);
 QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/
 border-style:outset;/*设置边框*/
-border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+background-color: rgba(255,255,255,0);
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+
 }
 QLineEdit::hover
 {
@@ -378,16 +380,16 @@ background-color:rgba(135,206,250, 255);
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 255);/*背景颜色设置*/  
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 255);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -527,16 +529,16 @@ border: 1px solid rgba(70,130,180, 80);</string>
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(152,198,230, 255);
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -586,7 +588,7 @@ border-style:inset;/*边框设置*/
          </property>
          <property name="styleSheet">
           <string notr="true">color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(152,198,230, 255);
+background-color: rgba(255,255,255,0);
 border-style:inset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80);</string>
@@ -682,18 +684,17 @@ border: 1px solid rgba(220,220,220, 200);
            <string notr="true">/*登录按钮*/
 QPushButton{
 /*静置时设置*/
-background-color:rgba(152,198,230, 255);
 color:#FFFAFA;/*字体颜色设置*/
-
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -748,16 +749,16 @@ border-style:inset;/*边框设置*/
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(152,198,230, 255);
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -812,16 +813,16 @@ border-style:inset;/*边框设置*/
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(152,198,230, 255);
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -876,16 +877,16 @@ border-style:inset;/*边框设置*/
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(152,198,230, 255);
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -940,16 +941,16 @@ border-style:inset;/*边框设置*/
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(152,198,230, 255); 
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -1022,15 +1023,15 @@ color:#FFE4E1;/*设置字体颜色 以备不时之需*/</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>10</y>
+        <y>49</y>
         <width>750</width>
-        <height>450</height>
+        <height>411</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>750</width>
-        <height>450</height>
+        <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -1125,6 +1126,9 @@ QTableView QScrollBar::up-arrow:vertical, QTableView QScrollBar::down-arrow:vert
       <property name="sortingEnabled">
        <bool>true</bool>
       </property>
+      <property name="cornerButtonEnabled">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="returnBack">
       <property name="geometry">
@@ -1161,16 +1165,16 @@ QTableView QScrollBar::up-arrow:vertical, QTableView QScrollBar::down-arrow:vert
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(152,198,230, 255);
-border-style:inset;/*背景颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
 border-radius:10px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);
+border: 1px solid rgba(70,130,180, 80)
 }
 
 QPushButton:hover{
 /*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
 background-color:rgba(135,206,250, 255);
-border-style:inset;/*边框设置*/
+border-style:outset;/*边框设置*/
 }
 QPushButton:pressed{
 /*按压时设置*/
@@ -1181,6 +1185,147 @@ border-style:inset;/*边框设置*/
       </property>
       <property name="text">
        <string>返回</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="searchLineEdit_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>微软雅黑</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"> /*文本输入框 账号输入*/
+QLineEdit{
+/*非悬浮时颜色设置*/
+color:#000000;
+background-color: rgba(255,255,255,0);
+border-style:outset;/*设置边框*/
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 100);
+}
+QLineEdit::hover
+{
+/*悬浮时颜色设置*/
+background-color:rgba(135,206,250, 255);
+}</string>
+      </property>
+      <property name="maxLength">
+       <number>25</number>
+      </property>
+      <property name="placeholderText">
+       <string>键入用户名搜索</string>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="search">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>10</y>
+        <width>28</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>28</width>
+        <height>28</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>28</width>
+        <height>28</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="Resource.qrc">:/new/prefix1/search.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="returnToSum">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>10</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>微软雅黑</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*登录按钮*/
+QPushButton{
+/*静置时设置*/
+color:#FFFAFA;/*字体颜色设置*/
+background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
+border-radius:10px;/*边框圆角半径设置*/
+border: 1px solid rgba(70,130,180, 80)
+}
+
+QPushButton:hover{
+/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
+background-color:rgba(135,206,250, 255);
+border-style:outset;/*边框设置*/
+}
+QPushButton:pressed{
+/*按压时设置*/
+background-color:rgba(173,216,230, 255);
+/*背景颜色设置*/
+border-style:inset;/*边框设置*/
+}</string>
+      </property>
+      <property name="text">
+       <string>回到总览</string>
       </property>
      </widget>
     </widget>

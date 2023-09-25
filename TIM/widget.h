@@ -4,16 +4,17 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include<QGraphicsDropShadowEffect>                                                   //阴影添加
+#include <QGraphicsDropShadowEffect>                                                   //阴影添加
 #include <QGraphicsBlurEffect>                                                        //显卡渲染头文件
-#include<QPropertyAnimation>                                                          //动画事件头文件
+#include <QPropertyAnimation>                                                          //动画事件头文件
 #include <QMouseEvent>                                                                //鼠标事件头文件
-#include<QCloseEvent>                                                                 //关闭事件头文件
+#include <QCloseEvent>                                                                 //关闭事件头文件
 #include <QTcpServer>
 #include <QTcpSocket>
-#include<QHostInfo>
+#include <QHostInfo>
 #include <QWidget>                                                                    //widget相关头文件
-
+#include <QPainter>
+#include <QMovie>
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -70,11 +71,17 @@ public:
         }
     }
 
+
+
+
+
     bool eventFilter(QObject *obj, QEvent *event);                                    //自定义一些Qlable的点击实现
     void showEvent(QShowEvent *event);                                                //窗口最小化更改回透明度为1 辅助函数
     void changeEvent( QEvent* e );                                                    //窗口最小化更改回透明度为1
 
     QString myAccount;
+    QString myPassword;
+    void shouError();
 
     bool networkAbleFlag=false;
     bool loginSuccessFlag=false;
@@ -88,6 +95,11 @@ public:
 
     QTcpSocket* client;
     QTcpSocket* client1;
+
+
+
+private slots:
+    void on_rememberPasssword_stateChanged(int arg1);
 
 private:
 

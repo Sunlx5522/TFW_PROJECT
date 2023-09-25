@@ -17,5 +17,8 @@
         <file>w1.png</file>
         <file>w2.png</file>
         <file>welcome.png</file>
+        <file>search.png</file>
+        <file>search1.png</file>
+        <file>search2.png</file>
     </qresource>
 </RCC>

@@ -20,4 +20,18 @@ private:
     QNetworkAccessManager* m_manager;
 };
 
+
+class HeartBeat1 : public QObject
+{
+    Q_OBJECT
+public:
+    HeartBeat1(QObject* parent = nullptr);
+
+private slots:
+    void checkTageStatus();
+
+private:
+    QTimer m_timer;
+    QNetworkAccessManager* m_manager;
+};
 #endif // HEARTBEAT_H

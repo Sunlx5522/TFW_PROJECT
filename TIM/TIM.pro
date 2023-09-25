@@ -1,6 +1,6 @@
  #  qt的数据库添加
-QT       += sql
 #  qt的gui添加
+QT       += core sql
 QT       += core gui
 #  网络服务添加
 QT       += core gui network
@@ -15,24 +15,34 @@ CONFIG += c++11
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+    GetTime.cpp \
     MD5.cpp \
     address.cpp \
     addresssetting.cpp \
+    findpassword.cpp \
     heartbeat.cpp \
+    initsurface.cpp \
     main.cpp \
+    qrcode.cpp \
     userlist.cpp \
     widget.cpp
 
 HEADERS += \
+    GetTime.h \
     MD5.h \
     address.h \
     addresssetting.h \
+    findpassword.h \
     heartbeat.h \
+    initsurface.h \
+    qrcode.h \
     userlist.h \
     widget.h
 
 FORMS += \
     addresssetting.ui \
+    findpassword.ui \
+    qrcode.ui \
     widget.ui
 
 # Default rules for deployment.
@@ -44,3 +54,10 @@ RESOURCES += \
     SourceFile.qrc
 
  CONFIG += resources_big
+
+
+LIBS += -L$$PWD/ -lqrencode
+INCLUDEPATH += $$PWD/
+
+DISTFILES +=
+

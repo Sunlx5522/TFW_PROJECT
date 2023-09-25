@@ -5,24 +5,31 @@
 #include"addresssetting.h"
 #include "widget.h"                                                                          /*登录窗口头文件*/
 #include"heartbeat.h"
+#include"qrcode.h"
 #include"userlist.h"
-
-
+#include"findpassword.h"
 Widget* ww;
 addressSetting* bb;
+qrcode *cc;
+CurrentUser* cu;
+findpassword * ffd;
 int main(int argc, char *argv[])                                                             /*必须规范写法 因为涉及到传值*/
 {  
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);                             //进行不同屏幕的dpi适配 防止布局错乱
     QApplication a(argc, argv);                                                              //程序声明 
-    UserList *user;
-    user = new UserList();
     Widget w;                                                                                //声明创建窗口
     addressSetting *b;
+    qrcode * c;
+    cc = c;
     bb=b;
     ww=&w;
     w.move((a.desktop()->width() - w.width()) / 2, (a.desktop()->height() - w.height()) / 2);//窗口居中
     w.show();                                                                                //窗口显示
+    CurrentUser cuser;
+    cu=&cuser;
     HeartBeat heartbeat;
+    findpassword *fd;
+    ffd = fd;
     return a.exec();                                                                         //程序不按按钮不结束 让程序ui在屏幕上停留
 
 }

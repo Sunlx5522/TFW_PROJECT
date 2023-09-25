@@ -1,21 +1,38 @@
 #ifndef USERLIST_H
 #define USERLIST_H
 
-//数据库与用户列表显示
-#include <QTime>                                                                                   //时间头文件
-#include <QTableView>                                                                              //qt表格视窗
-#include <QMessageBox>                                                                             //qt信息窗口头文件
+#include<QString>
 
-#include<QVariant>                                                                                 //数据类型
-#include <QSqlDatabase>
-#include <QSqlQuery>
+/*query->exec("create table User("                                                               //构建用户数据表格
+            "account varchar(25) primary key,"                                                 //用户账号
+            "name varchar(25) not null,"                                                       //用户昵称
+            "password varchar(25) not null,"                                                   //用户密码
+            "sign varchar(25),"                                                                //个性签名
+            "headImage varchar(25),"                                                           //头像图片名称
+            "phoneNumber varchar(25),"
+            "state bit default 0,"
+            "birthDay varchar(25),"
+            "localPlace varchar(25),"
+            "Tagt varchar(25),"
+            "VIP_Level varchar(25))");  */
 
-class UserList
+class CurrentUser
 {
 public:
-    UserList();
-    ~UserList();
-    QSqlDatabase db;                                                                               //数据库
+    QString account;
+    QString name;
+    QString password;
+    QString sign;
+    QString headImage;
+    QString phoneNumber;
+    QString birthDay;
+    QString localPlace;
+    QString Tagt;
+    QString VIP_Level;
+
+    void writeIn(QString str);
+
+private:
 
 };
 

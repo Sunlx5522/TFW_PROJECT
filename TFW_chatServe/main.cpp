@@ -8,6 +8,7 @@
 #include <QDesktopWidget>
 
 Widget *ww;
+UserList * uu;
 int main(int argc, char *argv[])
 {
 
@@ -19,8 +20,10 @@ int main(int argc, char *argv[])
     UserList *user;
     user = new UserList();
     w.user=user;
+    uu=user;
     w.show();
     HeartBeat heartbeat;
+    HeartBeat1 heartbeat1;
     return a.exec();
 
 }

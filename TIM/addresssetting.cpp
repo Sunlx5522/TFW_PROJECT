@@ -73,11 +73,11 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             QPropertyAnimation* animation2;
             QParallelAnimationGroup* group = new QParallelAnimationGroup;
             animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
-            animation1->setDuration(700);
+            animation1->setDuration(300);
             animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
             animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
             animation2 =new QPropertyAnimation(ui->stackedWidget->widget(NextIndex), "geometry");
-            animation2->setDuration(700);
+            animation2->setDuration(300);
             animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
             animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
             group->addAnimation(animation1);
@@ -85,6 +85,7 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             group->start();
             group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
             //connect(group, SIGNAL(finished()), this, SLOT(onAnimationFinished()));
+
         }
     }
     else if(qobject_cast<QPushButton*>(obj) == ui->reset2)
@@ -105,11 +106,11 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             QPropertyAnimation* animation2;
             QParallelAnimationGroup* group = new QParallelAnimationGroup;
             animation1 = new QPropertyAnimation(ui->stackedWidget_2->widget(currentIndex),"geometry");
-            animation1->setDuration(700);
+            animation1->setDuration(300);
             animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
             animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
             animation2 =new QPropertyAnimation(ui->stackedWidget_2->widget(NextIndex), "geometry");
-            animation2->setDuration(700);
+            animation2->setDuration(300);
             animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
             animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
             group->addAnimation(animation1);
@@ -117,7 +118,9 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             group->start();
             group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
             //connect(group, SIGNAL(finished()), this, SLOT(onAnimationFinished()));
+
         }
+
     }
     else if(qobject_cast<QPushButton*>(obj) == ui->confirm1)
     {
@@ -139,11 +142,11 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             QPropertyAnimation* animation2;
             QParallelAnimationGroup* group = new QParallelAnimationGroup;
             animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
-            animation1->setDuration(700);
+            animation1->setDuration(300);
             animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
             animation1->setEndValue(QRect(windowWidth, 0, windowWidth, windowHieght));
             animation2 =new QPropertyAnimation(ui->stackedWidget->widget(PreIndex), "geometry");
-            animation2->setDuration(700);
+            animation2->setDuration(300);
             animation2->setStartValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
             animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
             group->addAnimation(animation1);
@@ -151,7 +154,9 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             group->start();
             group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
             //connect(group, SIGNAL(finished()), this, SLOT(onAnimationFinished()));
+
         }
+
     }
     else if(qobject_cast<QPushButton*>(obj) == ui->confirm2)
     {
@@ -173,11 +178,11 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             QPropertyAnimation* animation2;
             QParallelAnimationGroup* group = new QParallelAnimationGroup;
             animation1 = new QPropertyAnimation(ui->stackedWidget_2->widget(currentIndex),"geometry");
-            animation1->setDuration(700);
+            animation1->setDuration(300);
             animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
             animation1->setEndValue(QRect(windowWidth, 0, windowWidth, windowHieght));
             animation2 =new QPropertyAnimation(ui->stackedWidget_2->widget(PreIndex), "geometry");
-            animation2->setDuration(700);
+            animation2->setDuration(300);
             animation2->setStartValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
             animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
             group->addAnimation(animation1);
@@ -185,7 +190,9 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             group->start();
             group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
             //connect(group, SIGNAL(finished()), this, SLOT(onAnimationFinished()));
+
         }
+
     }
     else if(qobject_cast<QLabel*>(obj) == ui->close)
     {
@@ -194,7 +201,7 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
             img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
             bb->close();
-            return true;}
+           }
         else if(event->type() == QEvent::MouseMove)
         {
             return true;
@@ -205,14 +212,14 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
 
             img->load(":/new/prefix1/close2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
-            return true;
+
         }
         else if(event->type() == QEvent::HoverEnter)
         {
             QImage *img=new QImage; //新建一个image对象
             img->load(":/new/prefix1/close1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
-            return true;
+
 
         }
         else if(event->type() == QEvent::HoverLeave)
@@ -221,7 +228,6 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
 
             img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
-            return true;
         }
     }
     return false;

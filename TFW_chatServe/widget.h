@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <QPropertyAnimation>
 #include <QGraphicsDropShadowEffect>
+#include <QSortFilterProxyModel>
 
 #include <QList>
 #include "userlist.h"
@@ -82,10 +83,14 @@ public:
     void shouError();
 
     void addTable(QSqlQueryModel*);
+    void addTable_s(QSqlQueryModel*);
 
     bool networkAbleFlag=false;
 
      UserList *user;
+
+     void onCopyActionTriggered();
+     void showContextMenu(const QPoint &pos);
 
 private slots:
 
@@ -133,7 +138,7 @@ private:
     QPropertyAnimation *animation3;                                                                //启动动画
 
     QGraphicsBlurEffect *blureffect1;
-
+    QSortFilterProxyModel *proxyModel;
 
     QMenu *contextMenu ;
     QAction *copyAction ;

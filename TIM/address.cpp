@@ -1,3 +1,3 @@
 #include<QString>
 QString internetRemoteAddress="http://www.baidu.com";
-QString serveRemoteAddress="127.0.0.1";
+QString serveRemoteAddress="49.140.103.226";
