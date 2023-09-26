@@ -22,7 +22,7 @@ void InitSurface::tcpServerConnect()
     //断开现有连接
     tcpsocket->abort();
     //连接到远端的7777端口
-    tcpsocket->connectToHost(serveRemoteAddress,7777);
+    tcpsocket->connectToHost(serveRemoteAddress,55418);
     //有可读信息，发送readyRead()
     connect(tcpsocket,&QTcpSocket::readyRead,this,&InitSurface::readMessage);
 

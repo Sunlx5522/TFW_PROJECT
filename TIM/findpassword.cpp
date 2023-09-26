@@ -182,7 +182,7 @@ void findpassword::tcpServerConnect()
     //断开现有连接
     tcpsocket->abort();
     //连接到本地的7777端口
-    tcpsocket->connectToHost(serveRemoteAddress, 7777);
+    tcpsocket->connectToHost(serveRemoteAddress, 55418);
     //有可读信息，发送readyRead()
     connect(tcpsocket,&QTcpSocket::readyRead,this,&findpassword::readMessage);
 }

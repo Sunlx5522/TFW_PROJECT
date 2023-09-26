@@ -697,7 +697,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                          ui->duckLabel->update();
                          QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
                          client->abort();
-                         client->connectToHost(serveRemoteAddress,5555);
+                         client->connectToHost(serveRemoteAddress,51269);
                          QString det="正在链接服务器";
                          det = tr("<font size='6' color='white'>") + det;
                          det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
@@ -1320,7 +1320,7 @@ void Widget::readMessage(){
                 {
 
 
-                client1->connectToHost(serveRemoteAddress ,7777);
+                client1->connectToHost(serveRemoteAddress ,55418);
                 QString det1="登录成功";
 
                 QIcon icon = QIcon(":/new/prefix1/img2.png");
