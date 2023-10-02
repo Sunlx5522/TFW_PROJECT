@@ -31,6 +31,9 @@ addressSetting::addressSetting(QWidget *parent) :
     ui->confirm1->installEventFilter(this);
     ui->confirm2->installEventFilter(this);
     ui->close->installEventFilter(this);
+
+
+
     ui->close->setAttribute(Qt::WA_Hover,true);                                       //开启悬停事件
 }
 
@@ -38,6 +41,7 @@ addressSetting::addressSetting(QWidget *parent) :
 addressSetting::~addressSetting()
 {
     delete ui;
+    delete validator;
     ww->refresh();
 }
 

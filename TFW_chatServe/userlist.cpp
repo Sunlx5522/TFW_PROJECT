@@ -17,7 +17,7 @@ extern Widget *ww;
 #include <QTextStream>
 #include <QFile>
 #include <QDir>
-
+#include"GetTime.h"
 
 UserList::UserList()
 {
@@ -305,29 +305,37 @@ int UserList::CheckUser(QString account, QString password){
     }
     return 0;                                                                                      //用户名或密码错误 返回0
 }
-
+//QString string = "register|" + nameTmp+"|"+password1Tmp+"|"+phoneNumberTmp+"|"+signTemp+"|"+birthdayDate+"|"+localPlaceTemp+"|"+passwordq1Temp+"|"+passwordq2Temp+"|"+passwordq3Temp+"|"+headImageTemp;
+/* query->exec("create table User("                                                               //构建用户数据表格
+                "account varchar(25) primary key,"                                                 //用户账号
+                "name varchar(25) not null,"                                                       //用户昵称
+                "password varchar(25) not null,"                                                   //用户密码
+                "sign varchar(25),"                                                                //个性签名
+                "headImage varchar(25),"                                                           //头像图片名称
+                "phoneNumber varchar(25),"
+                "state bit default 0,"
+                "birthDay varchar(25),"
+                "localPlace varchar(25),"
+                "Tagt varchar(25),"
+                "VIP_Level varchar(25),"
+                "signUpDate varchar(25),"
+                "ban bit default 0,"
+                "passwordq1 varchar(25),"
+                "passwordq2 varchar(25),"
+                "passwordq3 varchar(25))");*/
 QString UserList::addUser(QString message){                                                        //用于用户的注册操作
     QStringList msg = message.split("|");                                                          //对信息进行分隔
     qDebug() << "总长度: " << msg.length();
     //临时信息
     QString accountTemp;
-    QString nameTemp;
-    QString passwordTemp;
-    QString signTemp;
-    QString headTemp;
-    QString s;
-    nameTemp = msg[1];
-    passwordTemp = msg[2];
-    signTemp = msg[3];
-    headTemp = msg[4];
-    //随机生成数据库中没有的五位数并返回
+    //随机生成数据库中没有的10位数并返回
     bool uniqueFlag = true;
     QString exitAccount;
     QSqlQuery query(db);
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));                                             //随机数种子
     while(true){
         //随机数生成
-        for(int i = 0; i < 5; i++){
+        for(int i = 0; i < 10; i++){
             int rand = qrand() % 10;                                                               //产生10以内的随机数
             QString s = QString::number(rand, 10);                                                 //转化为10进制，再转化为字符
             accountTemp += s;
@@ -346,29 +354,40 @@ QString UserList::addUser(QString message){                                     
         if(uniqueFlag == true)
             break;
     }
-    qDebug() << "accountTemp:"+accountTemp;
-    qDebug() << "nameTemp:"+nameTemp;
-    qDebug() << "passwordTemp:"+passwordTemp;
-    qDebug() << "signTemp:"+signTemp;
-    qDebug() << "headTemp:"+headTemp;
 
-    s = "insert into User values("+
-            accountTemp+"," +
-            nameTemp+","+
-            passwordTemp+","+
-            signTemp+",'"+
-            headTemp+"',"+
-            "0)";
-    qDebug() << s;
+
     //数据库插入
     //注意英文字符要加''单引号，数字可以不加
-    model->setQuery("insert into User values('"+
-                    accountTemp+"','" +
-                    nameTemp+"','"+
-                    passwordTemp+"','"+
-                    signTemp+"','"+
-                    headTemp+"',"+
-                    "0)");
+    QString temp0;
+    temp0="0";
+
+    int year;
+    int month;
+    int day;
+    QString syear;
+    QString smonth;
+    QString sday;
+    getCurrentTime(&year, &month, &day);
+    syear =QString::number(year,10);
+    smonth =QString::number(month,10);
+    sday =QString::number(day,10);
+    QString date=syear+"_"+smonth+"_"+sday;
+
+
+    query.prepare("insert into User values(:q1,:q2,:q3,:q4,:q5,:q6,0,:q7,:q8,'0','0',:q9,0,:q10,:q11,:q12)");
+    query.bindValue(":q1", accountTemp);
+    query.bindValue(":q2", msg[1]);
+    query.bindValue(":q3", msg[2]);
+    query.bindValue(":q4", msg[4]);
+    query.bindValue(":q5", msg[10]);
+    query.bindValue(":q6", msg[3]);
+    query.bindValue(":q7", msg[5]);
+    query.bindValue(":q8", msg[6]);
+    query.bindValue(":q9", date);
+    query.bindValue(":q10", msg[7]);
+    query.bindValue(":q11", msg[8]);
+    query.bindValue(":q12", msg[9]);
+    query.exec();
     model->setQuery("select * from User");
     return accountTemp;                                                                            //返回生成的账号
 }

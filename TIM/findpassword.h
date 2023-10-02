@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QTcpSocket>
 #include <QCloseEvent>
+#include <QRegExp>
+#include <QValidator>
 
 namespace Ui {
 class findpassword;
@@ -17,6 +19,9 @@ public:
     explicit findpassword(QWidget *parent = nullptr);
     ~findpassword();
     bool eventFilter(QObject *obj, QEvent *event);
+
+    QRegExp rx = QRegExp("[\40]*");
+    QRegExpValidator* validator = new QRegExpValidator(rx);
 
 private:
     Ui::findpassword *ui;

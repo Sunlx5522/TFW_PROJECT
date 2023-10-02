@@ -29,6 +29,12 @@
         <file>findPassword.png</file>
         <file>start_gif.gif</file>
         <file>img2_s.png</file>
+        <file>left.png</file>
+        <file>left1.png</file>
+        <file>left2.png</file>
+        <file>right.png</file>
+        <file>right1.png</file>
+        <file>right2.png</file>
     </qresource>
     <qresource prefix="/new/prefix2">
         <file>image/head (1).JPG</file>

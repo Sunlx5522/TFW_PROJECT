@@ -9,6 +9,8 @@
 #include <QPropertyAnimation>                                                          //动画事件头文件
 #include <QMouseEvent>                                                                //鼠标事件头文件
 #include <qsystemtrayicon.h>
+#include <QRegExp>
+#include <QValidator>
 #include <QCloseEvent>                                                                 //关闭事件头文件
 #include <QTcpServer>
 #include <QLineEdit>
@@ -87,6 +89,7 @@ public:
     void shouError();
 
     void setplacehodetext(QLineEdit*);
+    void setplacehodetextRed(QLineEdit*);
 
 
     bool networkAbleFlag=false;
@@ -98,9 +101,11 @@ public:
     void commitMessage1(QString Msg);
     void readMessage();
     void refresh();
-
+    void changeImage(int);
     QTcpSocket* client;
     QTcpSocket* client1;
+    QRegExp rx = QRegExp("[\40]*");
+    QRegExpValidator* validator = new QRegExpValidator(rx);
 
 
 

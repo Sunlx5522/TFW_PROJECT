@@ -1,3 +1,6 @@
+
+
+
 #include <QNetworkConfigurationManager>
 #include <QtConcurrent/QtConcurrent>
 #include <QGraphicsDropShadowEffect>                                                  //动画事件头文件
@@ -35,6 +38,8 @@
 #include <QLabel>                                                                      //lable相关函数
 #include <QMovie>                                                                      //gif动画
 #include <QLabel>                                                                     //laable控件头文件
+#include <QRegExp>
+#include <QValidator>
 #include <QString>
 #include <QSize>
 #include <QImage>
@@ -42,6 +47,13 @@
 #include <QIcon>
 #include "initsurface.h"
 #include "findpassword.h"
+#include <QDate>
+#include <QRegularExpression>
+#include "signUp.h"
+
+extern signUp* ssp;
+
+int imageCounter=1;
 extern Widget* ww;
 extern addressSetting* bb;
 extern QApplication a;                                                                //外部变量声明 用于关闭应用
@@ -51,10 +63,114 @@ extern findpassword * ffd;
 extern QString internetRemoteAddress;
 extern QString serveRemoteAddress;
 
+//用于注册
 QString nameTmp;
 QString password1Tmp;
 QString password2Tmp;
-QString phineNumberTmp;
+QString phoneNumberTmp;
+QString signTemp;
+
+QString birthdayDate;
+QString localPlaceTemp;
+QString passwordq1Temp;
+QString passwordq2Temp;
+QString passwordq3Temp;
+
+QString headImageTemp="head (1).JPG";
+
+void resetQstr()
+{
+    nameTmp=QString();
+    password1Tmp=QString();
+    password2Tmp=QString();
+    phoneNumberTmp=QString();
+
+    birthdayDate=QString();
+    localPlaceTemp=QString();
+    passwordq1Temp=QString();
+    passwordq2Temp=QString();
+    passwordq3Temp=QString();
+
+    signTemp=QString();
+    headImageTemp=QString();
+}
+//nameTmp=QString();
+
+bool isValidDate(const QString &dateStr) {
+    // 正则表达式检测基础格式
+    QRegularExpression regex("^(\\d{4})_(\\d{1,2})_(\\d{1,2})$");
+    QRegularExpressionMatch match = regex.match(dateStr);
+
+    if (!match.hasMatch()) {
+        return false;
+    }
+
+    int year = match.captured(1).toInt();
+    int month = match.captured(2).toInt();
+    int day = match.captured(3).toInt();
+
+    // 利用QDate验证日期合法性
+    QDate date(year, month, day);
+    if (!date.isValid()) {
+        return false;
+    }
+
+    // 确保日期不超过当前日期
+    QDate currentDate = QDate::currentDate();
+    if (date > currentDate) {
+        return false;
+    }
+
+    return true;
+}
+
+void Widget::changeImage(int i)
+{
+    headImageTemp=QString();
+
+
+    headImageTemp="head ("+QString::number(i,10);
+    headImageTemp=headImageTemp+").JPG";
+
+
+    QString tmp=":/new/prefix2/image/";//QString::number(long_temp,10) :/new/prefix2/image/head (1).JPG
+    tmp=tmp+"head ("+QString::number(i,10);
+    tmp=tmp+").JPG";
+
+    QPixmap originalPixmap(tmp);
+    QPixmap roundedPixmap(originalPixmap.size());
+    roundedPixmap.fill(Qt::transparent); // 设置背景为透明
+    QPainter painter(&roundedPixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QPainterPath path;
+    path.addEllipse(originalPixmap.rect());
+    painter.setClipPath(path);
+    painter.drawPixmap(0, 0, originalPixmap);
+    ui->userImage_2->setPixmap(roundedPixmap);
+
+    ui->brandName_6->setText(headImageTemp);
+
+
+}
+
+
+/*"create table User("                                                                             //构建用户数据表格
+                "account varchar(25) primary key,"                                                 //用户账号
+                "name varchar(25) not null,"                                                       //用户昵称
+                "password varchar(25) not null,"                                                   //用户密码
+                "sign varchar(25),"                                                                //个性签名
+                "headImage varchar(25),"                                                           //头像图片名称
+                "phoneNumber varchar(25),"
+                "state bit default 0,"
+                "birthDay varchar(25),"
+                "localPlace varchar(25),"
+                "Tagt varchar(25),"
+                "VIP_Level varchar(25),"
+                "signUpDate varchar(25),"
+                "ban bit default 0,"
+                "passwordq1 varchar(25),"
+                "passwordq2 varchar(25),"
+                "passwordq3 varchar(25))");*/
 
 
 
@@ -71,18 +187,36 @@ Widget::Widget(QWidget *parent)
 
     //登录界面lable点击功能实现
 
+
+    ui->leftLabel->installEventFilter(this);                                  //将qlable设置点击事件
+    ui->rightLabel->installEventFilter(this);                                  //将qlable设置点击事件
     ui->rememberPasssword->installEventFilter(this);                                  //将qlable设置点击事件
     ui->accountLineEdit->installEventFilter(this);                                    //将qlable设置点击事件
     ui->return_back1->installEventFilter(this);                                       //将qlable设置点击事件
     ui->passwordBack->installEventFilter(this);                                       //将qlable设置点击事件
     ui->logInButton->installEventFilter(this);                                        //将qlable设置点击事件
+    ui->registerButton->installEventFilter(this);                                        //将qlable设置点击事件
     ui->duckLabel->installEventFilter(this);                                          //将qlable设置点击事件
     ui->setting->installEventFilter(this);                                            //将qlable设置点击事件
     ui->qrLabel->installEventFilter(this);                                            //将qlable设置点击事件
     ui->signUp->installEventFilter(this);                                             //将qlable设置点击事件
+
+    ui->return_back1_2->installEventFilter(this);                                    //将qlable设置点击事件
     ui->next1->installEventFilter(this);                                              //将qlable设置点击事件
+    ui->next1_2->installEventFilter(this);                                              //将qlable设置点击事件
+    ui->return_back1_2->setAttribute(Qt::WA_Hover,true);                                //开启悬停事件
+    ui->next1_2->setAttribute(Qt::WA_Hover,true);                                 //开启悬停事件
+
     ui->close->installEventFilter(this);                                              //将qlable设置点击事件
     ui->mim->installEventFilter(this);                                                //将qlable设置点击事件
+
+
+    ui->leftLabel->setAttribute(Qt::WA_Hover,true);                                //开启悬停事件
+    ui->rightLabel->setAttribute(Qt::WA_Hover,true);                                //开启悬停事件
+
+
+
+    ui->return_back1->setAttribute(Qt::WA_Hover,true);                                //开启悬停事件
     ui->passwordBack->setAttribute(Qt::WA_Hover,true);                                //开启悬停事件
     ui->logInButton->setAttribute(Qt::WA_Hover,true);                                 //开启悬停事件
     ui->setting->setAttribute(Qt::WA_Hover,true);                                     //开启悬停事件
@@ -103,11 +237,25 @@ Widget::Widget(QWidget *parent)
     ui->duckLabel->setScaledContents(true);
 
 
+
+    //"[a-zA-Z0-9\u4e00-\u9fa5]+"
     ui->accountLineEdit->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
     ui->passwordLineEdit->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
+    ui->nameLineEdit->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
     ui->signUpPasswordLineEdit1->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
     ui->signUpPasswordLineEdit2->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
     ui->phoneNumber->setValidator(new QRegExpValidator(QRegExp("[0-9]+$")));//输入限制
+    ui->sign->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->localLineEdit->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->pd1LineEdit->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->pd2LineEdit->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->pd3LineEdit->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->phoneNumber->setInputMask("+86: 000-0000-0000");
+    //ui->phoneNumber->setCursorPosition(5);  // 将光标设置在文本的开始位置
+
+
+
+
     ui->signUp->setStyleSheet("background:rgba(85,170,255,0);color:#4169E1");         //color:#FFFAFA;字体颜色设置
 
     ui->userImage->raise();                                                           //控件置顶显示
@@ -491,6 +639,12 @@ void Widget::setplacehodetext(QLineEdit *a)
     palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#FFFAFA");
     a->setPalette(palette);
 }
+void Widget::setplacehodetextRed(QLineEdit *a)
+{
+    QPalette palette = a->palette();
+    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#DC143C");
+    a->setPalette(palette);
+}
 
 void Widget::showwidget()
 {
@@ -505,6 +659,7 @@ void Widget::closewidget()
 //析构函数
 Widget::~Widget()
 {
+    delete validator;
     delete client;
     delete client1;
     delete animation;                                                                 //启动动画前的一段动画
@@ -585,6 +740,10 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonRelease)
         {
+
+
+            if((!ui->accountLineEdit->text().isEmpty())&&(!ui->passwordLineEdit->text().isEmpty()))
+            {
             if(!networkAbleFlag)
             {
                 ui->duckLabel->hide();
@@ -817,6 +976,27 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             }
         }
 
+            else
+            {
+                if(ui->accountLineEdit->text().isEmpty())
+                {
+                    ui->accountLineEdit->setPlaceholderText("请输入账号");
+                    setplacehodetextRed(ui->accountLineEdit);
+                }
+                if(ui->passwordLineEdit->text().isEmpty())
+                {
+                    ui->passwordLineEdit->setPlaceholderText("请输入密码");
+                    setplacehodetextRed(ui->passwordLineEdit);
+                }
+
+            }
+
+
+        }
+
+
+
+
 
 
 
@@ -833,8 +1013,16 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
     {
         if(event->type() == QEvent::MouseButtonRelease)
         {
+
             ui->return_back1->removeEventFilter(this);
             ui->signUp->removeEventFilter(this);
+            ui->accountLineEdit->clear();
+            ui->passwordLineEdit->clear();
+            ui->accountLineEdit->setPlaceholderText("账号");
+            ui->passwordLineEdit->setPlaceholderText("密码");
+            setplacehodetext(ui->accountLineEdit);
+            setplacehodetext(ui->passwordLineEdit);
+            update();
             int currentIndex = ui->stackedWidget->currentIndex();
             int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
             int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
@@ -883,7 +1071,361 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         {
             return true;
         }
+        else if(event->type()==QEvent::MouseButtonRelease)
+        {
+            ui->birthdayLineEdit->clear();
+            ui->localLineEdit->clear();
+            ui->pd1LineEdit->clear();
+            ui->pd2LineEdit->clear();
+            ui->pd3LineEdit->clear();
+            ui->birthdayLineEdit->setPlaceholderText("生日");
+            ui->localLineEdit->setPlaceholderText("所在地");
+            ui->pd1LineEdit->setPlaceholderText("密保一");
+            ui->pd2LineEdit->setPlaceholderText("密保二");
+            ui->pd3LineEdit->setPlaceholderText("密保三");
+            setplacehodetext(ui->birthdayLineEdit);
+            setplacehodetext(ui->localLineEdit);
+            setplacehodetext(ui->pd1LineEdit);
+            setplacehodetext(ui->pd2LineEdit);
+            setplacehodetext(ui->pd3LineEdit);
+
+            if((!ui->nameLineEdit->text().isEmpty())&&(!ui->signUpPasswordLineEdit1->text().isEmpty())&&(!ui->signUpPasswordLineEdit2->text().isEmpty())&&(!ui->sign->text().isEmpty()))
+            {
+            nameTmp=ui->nameLineEdit->text();
+            password1Tmp=ui->signUpPasswordLineEdit1->text();
+            password2Tmp=ui->signUpPasswordLineEdit2->text();
+            phoneNumberTmp=ui->phoneNumber->text();
+            signTemp=ui->sign->text();
+
+                           if(password1Tmp==password2Tmp)
+                           {
+                           qDebug()<<ui->phoneNumber->text();
+                           setplacehodetext(ui->birthdayLineEdit);
+                           setplacehodetext(ui->localLineEdit);
+                           setplacehodetext(ui->pd1LineEdit);
+                           setplacehodetext(ui->pd2LineEdit);
+                           setplacehodetext(ui->pd3LineEdit);
+                           ui->next1->removeEventFilter(this);
+                           ui->return_back1_2->removeEventFilter(this);
+                           int currentIndex = ui->stackedWidget->currentIndex();
+                           int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
+                           int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
+                           int NextIndex = currentIndex + 1;
+                           ui->stackedWidget->setCurrentIndex(NextIndex);
+                           ui->stackedWidget->widget(currentIndex)->show();
+                           QPropertyAnimation* animation1;
+                           QPropertyAnimation* animation2;
+                           QParallelAnimationGroup* group = new QParallelAnimationGroup;
+                           animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
+                           animation1->setDuration(700);
+                           animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
+                           animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
+                           animation2 =new QPropertyAnimation(ui->stackedWidget->widget(NextIndex), "geometry");
+                           animation2->setDuration(700);
+                           animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
+                           animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
+                           group->addAnimation(animation1);
+                           group->addAnimation(animation2);
+                           group->start();
+                           group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
+                           delete duckMovie;
+                           duckMovie = new QMovie();
+                           duckMovie->setScaledSize(ui->duckLabel->size());
+                           duckMovie->setFileName(":/new/prefix1/duck2.gif");
+                           duckMovie->setSpeed(120);
+                           ui->duckLabel->setMovie(duckMovie);
+                           duckMovie->start();
+                           QObject::connect(duckMovie, &QMovie::frameChanged, [=](int frameNumber) {
+                               // GIF 动画执行一次就结束
+                               if (frameNumber == duckMovie->frameCount()-1) {
+                                   duckMovie->stop();
+                                   refresh();
+                               }
+                           });
+                           }
+                           else
+                           {
+                               setplacehodetextRed(ui->signUpPasswordLineEdit1);
+                               setplacehodetextRed(ui->signUpPasswordLineEdit2);
+                               ui->signUpPasswordLineEdit1->clear();
+                               ui->signUpPasswordLineEdit2->clear();
+                               update();
+                               ui->signUpPasswordLineEdit1->setPlaceholderText("两次密码不一致");
+                               ui->signUpPasswordLineEdit2->setPlaceholderText("两次密码不一致");
+                           }
+
+
+
+        }
+        else
+            {
+                if(ui->nameLineEdit->text().isEmpty())
+                {
+                    ui->nameLineEdit->setPlaceholderText("请输入昵称");
+                    setplacehodetextRed(ui->nameLineEdit);
+                }
+                if(ui->signUpPasswordLineEdit1->text().isEmpty())
+                {
+                    ui->signUpPasswordLineEdit1->setPlaceholderText("请输入密码");
+                    setplacehodetextRed(ui->signUpPasswordLineEdit1);
+                }
+                if(ui->signUpPasswordLineEdit2->text().isEmpty())
+                {
+                    ui->signUpPasswordLineEdit2->setPlaceholderText("请确认密码");
+                    setplacehodetextRed(ui->signUpPasswordLineEdit2);
+                }
+                if(ui->sign->text().isEmpty())
+                {
+                    ui->sign->setPlaceholderText("请输入个性签名");
+                    setplacehodetextRed(ui->sign);
+                }
+
+
+
+
+
+
+
+            }
+        }
     }
+
+
+
+
+
+
+
+
+    /*QString birthdayDate;
+QString localPlaceTemp;
+QString passwordq1Temp;
+QString passwordq2Temp;
+QString passwordq3Temp;*/
+
+
+
+
+
+    else if(qobject_cast<QPushButton*>(obj) == ui->next1_2)
+    {
+        if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+        else if(event->type()==QEvent::MouseButtonRelease)
+        {
+            headImageTemp="head (1).JPG";
+            if((!ui->birthdayLineEdit->text().isEmpty())&&(!ui->localLineEdit->text().isEmpty())&&(!ui->pd1LineEdit->text().isEmpty())&&(!ui->pd2LineEdit->text().isEmpty())&&(!ui->pd3LineEdit->text().isEmpty()))
+            {
+
+              if(isValidDate(ui->birthdayLineEdit->text()))
+              {
+
+                  QString tmp=":/new/prefix2/image/head (1).JPG";
+
+
+                  QPixmap originalPixmap(tmp);
+                  QPixmap roundedPixmap(originalPixmap.size());
+                  roundedPixmap.fill(Qt::transparent); // 设置背景为透明
+                  QPainter painter(&roundedPixmap);
+                  painter.setRenderHint(QPainter::Antialiasing);
+                  QPainterPath path;
+                  path.addEllipse(originalPixmap.rect());
+                  painter.setClipPath(path);
+                  painter.drawPixmap(0, 0, originalPixmap);
+                  ui->userImage_2->setPixmap(roundedPixmap);
+
+                  imageCounter=1;
+            birthdayDate=ui->birthdayLineEdit->text();
+            localPlaceTemp=ui->localLineEdit->text();
+            passwordq1Temp=ui->pd1LineEdit->text();
+            passwordq2Temp=ui->pd2LineEdit->text();
+            passwordq3Temp=ui->pd3LineEdit->text();
+
+                           int currentIndex = ui->stackedWidget->currentIndex();
+                           int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
+                           int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
+                           int NextIndex = currentIndex + 1;
+                           ui->stackedWidget->setCurrentIndex(NextIndex);
+                           ui->stackedWidget->widget(currentIndex)->show();
+                           QPropertyAnimation* animation1;
+                           QPropertyAnimation* animation2;
+                           QParallelAnimationGroup* group = new QParallelAnimationGroup;
+                           animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
+                           animation1->setDuration(700);
+                           animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
+                           animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
+                           animation2 =new QPropertyAnimation(ui->stackedWidget->widget(NextIndex), "geometry");
+                           animation2->setDuration(700);
+                           animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
+                           animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
+                           group->addAnimation(animation1);
+                           group->addAnimation(animation2);
+                           group->start();
+                           group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
+                           delete duckMovie;
+                           duckMovie = new QMovie();
+                           duckMovie->setScaledSize(ui->duckLabel->size());
+                           duckMovie->setFileName(":/new/prefix1/duck2.gif");
+                           duckMovie->setSpeed(120);
+                           ui->duckLabel->setMovie(duckMovie);
+                           duckMovie->start();
+                           QObject::connect(duckMovie, &QMovie::frameChanged, [=](int frameNumber) {
+                               // GIF 动画执行一次就结束
+                               if (frameNumber == duckMovie->frameCount()-1) {
+                                   duckMovie->stop();
+                                   refresh();
+                               }
+                           });
+              }
+              else
+              {
+                  ui->birthdayLineEdit->clear();
+                  ui->birthdayLineEdit->setPlaceholderText("生日格式不正确");
+                  setplacehodetextRed(ui->birthdayLineEdit);
+              }
+
+
+
+
+
+        }
+        else
+            {
+
+
+                if(ui->birthdayLineEdit->text().isEmpty())
+                {
+                    ui->birthdayLineEdit->setPlaceholderText("请输入生日");
+                    setplacehodetextRed(ui->birthdayLineEdit);
+                }
+                if(ui->localLineEdit->text().isEmpty())
+                {
+                    ui->localLineEdit->setPlaceholderText("请输入所在地");
+                    setplacehodetextRed(ui->localLineEdit);
+                }
+                if(ui->pd1LineEdit->text().isEmpty())
+                {
+                    ui->pd1LineEdit->setPlaceholderText("请输入密保一");
+                    setplacehodetextRed(ui->pd1LineEdit);
+                }
+                if(ui->pd2LineEdit->text().isEmpty())
+                {
+                    ui->pd2LineEdit->setPlaceholderText("请输入密保二");
+                    setplacehodetextRed(ui->pd2LineEdit);
+                }
+                if(ui->pd3LineEdit->text().isEmpty())
+                {
+                    ui->pd3LineEdit->setPlaceholderText("请输入密保三");
+                    setplacehodetextRed(ui->pd3LineEdit);
+                }
+
+
+
+
+
+
+
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    else if(qobject_cast<QPushButton*>(obj) == ui->return_back1_2)
+    {
+        if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+        else if(event->type()==QEvent::MouseButtonRelease)
+        {
+
+
+            setplacehodetext(ui->nameLineEdit);
+            setplacehodetext(ui->signUpPasswordLineEdit1);
+            setplacehodetext(ui->signUpPasswordLineEdit2);
+            setplacehodetext(ui->phoneNumber);
+            setplacehodetext(ui->sign);
+            ui->nameLineEdit->clear();
+            ui->signUpPasswordLineEdit1->clear();
+            ui->signUpPasswordLineEdit2->clear();
+            ui->sign->clear();
+            ui->nameLineEdit->setPlaceholderText("昵称");
+            ui->signUpPasswordLineEdit1->setPlaceholderText("密码");
+            ui->signUpPasswordLineEdit2->setPlaceholderText("确认密码");
+            ui->sign->setPlaceholderText("个性签名");
+
+
+                           ui->next1->removeEventFilter(this);
+                           ui->return_back1_2->removeEventFilter(this);
+                           int currentIndex = ui->stackedWidget->currentIndex();
+                           int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
+                           int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
+                           int PreIndex = currentIndex - 1;
+                           ui->stackedWidget->setCurrentIndex(PreIndex);
+                           ui->stackedWidget->widget(currentIndex)->show();
+                           QPropertyAnimation* animation1;
+                           QPropertyAnimation* animation2;
+                           QParallelAnimationGroup* group = new QParallelAnimationGroup;
+                           animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
+                           animation1->setDuration(700);
+                           animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
+                           animation1->setEndValue(QRect(windowWidth, 0, windowWidth, windowHieght));
+                           animation2 =new QPropertyAnimation(ui->stackedWidget->widget(PreIndex), "geometry");
+                           animation2->setDuration(700);
+                           animation2->setStartValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
+                           animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
+                           group->addAnimation(animation1);
+                           group->addAnimation(animation2);
+                           group->start();
+                           group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
+                           delete duckMovie;
+                           duckMovie = new QMovie();
+                           duckMovie->setScaledSize(ui->duckLabel->size());
+                           duckMovie->setFileName(":/new/prefix1/duck2.gif");
+                           duckMovie->setSpeed(120);
+                           ui->duckLabel->setMovie(duckMovie);
+                           duckMovie->start();
+                           QObject::connect(duckMovie, &QMovie::frameChanged, [=](int frameNumber) {
+                               // GIF 动画执行一次就结束
+                               if (frameNumber == duckMovie->frameCount()-1) {
+                                   duckMovie->stop();
+                                   refresh();
+                               }
+                           });
+        }
+    }
+
+
+    else if(qobject_cast<QPushButton*>(obj) == ui->registerButton)
+    {
+        if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+        else if(event->type()==QEvent::MouseButtonRelease)
+        {
+          ssp->tcpServerConnect();
+          ssp->sendMessage("register");
+        }
+    }
+
+
 
     else if(qobject_cast<QCheckBox*>(obj) == ui->rememberPasssword)
     {
@@ -895,12 +1437,38 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
     else if(qobject_cast<QLabel*>(obj) == ui->signUp)
     {
         if(event->type() == QEvent::MouseButtonRelease){
+            ui->nameLineEdit->setPlaceholderText("昵称");
+            ui->signUpPasswordLineEdit1->setPlaceholderText("密码");
+            ui->signUpPasswordLineEdit2->setPlaceholderText("确认密码");
+            ui->sign->setPlaceholderText("个性签名");
+            ui->birthdayLineEdit->setPlaceholderText("生日");
+            ui->localLineEdit->setPlaceholderText("所在地");
+            ui->pd1LineEdit->setPlaceholderText("密保一");
+            ui->pd2LineEdit->setPlaceholderText("密保二");
+            ui->pd3LineEdit->setPlaceholderText("密保三");
+
+            ui->nameLineEdit->clear();
+            ui->signUpPasswordLineEdit1->clear();
+            ui->signUpPasswordLineEdit2->clear();
+            ui->phoneNumber->clear();
+            ui->sign->clear();
+            ui->birthdayLineEdit->clear();
+            ui->localLineEdit->clear();
+            ui->pd1LineEdit->clear();
+            ui->pd2LineEdit->clear();
+            ui->pd3LineEdit->clear();
+
+            resetQstr();
             setplacehodetext(ui->nameLineEdit);
             setplacehodetext(ui->signUpPasswordLineEdit1);
             setplacehodetext(ui->signUpPasswordLineEdit2);
             setplacehodetext(ui->phoneNumber);
-
-
+            setplacehodetext(ui->sign);
+            setplacehodetext(ui->birthdayLineEdit);
+            setplacehodetext(ui->localLineEdit);
+            setplacehodetext(ui->pd1LineEdit);
+            setplacehodetext(ui->pd2LineEdit);
+            setplacehodetext(ui->pd3LineEdit);
             ui->return_back1->removeEventFilter(this);
             ui->signUp->removeEventFilter(this);
             int currentIndex = ui->stackedWidget->currentIndex();
@@ -1125,6 +1693,100 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             ui->mim->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
+
+
+    else if(qobject_cast<QLabel*>(obj) == ui->leftLabel)
+    {
+        if(event->type() == QEvent::MouseButtonRelease){
+            QImage *img=new QImage; //新建一个image对象
+            img->load(":/new/prefix1/left.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            if(imageCounter==1)
+            {
+                ;
+
+            }
+            else
+            {
+                imageCounter--;
+                changeImage(imageCounter);
+            }
+            }
+        else if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+        else if(event->type() == QEvent::MouseButtonPress)
+        {
+            QImage *img=new QImage; //新建一个image对象
+
+            img->load(":/new/prefix1/left2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+        }
+        else if(event->type() == QEvent::HoverEnter)
+        {
+            QImage *img=new QImage; //新建一个image对象
+
+            img->load(":/new/prefix1/left1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+
+        }
+        else if(event->type() == QEvent::HoverLeave)
+        {
+            QImage *img=new QImage; //新建一个image对象
+
+            img->load(":/new/prefix1/left.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+        }
+    }
+
+
+    else if(qobject_cast<QLabel*>(obj) == ui->rightLabel)
+    {
+        if(event->type() == QEvent::MouseButtonRelease){
+            QImage *img=new QImage; //新建一个image对象
+            img->load(":/new/prefix1/right.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            if(imageCounter==32)
+            {
+                ;
+
+            }
+            else
+            {
+                imageCounter++;
+                changeImage(imageCounter);
+            }
+            }
+        else if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+        else if(event->type() == QEvent::MouseButtonPress)
+        {
+            QImage *img=new QImage; //新建一个image对象
+
+            img->load(":/new/prefix1/right2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+        }
+        else if(event->type() == QEvent::HoverEnter)
+        {
+            QImage *img=new QImage; //新建一个image对象
+
+            img->load(":/new/prefix1/right1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+
+        }
+        else if(event->type() == QEvent::HoverLeave)
+        {
+            QImage *img=new QImage; //新建一个image对象
+
+            img->load(":/new/prefix1/right.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+        }
+    }
+
+
     else if(qobject_cast<QLabel*>(obj) == ui->close)
     {
         if(event->type() == QEvent::MouseButtonRelease){
@@ -1189,6 +1851,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
+
      return QWidget::eventFilter(obj, event);  // 对于其他事件，继续默认处理;
 }
 //以下两个个函数均参与最小化过程的处理  隐藏窗口后将其透明度重新设置为1
@@ -1485,6 +2148,7 @@ void Widget::refresh()
     ui->passwordBack->installEventFilter(this);
     ui->logInButton->installEventFilter(this);
     ui->return_back1->installEventFilter(this);
+    ui->return_back1_2->installEventFilter(this);
     ui->next1->installEventFilter(this);
 }
 

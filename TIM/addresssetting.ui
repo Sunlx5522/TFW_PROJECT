@@ -138,7 +138,7 @@ border: 1px solid rgba(70,130,180, 80);</string>
      <widget class="QPushButton" name="reset1">
       <property name="geometry">
        <rect>
-        <x>300</x>
+        <x>310</x>
         <y>10</y>
         <width>61</width>
         <height>51</height>
@@ -172,7 +172,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -255,7 +255,7 @@ background-color:rgba(135,206,250, 255);
      <widget class="QPushButton" name="confirm1">
       <property name="geometry">
        <rect>
-        <x>300</x>
+        <x>310</x>
         <y>10</y>
         <width>61</width>
         <height>51</height>
@@ -289,7 +289,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -387,7 +387,7 @@ border: 1px solid rgba(70,130,180, 80);</string>
      <widget class="QPushButton" name="reset2">
       <property name="geometry">
        <rect>
-        <x>300</x>
+        <x>310</x>
         <y>10</y>
         <width>61</width>
         <height>51</height>
@@ -421,7 +421,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -504,7 +504,7 @@ background-color:rgba(135,206,250, 255);
      <widget class="QPushButton" name="confirm2">
       <property name="geometry">
        <rect>
-        <x>300</x>
+        <x>310</x>
         <y>10</y>
         <width>61</width>
         <height>51</height>
@@ -538,7 +538,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -591,11 +591,13 @@ border-style:inset;/*边框设置*/
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../TFW_chatServe/Resource.qrc">:/new/prefix1/close.png</pixmap>
+     <pixmap resource="SourceFile.qrc">:/new/prefix1/close.png</pixmap>
     </property>
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="SourceFile.qrc"/>
+ </resources>
  <connections/>
 </ui>

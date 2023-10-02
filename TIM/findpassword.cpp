@@ -24,6 +24,17 @@ findpassword::findpassword(QWidget *parent) :
     ui->commit_2->setAttribute(Qt::WA_Hover,true);                                       //开启悬停事件
     ui->changePassword->installEventFilter(this);
     ui->changePassword->setAttribute(Qt::WA_Hover,true);                                       //开启悬停事件
+
+    //"[a-zA-Z0-9\u4e00-\u9fa5]+"
+    ui->accout_line->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
+    ui->passwordProtect1->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->passwordProtect2->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->passwordProtect3->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
+    ui->newpassword1->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
+    ui->newpassword2->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
+
+
+
     tcpsocket = new QTcpSocket(this);
 
 }
@@ -31,6 +42,7 @@ findpassword::findpassword(QWidget *parent) :
 findpassword::~findpassword()
 {
     delete ui;
+    delete validator;
     ww->refresh();
 }
 

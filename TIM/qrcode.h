@@ -1,7 +1,7 @@
 #ifndef QRCODE_H
 #define QRCODE_H
 
-#include"qrencode.h"
+#include"qrencode.h" //该头文件在工程目录下 可饮用
 #include <QWidget>
 #include<QString>
 #include"QPixmap"

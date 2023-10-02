@@ -81,7 +81,7 @@ border-radius:5px;
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="Resource.qrc">:/new/prefix1/mim.png</pixmap>
+        <pixmap resource="../TIM/SourceFile.qrc">:/new/prefix1/mim.png</pixmap>
        </property>
       </widget>
      </item>
@@ -106,7 +106,7 @@ border-radius:5px;
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="Resource.qrc">:/new/prefix1/close.png</pixmap>
+        <pixmap resource="../TIM/SourceFile.qrc">:/new/prefix1/close.png</pixmap>
        </property>
       </widget>
      </item>
@@ -198,7 +198,7 @@ border: 1px solid rgba(220,220,220, 200);
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="Resource.qrc">:/new/prefix1/user.png</pixmap>
+              <pixmap resource="../TIM/SourceFile.qrc">:/new/prefix1/user.png</pixmap>
              </property>
             </widget>
            </item>
@@ -382,7 +382,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -437,7 +437,7 @@ border-style:inset;/*边框设置*/
        <string notr="true">/*放置gif 的widget窗口*/
 QWidget#widget_3{
 background-image: url(:/new/prefix1/w2.png);/*设置背景图片*/
-border-radius:10px;/*设置圆角半径*/
+border-radius:2px;/*设置圆角半径*/
 border-style:outset;/*设置边框*/
 border: 1px solid rgba(220,220,220, 200);
 }</string>
@@ -531,7 +531,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -616,7 +616,7 @@ border: 1px solid rgba(70,130,180, 80);</string>
        <string notr="true">/*放置gif 的widget窗口*/
 QWidget#widget_2{
 background-image: url(:/new/prefix1/w1.png);/*设置背景图片*/
-border-radius:10px;/*设置圆角半径*/
+border-radius:2px;/*设置圆角半径*/
 border-style:outset;/*设置边框*/
 border: 1px solid rgba(220,220,220, 200);
 }</string>
@@ -687,7 +687,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -751,7 +751,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -815,7 +815,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -879,7 +879,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -943,7 +943,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -1167,7 +1167,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -1268,7 +1268,7 @@ background-color:rgba(135,206,250, 255);
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="Resource.qrc">:/new/prefix1/search.png</pixmap>
+       <pixmap>:/new/prefix1/search.png</pixmap>
       </property>
      </widget>
      <widget class="QPushButton" name="returnToSum">
@@ -1308,7 +1308,7 @@ QPushButton{
 color:#FFFAFA;/*字体颜色设置*/
 background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
-border-radius:10px;/*边框圆角半径设置*/
+border-radius:2px;/*边框圆角半径设置*/
 border: 1px solid rgba(70,130,180, 80)
 }
 
@@ -1332,8 +1332,6 @@ border-style:inset;/*边框设置*/
    </widget>
   </widget>
  </widget>
- <resources>
-  <include location="Resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -1,7 +1,5 @@
-#include"GetTime.h"
+#include "GetTime.h"
 #include "time.h"
-
-//--------------------
 //以下为获取时间的功能函数
 void getCurrentTime(int* year, int* month, int* day)
 {

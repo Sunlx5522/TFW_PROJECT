@@ -8,11 +8,13 @@
 #include"qrcode.h"
 #include"userlist.h"
 #include"findpassword.h"
+#include"signUp.h"
 Widget* ww;
 addressSetting* bb;
 qrcode *cc;
 CurrentUser* cu;
 findpassword * ffd;
+signUp* ssp;
 int main(int argc, char *argv[])                                                             /*必须规范写法 因为涉及到传值*/
 {  
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);                             //进行不同屏幕的dpi适配 防止布局错乱
@@ -30,6 +32,8 @@ int main(int argc, char *argv[])                                                
     HeartBeat heartbeat;
     findpassword *fd;
     ffd = fd;
+    signUp sp;
+    ssp=&sp;
     return a.exec();                                                                         //程序不按按钮不结束 让程序ui在屏幕上停留
 
 }

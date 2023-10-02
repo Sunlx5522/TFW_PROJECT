@@ -1256,7 +1256,10 @@ void Widget::readMessage_surface(){
     }else if(flag == "register"){
         //新用户注册，服务器生成'账号.db'的好友列表，登录时返回给用户
         ui->display_screen->append("请求注册");
-        ui->display_screen->setAlignment(Qt::AlignCenter);
+
+
+
+
         QString accountTemp = user->addUser(message);
         qDebug() << "注册成功";
         ui->display_screen->append("账号:"+accountTemp+"注册成功");
