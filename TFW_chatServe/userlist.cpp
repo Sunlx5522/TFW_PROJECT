@@ -1,5 +1,5 @@
 #include "widget.h"
-extern Widget *ww;
+extern Widget *loginpage;
 #include "userlist.h"
 
 #include "heartbeat.h"
@@ -25,7 +25,7 @@ UserList::UserList()
     db.setDatabaseName("UserList.db");                                                             //如果文件中已有则不需要重复添加
     //打开
     if(!db.open()){
-      ww->shouError();                                                                             //打不开 输出错误命令（此指令一般情况下不会执行）
+      loginpage->shouError();                                                                             //打不开 输出错误命令（此指令一般情况下不会执行）
      }
     //指定连接
     query = new QSqlQuery(db);                                                                     //操作指针链接
@@ -227,7 +227,7 @@ UserList::UserList()
     db = QSqlDatabase::database();                                                                 //获取数据库指针
     //数据库模型视图
     //定制模型
-    model = new QSqlQueryModel(ww);
+    model = new QSqlQueryModel(loginpage);
     model->setQuery("select * from User");
     model->setHeaderData(0,Qt::Horizontal,"账号");
     model->setHeaderData(1,Qt::Horizontal,"昵称");
@@ -283,8 +283,8 @@ UserList::UserList()
     model->setQuery("select * from User");
 
 
-    ww->addTable(model);
-    ww->addTable_s(model);
+    loginpage->addTable(model);
+    loginpage->addTable_s(model);
 }
 
 int UserList::CheckUser(QString account, QString password){

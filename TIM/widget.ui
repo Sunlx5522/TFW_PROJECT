@@ -2075,7 +2075,6 @@ border-style:inset;/*边框设置*/
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="page_5"/>
      </widget>
     </widget>
    </item>

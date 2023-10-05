@@ -6,9 +6,9 @@
 #include<QFile>
 #include<QTextStream>
 #include "userlist.h"
-extern CurrentUser* cu;
-extern QString internetRemoteAddress;
-extern QString serveRemoteAddress;
+#include "address.h"
+extern CurrentUser* currentuser;
+extern tfwAddress* tfwaddress;
 InitSurface::InitSurface()
 {
     tcpServerConnect();
@@ -22,7 +22,7 @@ void InitSurface::tcpServerConnect()
     //断开现有连接
     tcpsocket->abort();
     //连接到远端的7777端口
-    tcpsocket->connectToHost(serveRemoteAddress,55418);
+    tcpsocket->connectToHost(tfwaddress->serveRemoteAddress,tfwaddress->port7777);
     //有可读信息，发送readyRead()
     connect(tcpsocket,&QTcpSocket::readyRead,this,&InitSurface::readMessage);
 
@@ -44,16 +44,16 @@ void InitSurface::readMessage()
     if(msg[0] == "initSurface"){
 
 
-    cu->account=msg[1];
-    cu->name=msg[2];
-    cu->password=msg[3];
-    cu->sign=msg[4];
-    cu->headImage=msg[5];
-    cu->phoneNumber=msg[6];
-    cu->birthDay=msg[7];
-    cu->localPlace=msg[8];
-    cu->Tagt=msg[9];
-    cu->VIP_Level=msg[10];
+    currentuser->account=msg[1];
+    currentuser->name=msg[2];
+    currentuser->password=msg[3];
+    currentuser->sign=msg[4];
+    currentuser->headImage=msg[5];
+    currentuser->phoneNumber=msg[6];
+    currentuser->birthDay=msg[7];
+    currentuser->localPlace=msg[8];
+    currentuser->Tagt=msg[9];
+    currentuser->VIP_Level=msg[10];
 
 
     QString fileName = QCoreApplication::applicationDirPath();
@@ -72,16 +72,16 @@ void InitSurface::readMessage()
         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
         {
             QTextStream out(&file); // 创建一个QTextStream对象，用于写入内容到文件
-            out << cu->account<<"\n";
-            out << cu->name<<"\n";
-            out << cu->password<<"\n";
-            out << cu->sign<<"\n";
-            out << cu->headImage<<"\n";
-            out << cu->phoneNumber<<"\n";
-            out << cu->birthDay<<"\n";
-            out << cu->localPlace<<"\n";
-            out << cu->Tagt<<"\n";
-            out << cu->VIP_Level<<"\n";
+            out << currentuser->account<<"\n";
+            out << currentuser->name<<"\n";
+            out << currentuser->password<<"\n";
+            out << currentuser->sign<<"\n";
+            out << currentuser->headImage<<"\n";
+            out << currentuser->phoneNumber<<"\n";
+            out << currentuser->birthDay<<"\n";
+            out << currentuser->localPlace<<"\n";
+            out << currentuser->Tagt<<"\n";
+            out << currentuser->VIP_Level<<"\n";
         }
         file.close();
 
@@ -95,16 +95,16 @@ void InitSurface::readMessage()
                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
                         {
                             QTextStream out(&file); // 创建一个QTextStream对象，用于写入内容到文件
-                            out << cu->account<<"\n";
-                            out << cu->name<<"\n";
-                            out << cu->password<<"\n";
-                            out << cu->sign<<"\n";
-                            out << cu->headImage<<"\n";
-                            out << cu->phoneNumber<<"\n";
-                            out << cu->birthDay<<"\n";
-                            out << cu->localPlace<<"\n";
-                            out << cu->Tagt<<"\n";
-                            out << cu->VIP_Level<<"\n";
+                            out << currentuser->account<<"\n";
+                            out << currentuser->name<<"\n";
+                            out << currentuser->password<<"\n";
+                            out << currentuser->sign<<"\n";
+                            out << currentuser->headImage<<"\n";
+                            out << currentuser->phoneNumber<<"\n";
+                            out << currentuser->birthDay<<"\n";
+                            out << currentuser->localPlace<<"\n";
+                            out << currentuser->Tagt<<"\n";
+                            out << currentuser->VIP_Level<<"\n";
                         }
                         file.close();
                     }

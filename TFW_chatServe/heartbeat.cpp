@@ -1,8 +1,8 @@
 #include "heartbeat.h"
 #include "userlist.h"
 #include"widget.h"
-extern UserList * uu;
-extern Widget* ww;
+extern UserList * user;
+extern Widget* loginpage;
 HeartBeat::HeartBeat(QObject* parent) :
     QObject(parent),
     m_manager(new QNetworkAccessManager(this))
@@ -18,12 +18,12 @@ void HeartBeat::checkNetworkStatus()
         if (reply->error() == QNetworkReply::NoError) {
             int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             if (statusCode == 200) {
-                 ww->networkAbleFlag=true;
+                 loginpage->networkAbleFlag=true;
             } else {
-                 ww->networkAbleFlag=false;
+                 loginpage->networkAbleFlag=false;
             }
         } else {
-            ww->networkAbleFlag=false;
+            loginpage->networkAbleFlag=false;
         }
         reply->deleteLater();
     });
@@ -41,5 +41,5 @@ HeartBeat1::HeartBeat1(QObject* parent) :
 
 void HeartBeat1::checkTageStatus()
 {
-   uu->tageUpdate();
+   user->tageUpdate();
 }

@@ -3,10 +3,10 @@
 #include <QParallelAnimationGroup>
 #include <QTcpSocket>
 #include "widget.h"
-extern Widget* ww;
-extern findpassword * ffd;
-extern QString internetRemoteAddress;
-extern QString serveRemoteAddress;
+#include "address.h"
+extern Widget* loginpage;
+extern findpassword * findpasswordpage;
+extern tfwAddress *tfwaddress;
 findpassword::findpassword(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::findpassword)
@@ -43,7 +43,7 @@ findpassword::~findpassword()
 {
     delete ui;
     delete validator;
-    ww->refresh();
+    loginpage->refresh();
 }
 
 
@@ -52,10 +52,10 @@ bool findpassword::eventFilter(QObject *obj, QEvent *event)
     if(qobject_cast<QLabel*>(obj) == ui->close)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
-            ffd->close();
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
+            findpasswordpage->close();
            }
         else if(event->type() == QEvent::MouseMove)
         {
@@ -63,26 +63,26 @@ bool findpassword::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/close2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/close2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/close1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/close1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
     else if(qobject_cast<QPushButton*>(obj) == ui->commit_2)
@@ -106,25 +106,29 @@ bool findpassword::eventFilter(QObject *obj, QEvent *event)
             }
             else
             {
-                ww->setplacehodetext(ui->accout_line);
-                ww->setplacehodetext(ui->passwordProtect1);
-                ww->setplacehodetext(ui->passwordProtect2);
-                ww->setplacehodetext(ui->passwordProtect3);
+                loginpage->setplacehodetext(ui->accout_line);
+                loginpage->setplacehodetext(ui->passwordProtect1);
+                loginpage->setplacehodetext(ui->passwordProtect2);
+                loginpage->setplacehodetext(ui->passwordProtect3);
                 if(ui->accout_line->text().isEmpty())
                 {
                     ui->accout_line->setPlaceholderText("请输入账号");
+                    loginpage->setplacehodetextRed(ui->accout_line);
                 }
                 if(ui->passwordProtect1->text().isEmpty())
                 {
                     ui->passwordProtect1->setPlaceholderText("请输入密保一");
+                    loginpage->setplacehodetextRed(ui->passwordProtect1);
                 }
                 if(ui->passwordProtect2->text().isEmpty())
                 {
                     ui->passwordProtect2->setPlaceholderText("请输入密保二");
+                    loginpage->setplacehodetextRed(ui->passwordProtect2);
                 }
                 if(ui->passwordProtect3->text().isEmpty())
                 {
                     ui->passwordProtect3->setPlaceholderText("请输入密保三");
+                    loginpage->setplacehodetextRed(ui->passwordProtect3);
                 }
             }
 
@@ -156,23 +160,26 @@ bool findpassword::eventFilter(QObject *obj, QEvent *event)
                     ui->newpassword1->clear();
                     ui->newpassword2->clear();
                     update();
-                    ww->setplacehodetext(ui->newpassword1);
-                    ww->setplacehodetext(ui->newpassword2);
+                    loginpage->setplacehodetextRed(ui->newpassword1);
+                    loginpage->setplacehodetextRed(ui->newpassword2);
                     ui->newpassword1->setPlaceholderText("密码不一致");
                     ui->newpassword2->setPlaceholderText("密码不一致");
                 }
             }
             else
             {
-                ww->setplacehodetext(ui->newpassword1);
-                ww->setplacehodetext(ui->newpassword2);
+                loginpage->setplacehodetext(ui->newpassword1);
+                loginpage->setplacehodetext(ui->newpassword2);
                 if(ui->newpassword1->text().isEmpty())
                 {
                     ui->newpassword1->setPlaceholderText("请输入新密码");
+                    loginpage->setplacehodetextRed(ui->newpassword1);
+
                 }
                 if(ui->newpassword2->text().isEmpty())
                 {
                     ui->newpassword2->setPlaceholderText("请确认新密码");
+                    loginpage->setplacehodetextRed(ui->newpassword2);
                 }
             }
 
@@ -194,7 +201,7 @@ void findpassword::tcpServerConnect()
     //断开现有连接
     tcpsocket->abort();
     //连接到本地的7777端口
-    tcpsocket->connectToHost(serveRemoteAddress, 55418);
+    tcpsocket->connectToHost(tfwaddress->serveRemoteAddress, tfwaddress->port7777);
     //有可读信息，发送readyRead()
     connect(tcpsocket,&QTcpSocket::readyRead,this,&findpassword::readMessage);
 }

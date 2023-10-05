@@ -7,21 +7,20 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
-Widget *ww;
-UserList * uu;
+Widget *loginpage;
+UserList * user;
 int main(int argc, char *argv[])
 {
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);                                   //进行不同屏幕的dpi适配 防止布局错乱
     QApplication a(argc, argv);
-    Widget w;
-    ww=&w;
-    w.move((a.desktop()->width() - w.width()) / 2, (a.desktop()->height() - w.height()) / 2);      //窗口居中
-    UserList *user;
-    user = new UserList();
-    w.user=user;
-    uu=user;
-    w.show();
+    Widget loginPage;
+    loginpage=&loginPage;
+    loginPage.move((a.desktop()->width() - loginPage.width()) / 2, (a.desktop()->height() - loginPage.height()) / 2);      //窗口居中
+    UserList User;
+    loginPage.user=&User;
+    user=&User;
+    loginPage.show();
     HeartBeat heartbeat;
     HeartBeat1 heartbeat1;
     return a.exec();

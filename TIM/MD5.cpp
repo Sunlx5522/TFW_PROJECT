@@ -169,5 +169,5 @@ void MD5Function (unsigned char encrypt[],char *crypt1)
     for(i=0; i<16; i++) {
         sprintf(&crypt1[i*2], "%02x", decrypt[i]);
     }
-    //printf("%s\n",crypt1);
+    //printf("%s\n",crypt1); //调试使用
 }

@@ -1,6 +1,3 @@
-
-
-
 #include <QNetworkConfigurationManager>
 #include <QtConcurrent/QtConcurrent>
 #include <QGraphicsDropShadowEffect>                                                  //动画事件头文件
@@ -50,18 +47,17 @@
 #include <QDate>
 #include <QRegularExpression>
 #include "signUp.h"
-
-extern signUp* ssp;
+#include"address.h"
+extern signUp* signuppage;
 
 int imageCounter=1;
-extern Widget* ww;
-extern addressSetting* bb;
+extern Widget* loginpage;
+extern addressSetting* addresssetting;
 extern QApplication a;                                                                //外部变量声明 用于关闭应用
-extern qrcode *cc;
-extern findpassword * ffd;
+extern qrcode *qrcodepage;
+extern findpassword * findpasswordpage;
 
-extern QString internetRemoteAddress;
-extern QString serveRemoteAddress;
+extern tfwAddress* tfwaddress;
 
 //用于注册
 QString nameTmp;
@@ -122,6 +118,11 @@ bool isValidDate(const QString &dateStr) {
     }
 
     return true;
+}
+
+void Widget::registerAppend(QString str)
+{
+    ui->textEdit->append(str);
 }
 
 void Widget::changeImage(int i)
@@ -642,7 +643,7 @@ void Widget::setplacehodetext(QLineEdit *a)
 void Widget::setplacehodetextRed(QLineEdit *a)
 {
     QPalette palette = a->palette();
-    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#DC143C");
+    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#191970");
     a->setPalette(palette);
 }
 
@@ -705,11 +706,11 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             Lable2=new QLabel(this);
             Lable2->resize(450,350);
             Lable2->setGeometry(275,325,450,350);
-            ffd=new findpassword;
+            findpasswordpage=new findpassword;
             QPoint globalPos1 = Lable2->mapToGlobal(QPoint(0, 0));
-            ffd->move(globalPos1.x(),globalPos1.y());
+            findpasswordpage->move(globalPos1.x(),globalPos1.y());
 
-            ffd->show();
+            findpasswordpage->show();
 
 
 
@@ -856,7 +857,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                          ui->duckLabel->update();
                          QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
                          client->abort();
-                         client->connectToHost(serveRemoteAddress,51269);
+                         client->connectToHost(tfwaddress->serveRemoteAddress,tfwaddress->port5555);
                          QString det="正在链接服务器";
                          det = tr("<font size='6' color='white'>") + det;
                          det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
@@ -1420,8 +1421,59 @@ QString passwordq3Temp;*/
         }
         else if(event->type()==QEvent::MouseButtonRelease)
         {
-          ssp->tcpServerConnect();
-          ssp->sendMessage("register");
+          if(loginFlag)
+          {
+          signuppage->tcpServerConnect();
+          signuppage->sendMessage("register");
+          ui->registerButton->setText("返回");
+          loginFlag=false;
+          }
+          else
+          {
+
+              ui->accountLineEdit->clear();
+              ui->passwordLineEdit->clear();
+              ui->accountLineEdit->setPlaceholderText("账号");
+              ui->passwordLineEdit->setPlaceholderText("密码");
+              setplacehodetext(ui->accountLineEdit);
+              setplacehodetext(ui->passwordLineEdit);
+              update();
+              int currentIndex = ui->stackedWidget->currentIndex();
+              int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
+              int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
+              int NextIndex = currentIndex - 3;
+              ui->stackedWidget->setCurrentIndex(NextIndex);
+              ui->stackedWidget->widget(currentIndex)->show();
+              QPropertyAnimation* animation1;
+              QPropertyAnimation* animation2;
+              QParallelAnimationGroup* group = new QParallelAnimationGroup;
+              animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
+              animation1->setDuration(700);
+              animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
+              animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
+              animation2 =new QPropertyAnimation(ui->stackedWidget->widget(NextIndex), "geometry");
+              animation2->setDuration(700);
+              animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
+              animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
+              group->addAnimation(animation1);
+              group->addAnimation(animation2);
+              group->start();
+              group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
+              delete duckMovie;
+              duckMovie = new QMovie();
+              duckMovie->setScaledSize(ui->duckLabel->size());
+              duckMovie->setFileName(":/new/prefix1/duck.gif");
+              duckMovie->setSpeed(120);
+              ui->duckLabel->setMovie(duckMovie);
+              duckMovie->start();
+              QObject::connect(duckMovie, &QMovie::frameChanged, [=](int frameNumber) {
+                  // GIF 动画执行一次就结束
+                  if (frameNumber == duckMovie->frameCount()-1) {
+                      duckMovie->stop();
+                  }
+              });
+
+          }
         }
     }
 
@@ -1437,6 +1489,8 @@ QString passwordq3Temp;*/
     else if(qobject_cast<QLabel*>(obj) == ui->signUp)
     {
         if(event->type() == QEvent::MouseButtonRelease){
+            ui->registerButton->setText("注册");
+            loginFlag=true;
             ui->nameLineEdit->setPlaceholderText("昵称");
             ui->signUpPasswordLineEdit1->setPlaceholderText("密码");
             ui->signUpPasswordLineEdit2->setPlaceholderText("确认密码");
@@ -1541,10 +1595,10 @@ QString passwordq3Temp;*/
     else if(qobject_cast<QLabel*>(obj) == ui->qrLabel)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/qrCode.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->qrLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/qrCode.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->qrLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
             setEnabled(false);
@@ -1563,11 +1617,11 @@ QString passwordq3Temp;*/
             Lable2->resize(400,200);
             Lable2->setGeometry(300,400,400,200);
 
-            cc=new qrcode;
+            qrcodepage=new qrcode;
             QPoint globalPos1 = Lable2->mapToGlobal(QPoint(0, 0));
-            cc->move(globalPos1.x(),globalPos1.y());
-            cc->slot_GenerateQRCode();
-            cc->show();
+            qrcodepage->move(globalPos1.x(),globalPos1.y());
+            qrcodepage->slot_GenerateQRCode();
+            qrcodepage->show();
 
 
 
@@ -1578,34 +1632,34 @@ QString passwordq3Temp;*/
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/qrCode2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->qrLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/qrCode2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->qrLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/qrCode1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->qrLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/qrCode1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->qrLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/qrCode.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->qrLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/qrCode.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->qrLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
     else if(qobject_cast<QLabel*>(obj) == ui->setting)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/ssetting.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->setting->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/ssetting.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->setting->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
             QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
             setEnabled(false);
@@ -1624,11 +1678,10 @@ QString passwordq3Temp;*/
             Lable2->resize(400,200);
             Lable2->setGeometry(300,400,400,200);
 
-            bb=new addressSetting;
+            addresssetting=new addressSetting;
             QPoint globalPos1 = Lable2->mapToGlobal(QPoint(0, 0));
-            bb->move(globalPos1.x(),globalPos1.y());
-
-            bb->show();
+            addresssetting->move(globalPos1.x(),globalPos1.y());
+            addresssetting->show();
 
 
 
@@ -1639,32 +1692,32 @@ QString passwordq3Temp;*/
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/ssetting2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->setting->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/ssetting2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->setting->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/ssetting1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->setting->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/ssetting1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->setting->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/ssetting.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->setting->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/ssetting.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->setting->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
     else if(qobject_cast<QLabel*>(obj) == ui->mim)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/mim.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/mim.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
             animation3->start();}
         else if(event->type() == QEvent::MouseMove)
         {
@@ -1672,25 +1725,25 @@ QString passwordq3Temp;*/
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/mim2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/mim2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/mim1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/mim1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/mim.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/mim.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
 
@@ -1698,9 +1751,9 @@ QString passwordq3Temp;*/
     else if(qobject_cast<QLabel*>(obj) == ui->leftLabel)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/left.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/left.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
             if(imageCounter==1)
             {
                 ;
@@ -1718,25 +1771,25 @@ QString passwordq3Temp;*/
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/left2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/left2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/left1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/left1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/left.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->leftLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/left.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->leftLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
 
@@ -1744,9 +1797,9 @@ QString passwordq3Temp;*/
     else if(qobject_cast<QLabel*>(obj) == ui->rightLabel)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/right.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/right.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
             if(imageCounter==32)
             {
                 ;
@@ -1764,25 +1817,25 @@ QString passwordq3Temp;*/
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/right2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/right2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/right1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/right1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/right.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->rightLabel->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/right.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->rightLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
 
@@ -1806,9 +1859,9 @@ QString passwordq3Temp;*/
             ui->logInButton->removeEventFilter(this);
             ui->return_back1->removeEventFilter(this);
             ui->next1->removeEventFilter(this);
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
             delete duckMovie;
             duckMovie = new QMovie();
             duckMovie->setScaledSize(ui->duckLabel->size());
@@ -1830,25 +1883,25 @@ QString passwordq3Temp;*/
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/close2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/close2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/close1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/close1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
 
@@ -1983,7 +2036,7 @@ void Widget::readMessage(){
                 {
 
 
-                client1->connectToHost(serveRemoteAddress ,55418);
+                client1->connectToHost(tfwaddress->serveRemoteAddress ,tfwaddress->port7777);
                 QString det1="登录成功";
 
                 QIcon icon = QIcon(":/new/prefix1/img2.png");

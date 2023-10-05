@@ -25,7 +25,7 @@
 #include <QParallelAnimationGroup>                                                                 //动画群盒子头文件
 #include <QGraphicsDropShadowEffect>                                                               //显卡模糊显示头文件
 #include <QRegularExpressionValidator>                                                             //qt规范表达
-extern UserList * uu;
+extern UserList * user;
 extern QApplication a;                                                                             //应用名
 
 Widget::Widget(QWidget *parent)
@@ -262,9 +262,9 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
     {
 
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage;                                                                //新建一个image对象
-            img->load(":/new/prefix1/close.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img));                                        //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                //新建一个image对象
+            img.load(":/new/prefix1/close.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img));                                        //将图片放入label，使用setPixmap,注意指针*img
             setEnabled(false);
             ui->mim->removeEventFilter(this);                                                             //将qlable设置点击事件
             ui->close->removeEventFilter(this);                                                           //将qlable设置点击事件
@@ -284,23 +284,23 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
-            img->load(":/new/prefix1/close2.png");                                                 //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img));                                        //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                //新建一个image对象
+            img.load(":/new/prefix1/close2.png");                                                 //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img));                                        //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage;                                                                 //新建一个image对象
-            img->load(":/new/prefix1/close1.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img));                                         //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                 //新建一个image对象
+            img.load(":/new/prefix1/close1.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img));                                         //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
-            img->load(":/new/prefix1/close.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img));                                        //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                //新建一个image对象
+            img.load(":/new/prefix1/close.png");                                                  //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img));                                        //将图片放入label，使用setPixmap,注意指针*img
 
         }
     }
@@ -767,12 +767,13 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
     }
 
 
+
     else if(qobject_cast<QLabel*>(obj) == ui->mim)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage;                                                                //新建一个image对象
-            img->load(":/new/prefix1/mim.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                //新建一个image对象
+            img.load(":/new/prefix1/mim.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
             animation1->start();}
         else if(event->type() == QEvent::MouseMove)
         {
@@ -780,24 +781,24 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
+            QImage img;                                                                //新建一个image对象
 
-            img->load(":/new/prefix1/mim2.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/mim2.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
+            QImage img;                                                                //新建一个image对象
 
-            img->load(":/new/prefix1/mim1.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/mim1.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
-            img->load(":/new/prefix1/mim.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->mim->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                //新建一个image对象
+            img.load(":/new/prefix1/mim.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->mim->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
         }
     }
 
@@ -805,9 +806,9 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
     else if(qobject_cast<QLabel*>(obj) == ui->search)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage;                                                                //新建一个image对象
-            img->load(":/new/prefix1/search.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                //新建一个image对象
+            img.load(":/new/prefix1/search.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
             ui->tableView->setModel(proxyModel);
             QString r1;
             r1=ui->searchLineEdit_2->text();
@@ -823,24 +824,24 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
+            QImage img;                                                                //新建一个image对象
 
-            img->load(":/new/prefix1/search2.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/search2.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
+            QImage img;                                                                //新建一个image对象
 
-            img->load(":/new/prefix1/search1.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/search1.png");                                                   //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage;                                                                //新建一个image对象
-            img->load(":/new/prefix1/search.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->search->setPixmap(QPixmap::fromImage(*img));                                          //将图片放入label，使用setPixmap,注意指针*img
+            QImage img;                                                                //新建一个image对象
+            img.load(":/new/prefix1/search.png");                                                    //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->search->setPixmap(QPixmap::fromImage(img));                                          //将图片放入label，使用setPixmap,注意指针*img
         }
     }
 
@@ -1319,7 +1320,7 @@ void Widget::readMessage_surface(){
                 updateQuery.bindValue(":ps", parts[1]);
                 updateQuery.bindValue(":account", parts[0]);
                 updateQuery.exec();
-                uu->model->setQuery("select * from User");
+                user->model->setQuery("select * from User");
             }
 
         }

@@ -43,5 +43,5 @@ void MD5Transform(unsigned int state[4], unsigned char block[64]);
 void MD5Encode(unsigned char *output, unsigned int *input, unsigned int len);
 void MD5Decode(unsigned int *output, unsigned char *input, unsigned int len);
 //MD5Function
-void MD5Function (unsigned char encrypt[],char *crypt1);
+void MD5Function (unsigned char encrypt[],char *crypt1); //主功能函数
 #endif // MD5_H

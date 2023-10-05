@@ -90,8 +90,8 @@ public:
 
     void setplacehodetext(QLineEdit*);
     void setplacehodetextRed(QLineEdit*);
-
-
+    void registerAppend(QString);
+    bool loginFlag=true;
     bool networkAbleFlag=false;
     bool loginSuccessFlag=false;
     bool AlreadyOnlineFlag=false;

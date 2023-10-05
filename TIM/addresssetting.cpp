@@ -4,10 +4,9 @@
 #include<QParallelAnimationGroup>
 #include "ui_addresssetting.h"
 
-extern Widget* ww;
-extern addressSetting* bb;
-extern QString internetRemoteAddress;
-extern QString serveRemoteAddress;
+extern Widget* loginpage;
+extern addressSetting* addresssetting;
+extern tfwAddress* tfwaddress;
 
 addressSetting::addressSetting(QWidget *parent) :
     QWidget(parent),
@@ -19,11 +18,11 @@ addressSetting::addressSetting(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint | windowFlags()|Qt::WindowStaysOnTopHint);                          //去窗口边框
     setAttribute(Qt::WA_TranslucentBackground);                                       //把窗口背景设置为透明;
     ui->display_screen->append("当前互联网监测地址");
-    ui->display_screen->append(internetRemoteAddress);
+    ui->display_screen->append(tfwaddress->internetRemoteAddress);
     ui->display_screen_2->append("当前远端服务器地址");
-    ui->display_screen_2->append(serveRemoteAddress);
-    ui->LineEdit1->setText(internetRemoteAddress);
-    ui->LineEdit_2->setText(serveRemoteAddress);
+    ui->display_screen_2->append(tfwaddress->serveRemoteAddress);
+    ui->LineEdit1->setText(tfwaddress->internetRemoteAddress);
+    ui->LineEdit_2->setText(tfwaddress->serveRemoteAddress);
     ui->LineEdit1->installEventFilter(this);
     ui->LineEdit_2->installEventFilter(this);
     ui->reset1->installEventFilter(this);
@@ -42,7 +41,7 @@ addressSetting::~addressSetting()
 {
     delete ui;
     delete validator;
-    ww->refresh();
+    loginpage->refresh();
 }
 
 
@@ -51,9 +50,9 @@ void addressSetting::situationUpdate()
  ui->display_screen->clear();
  ui->display_screen_2->clear();
  ui->display_screen->append("当前互联网监测地址");
- ui->display_screen->append(internetRemoteAddress);
+ ui->display_screen->append(tfwaddress->internetRemoteAddress);
  ui->display_screen_2->append("当前远端服务器地址");
- ui->display_screen_2->append(serveRemoteAddress);
+ ui->display_screen_2->append(tfwaddress->serveRemoteAddress);
  update();
 }
 
@@ -100,6 +99,7 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonRelease)
         {
+
             int currentIndex = ui->stackedWidget_2->currentIndex();
             int windowWidth = ui->stackedWidget_2->widget(currentIndex)->width();
             int windowHieght = ui->stackedWidget_2->widget(currentIndex)->height();
@@ -134,7 +134,7 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonRelease)
         {
-            internetRemoteAddress=ui->LineEdit1->text();
+            tfwaddress->internetRemoteAddress=ui->LineEdit1->text();
             situationUpdate();
             int currentIndex = ui->stackedWidget->currentIndex();
             int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
@@ -170,7 +170,7 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonRelease)
         {
-            serveRemoteAddress=ui->LineEdit_2->text();
+            tfwaddress->serveRemoteAddress=ui->LineEdit_2->text();
             situationUpdate();
             int currentIndex = ui->stackedWidget_2->currentIndex();
             int windowWidth = ui->stackedWidget_2->widget(currentIndex)->width();
@@ -201,10 +201,10 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
     else if(qobject_cast<QLabel*>(obj) == ui->close)
     {
         if(event->type() == QEvent::MouseButtonRelease){
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
-            bb->close();
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
+            addresssetting->close();
            }
         else if(event->type() == QEvent::MouseMove)
         {
@@ -212,26 +212,25 @@ bool addressSetting::eventFilter(QObject *obj, QEvent *event)
         }
         else if(event->type() == QEvent::MouseButtonPress)
         {
-            QImage *img=new QImage; //新建一个image对象
+            QImage img; //新建一个image对象
 
-            img->load(":/new/prefix1/close2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            img.load(":/new/prefix1/close2.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
         }
         else if(event->type() == QEvent::HoverEnter)
         {
-            QImage *img=new QImage; //新建一个image对象
-            img->load(":/new/prefix1/close1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/close1.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
 
 
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            QImage *img=new QImage; //新建一个image对象
-
-            img->load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
-            ui->close->setPixmap(QPixmap::fromImage(*img)); //将图片放入label，使用setPixmap,注意指针*img
+            QImage img; //新建一个image对象
+            img.load(":/new/prefix1/close.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
+            ui->close->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
         }
     }
     return false;

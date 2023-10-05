@@ -29,11 +29,8 @@ public:
     QString localPlace;
     QString Tagt;
     QString VIP_Level;
-
     void writeIn(QString str);
-
 private:
-
 };
 
 #endif // USERLIST_H
