@@ -1,5 +1,6 @@
 #include"signUp.h"
 #include <QTcpSocket>
+#include <QAbstractSocket>
 #include "address.h"
 #include "widget.h"
 extern Widget* loginpage;
@@ -17,7 +18,6 @@ extern QString passwordq2Temp;
 extern QString passwordq3Temp;
 
 extern QString headImageTemp;
-
 signUp::signUp()
 {
     tcpsocket = new QTcpSocket;
@@ -40,6 +40,7 @@ void signUp::tcpServerConnect()
     tcpsocket->connectToHost(tfwaddress->serveRemoteAddress, tfwaddress->port7777);
     //有可读信息，发送readyRead()
     connect(tcpsocket,&QTcpSocket::readyRead,this,&signUp::readMessage);
+    connect(tcpsocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleError()));
 }
 
 void signUp::sendMessage(QString Msg)
@@ -54,8 +55,19 @@ void signUp::sendMessage(QString Msg)
         out << string;
         qDebug()<<string;
         tcpsocket->write(message);
+        loginpage->registerAppend("请等待...");
+
     }
 }
+
+void signUp::handleError()
+{
+  loginpage->registerAppend("注册失败 网络连接错误");
+   qDebug()<<"注册失败 网络连接错误";
+   tcpsocket->abort();
+
+}
+
 void signUp::readMessage()
 {
     QDataStream in(tcpsocket);

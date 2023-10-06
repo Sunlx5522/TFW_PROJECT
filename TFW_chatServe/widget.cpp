@@ -1266,6 +1266,7 @@ void Widget::readMessage_surface(){
         ui->display_screen->append("账号:"+accountTemp+"注册成功");
         sendMessage_surface("register|"+accountTemp);                       //发送初始化消息
     }else if(flag == "findpassword"){
+        bool find=false;
         qDebug() << "找回密码";
         ui->display_screen->append("找回密码");
         QString initAccount;
@@ -1289,8 +1290,18 @@ void Widget::readMessage_surface(){
                 ui->display_screen->append("返回信息");
                 ui->display_screen->append(initMsg);
                 sendMessage_surface(initMsg);                       //发送初始化消息
+                find=true;
                 break;
             }
+        }
+        if(find)
+        {
+            ;
+        }
+        else
+        {initMsg = "none|";
+            sendMessage_surface(initMsg);                       //发送初始化消息
+            ui->display_screen->append("未找到用户");
         }
     }
     else if(flag == "changepassword")
@@ -1347,7 +1358,7 @@ void Widget::sendMessage_surface(QString Msg){
      flag = Msg.section('|', 0, 0);
      qDebug() << "信息为：" << Msg;
      if(flag != "initSurface" && flag != "logout" &&flag != "changepassword" &&
-            flag != "findpassword" && flag != "register"){
+            flag != "findpassword" && flag != "register"&& flag != "none"){
         qDebug() << "sendMessage_surface:错误信息,不发送";
         qDebug() << "信息为:" << Msg;
         return;

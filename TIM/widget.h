@@ -111,7 +111,6 @@ public:
 
 private slots:
     void on_rememberPasssword_stateChanged(int arg1);
-    void showwidget();
     void closewidget();
 
 private:
@@ -145,7 +144,6 @@ private:
     QMovie *think;
 
    QMenu * menu;
-   QAction *m_pShowAction;
    QAction *m_pCloseAction;
    QSystemTrayIcon  * systemtrayicon;  //系统托盘
    Ui::Widget *ui;

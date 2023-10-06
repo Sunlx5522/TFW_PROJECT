@@ -1,12 +1,15 @@
 #include "findpassword.h"
 #include "ui_findpassword.h"
 #include <QParallelAnimationGroup>
+#include <QAbstractSocket>
 #include <QTcpSocket>
 #include "widget.h"
 #include "address.h"
 extern Widget* loginpage;
 extern findpassword * findpasswordpage;
 extern tfwAddress *tfwaddress;
+
+QString operation;
 findpassword::findpassword(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::findpassword)
@@ -95,12 +98,14 @@ bool findpassword::eventFilter(QObject *obj, QEvent *event)
         {
             if((!ui->accout_line->text().isEmpty())&&(!ui->passwordProtect1->text().isEmpty())&&(!ui->passwordProtect2->text().isEmpty())&&(!ui->passwordProtect3->text().isEmpty()))
             {
-
+                findp = true;
+                ui->commit_2->setText("请稍候...");
+                ui->commit_2->removeEventFilter(this);
                 myAccount = ui->accout_line->text();
                 passwordp1 = ui->passwordProtect1->text();
                 passwordp2 = ui->passwordProtect2->text();
                 passwordp3 = ui->passwordProtect3->text();
-
+                operation="findpassword";
                 tcpServerConnect();
                 sendMessage("findpassword");
             }
@@ -152,6 +157,9 @@ bool findpassword::eventFilter(QObject *obj, QEvent *event)
                 newpassword2=ui->newpassword2->text();
                 if(newpassword1==newpassword2)
                 {
+                ui->changePassword->setText("请稍候...");
+                ui->changePassword->removeEventFilter(this);
+                operation="changepassword";
                 tcpServerConnect();
                 sendMessage("changepassword");
                 }
@@ -204,6 +212,48 @@ void findpassword::tcpServerConnect()
     tcpsocket->connectToHost(tfwaddress->serveRemoteAddress, tfwaddress->port7777);
     //有可读信息，发送readyRead()
     connect(tcpsocket,&QTcpSocket::readyRead,this,&findpassword::readMessage);
+    connect(tcpsocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleError()));
+}
+
+void findpassword::handleError()
+{
+    if(operation=="findpassword")
+    {
+    int currentIndex = ui->stackedWidget->currentIndex();
+    int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
+    int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
+    int NextIndex = currentIndex + 2;
+    ui->stackedWidget->setCurrentIndex(NextIndex);
+    ui->stackedWidget->widget(currentIndex)->show();
+    QPropertyAnimation* animation1;
+    QPropertyAnimation* animation2;
+    QParallelAnimationGroup* group = new QParallelAnimationGroup;
+    animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
+    animation1->setDuration(700);
+    animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
+    animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
+    animation2 =new QPropertyAnimation(ui->stackedWidget->widget(NextIndex), "geometry");
+    animation2->setDuration(700);
+    animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
+    animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
+    group->addAnimation(animation1);
+    group->addAnimation(animation2);
+    group->start();
+    group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
+    ui->textEdit->append("找回失败");
+    ui->textEdit->append("网络链接错误");
+    ui->textEdit->append("请重试");
+    tcpsocket->abort();
+    }
+    else
+    {
+        ui->changePassword->setText("修改密码");
+        ui->changePassword->installEventFilter(this);
+        ui->display->setText("修改失败");
+        ui->newpassword1->clear();
+        ui->newpassword2->clear();
+        update();
+    }
 }
 
 void findpassword::sendMessage(QString Msg)
@@ -285,6 +335,8 @@ void findpassword::readMessage()
             group->start();
             group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
             ui->passwordback->setText(password);
+            tcpsocket->abort();
+
         }
         else
         {
@@ -314,20 +366,80 @@ void findpassword::readMessage()
             ui->textEdit->append("密码无法进行找回");
             ui->textEdit->append("请您和工作人员联系");
             ui->textEdit->append("拨打:+86 13894980185");
-            ui->textEdit->append("提供诸如所在地 注册号码 生日等信息进行解封");
+            ui->textEdit->append("提供诸如所在地 注册号码 生日等信息进行找回");
             ui->textEdit->append("为了操作安全 我们会对您的找回信用进行评估");
             ui->textEdit->append("24小时后 您将收到我们的电话");
         }
         }
-    }else if(msg[0] == "changepassword"){
+    }
+    else if(msg[0] == "changepassword"){
          account = msg[1];
          if(account==myAccount)
          {
              ui->newpassword1->clear();
              ui->newpassword2->clear();
+             ui->newpassword1->setPlaceholderText("");
+             ui->newpassword2->setPlaceholderText("");
+             ui->changePassword->setText("修改密码");
+             ui->changePassword->installEventFilter(this);
              ui->display->setText("修改成功");
              update();
          }
+
+    }
+    else
+    {
+        if(findp)
+        {
+            int currentIndex = ui->stackedWidget->currentIndex();
+                int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
+                int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
+                int NextIndex = currentIndex + 2;
+                ui->stackedWidget->setCurrentIndex(NextIndex);
+                ui->stackedWidget->widget(currentIndex)->show();
+                QPropertyAnimation* animation1;
+                QPropertyAnimation* animation2;
+                QParallelAnimationGroup* group = new QParallelAnimationGroup;
+                animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
+                animation1->setDuration(700);
+                animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
+                animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
+                animation2 =new QPropertyAnimation(ui->stackedWidget->widget(NextIndex), "geometry");
+                animation2->setDuration(700);
+                animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
+                animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
+                group->addAnimation(animation1);
+                group->addAnimation(animation2);
+                group->start();
+                group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
+                ui->passwordback->setText(password);
+                ui->textEdit->append("用户名不存在");
+                ui->textEdit->append("请重试");
+        }
     }
     qDebug() << "FindPassword::readMessage:读取完成";
 }
+/*int currentIndex = ui->stackedWidget->currentIndex();
+    int windowWidth = ui->stackedWidget->widget(currentIndex)->width();
+    int windowHieght = ui->stackedWidget->widget(currentIndex)->height();
+    int NextIndex = currentIndex + 2;
+    ui->stackedWidget->setCurrentIndex(NextIndex);
+    ui->stackedWidget->widget(currentIndex)->show();
+    QPropertyAnimation* animation1;
+    QPropertyAnimation* animation2;
+    QParallelAnimationGroup* group = new QParallelAnimationGroup;
+    animation1 = new QPropertyAnimation(ui->stackedWidget->widget(currentIndex),"geometry");
+    animation1->setDuration(700);
+    animation1->setStartValue(QRect(0, 0, windowWidth, windowHieght));
+    animation1->setEndValue(QRect(-windowWidth, 0, windowWidth, windowHieght));
+    animation2 =new QPropertyAnimation(ui->stackedWidget->widget(NextIndex), "geometry");
+    animation2->setDuration(700);
+    animation2->setStartValue(QRect(windowWidth, 0, windowWidth, windowHieght));
+    animation2->setEndValue(QRect(0, 0, windowWidth, windowHieght));
+    group->addAnimation(animation1);
+    group->addAnimation(animation2);
+    group->start();
+    group->setProperty("widget", QVariant::fromValue(ui->stackedWidget->widget(currentIndex)));
+    ui->passwordback->setText(password);
+    ui->textEdit->append("用户名不存在");
+    ui->textEdit->append("请重试");*/

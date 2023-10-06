@@ -6,7 +6,7 @@
 #include <QCloseEvent>
 #include <QRegExp>
 #include <QValidator>
-
+#include <QObject>
 namespace Ui {
 class findpassword;
 }
@@ -19,10 +19,9 @@ public:
     explicit findpassword(QWidget *parent = nullptr);
     ~findpassword();
     bool eventFilter(QObject *obj, QEvent *event);
-
     QRegExp rx = QRegExp("[\40]*");
     QRegExpValidator* validator = new QRegExpValidator(rx);
-
+    bool findp=false;
 private:
     Ui::findpassword *ui;
     //network
@@ -39,6 +38,7 @@ private slots:
     void sendMessage(QString Msg);              //向服务器发送信息
     void readMessage();                         //读取服务器信息
     void tcpServerConnect();                    //连接服务器
+    void handleError();
 };
 
 #endif // FINDPASSWORD_H

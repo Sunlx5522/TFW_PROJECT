@@ -608,13 +608,11 @@ Widget::Widget(QWidget *parent)
         //显示图标
 
     menu = new QMenu(this);
-    m_pShowAction = new QAction("打开主界面");
+
     m_pCloseAction = new QAction("退出");
-    menu->addAction(m_pShowAction);
-    menu->addSeparator();
+
     menu->addAction(m_pCloseAction);
     systemtrayicon->setContextMenu(menu);
-    connect(m_pShowAction,SIGNAL(triggered(bool)),this,SLOT(showwidget()));
     connect(m_pCloseAction,SIGNAL(triggered(bool)),this,SLOT(closewidget()));
 
 
@@ -645,11 +643,6 @@ void Widget::setplacehodetextRed(QLineEdit *a)
     QPalette palette = a->palette();
     palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#191970");
     a->setPalette(palette);
-}
-
-void Widget::showwidget()
-{
-    this->show();
 }
 
 void Widget::closewidget()
@@ -1490,6 +1483,7 @@ QString passwordq3Temp;*/
     {
         if(event->type() == QEvent::MouseButtonRelease){
             ui->registerButton->setText("注册");
+            ui->textEdit->clear();
             loginFlag=true;
             ui->nameLineEdit->setPlaceholderText("昵称");
             ui->signUpPasswordLineEdit1->setPlaceholderText("密码");
