@@ -34,7 +34,7 @@ public:
     Widget(QWidget *parent = nullptr);
 
     ~Widget();
-
+    QGraphicsBlurEffect *blureffect1;
 
     void mousePressEvent(QMouseEvent *event) override                                 //实现窗口拖动
     {
@@ -87,7 +87,8 @@ public:
     QString myAccount;
     QString myPassword;
     void shouError();
-
+    void duckshow();
+    void chushihua();
     void setplacehodetext(QLineEdit*);
     void setplacehodetextRed(QLineEdit*);
     void registerAppend(QString);
@@ -111,7 +112,7 @@ public:
 
 private slots:
     void on_rememberPasssword_stateChanged(int arg1);
-    void closewidget();
+
 
 private:
 
@@ -131,6 +132,7 @@ private:
     QPropertyAnimation *animation2;                                                   //拖动动画
     QPropertyAnimation *animation3;                                                   //最小化动画
     QPropertyAnimation *animation4;                                                   //关闭动画
+    QPropertyAnimation *animation5;                                                   //关闭动画
 
 
     QPoint lastDragPos;                                                               //记录上次拖拽的位置
@@ -139,13 +141,11 @@ private:
     QMovie *startMovie;                                                               //开头gif播放
 
 
-    QGraphicsBlurEffect *blureffect1;
+
 
     QMovie *think;
 
-   QMenu * menu;
-   QAction *m_pCloseAction;
-   QSystemTrayIcon  * systemtrayicon;  //系统托盘
+
    Ui::Widget *ui;
 
 

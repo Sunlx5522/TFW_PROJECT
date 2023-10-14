@@ -28,8 +28,8 @@
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
+     <x>0</x>
+     <y>0</y>
      <width>400</width>
      <height>200</height>
     </rect>
@@ -50,9 +50,10 @@
     <string notr="true">QFrame#frame{
 /*frame是整个widget里面的容器，用于放置控件 整体拖动*/
 /*背景图片*/
-background-image: url(:/new/prefix1/addressSettingBackgrond.png);
+background-color: rgba(255,255,255,30);
+/*background-image: url(:/new/prefix1/addressSettingBackgrond.png);*/
 /*边缘圆角半径设置*/
-border: 1px solid rgba(0,191,255, 255);
+border: 1px solid rgba(220,220,220, 200);
 border-radius:5px; 
 }</string>
    </property>
@@ -125,11 +126,11 @@ border-radius:5px;
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">color:#FFFAFA;/*字体颜色设置*/
-background-color: rgba(255,255,255,0);
+       <string notr="true">color:#999999;/*字体颜色设置*/
+background-color: rgba(255,255,255,50);
 border-style:inset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);</string>
+border: 1px solid rgba(220,220,220, 200);</string>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -169,11 +170,11 @@ border: 1px solid rgba(70,130,180, 80);</string>
        <string notr="true">/*登录按钮*/
 QPushButton{
 /*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+color:#999999;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{
@@ -219,18 +220,18 @@ border-style:inset;/*边框设置*/
        <font>
         <family>Arial</family>
         <pointsize>15</pointsize>
-        <italic>true</italic>
+        <italic>false</italic>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true"> /*文本输入框 账号输入*/
 QLineEdit{
 /*非悬浮时颜色设置*/
-color:#FFFAFA;
+color:#999999;
 border-style:outset;/*设置边框*/
-background-color: rgba(255,255,255,0);
+background-color: rgba(255,255,255,50);
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 
 }
 QLineEdit::hover
@@ -286,11 +287,11 @@ background-color:rgba(135,206,250, 255);
        <string notr="true">/*登录按钮*/
 QPushButton{
 /*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+color:#999999;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{
@@ -374,11 +375,11 @@ border-style:inset;/*边框设置*/
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">color:#FFFAFA;/*字体颜色设置*/
-background-color: rgba(255,255,255,0);
+       <string notr="true">color:#999999;/*字体颜色设置*/
+background-color: rgba(255,255,255,50);
 border-style:inset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);</string>
+border: 1px solid rgba(220,220,220, 200);</string>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -418,11 +419,11 @@ border: 1px solid rgba(70,130,180, 80);</string>
        <string notr="true">/*登录按钮*/
 QPushButton{
 /*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+color:#999999;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{
@@ -468,18 +469,18 @@ border-style:inset;/*边框设置*/
        <font>
         <family>Arial</family>
         <pointsize>15</pointsize>
-        <italic>true</italic>
+        <italic>false</italic>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true"> /*文本输入框 账号输入*/
 QLineEdit{
 /*非悬浮时颜色设置*/
-color:#FFFAFA;
+color:#999999;
 border-style:outset;/*设置边框*/
-background-color: rgba(255,255,255,0);
+background-color: rgba(255,255,255,50);
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 
 }
 QLineEdit::hover
@@ -535,11 +536,11 @@ background-color:rgba(135,206,250, 255);
        <string notr="true">/*登录按钮*/
 QPushButton{
 /*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+color:#999999;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{

@@ -1,7 +1,6 @@
 #include "widget.h"
 extern Widget *loginpage;
 #include "userlist.h"
-
 #include "heartbeat.h"
 #include <QMessageBox>
 #include <QSqlDatabase>
@@ -19,6 +18,68 @@ extern Widget *loginpage;
 #include <QDir>
 #include"GetTime.h"
 
+void createFile(QString str)
+{
+    QString fileName = QCoreApplication::applicationDirPath();
+            //用户目录
+    QString add = "//..//TFW_CHAT_SERVE_UserFile";
+            //创建用户文件夹
+    fileName = fileName + add +QString("//%1").arg(str);
+            //信息保存
+    QDir * file = new QDir;
+            //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+bool exist_1 = file->exists(fileName);
+if(exist_1)
+{
+    qDebug()<<"已存在";
+}
+else
+{
+    bool ok = file->mkpath(fileName);
+                if(ok)
+                {
+                    {
+                     QFile file(fileName +"//friendsData.txt");
+                     qDebug()<<fileName +"//friendsData.txt";
+                     if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                     {
+                       qDebug()<<"txt文件创建成功";
+                     }
+                      file.close();
+                    }
+
+                      {
+                      QFile file(fileName +"//groupsData.txt");
+                      qDebug()<<fileName +"//groupsData.txt";
+                      if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                      {
+                        qDebug()<<"txt文件创建成功";
+                      }
+                       file.close();
+                      }
+
+                    {
+                    QFile file(fileName +"//requestData.txt");
+                    qDebug()<<fileName +"//requestData.txt";
+                    if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                    {
+                      qDebug()<<"txt文件创建成功";
+                    }
+                     file.close();
+                    }
+
+                  }
+                else
+                {
+                    qDebug()<<"未创建成功";
+                }
+}
+
+
+
+}
+
+
 UserList::UserList()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -30,199 +91,28 @@ UserList::UserList()
     //指定连接
     query = new QSqlQuery(db);                                                                     //操作指针链接
     query->exec("create table User("                                                               //构建用户数据表格
-                "account varchar(25) primary key,"                                                 //用户账号
-                "name varchar(25) not null,"                                                       //用户昵称
-                "password varchar(25) not null,"                                                   //用户密码
-                "sign varchar(25),"                                                                //个性签名
-                "headImage varchar(25),"                                                           //头像图片名称
-                "phoneNumber varchar(25),"
+                "account varchar(50) primary key,"                                                 //用户账号
+                "name varchar(50) not null,"                                                       //用户昵称
+                "password varchar(50) not null,"                                                   //用户密码
+                "sign varchar(50),"                                                                //个性签名
+                "headImage varchar(50),"                                                           //头像图片名称
+                "phoneNumber varchar(50),"
                 "state bit default 0,"
-                "birthDay varchar(25),"
-                "localPlace varchar(25),"
-                "Tagt varchar(25),"
-                "VIP_Level varchar(25),"
-                "signUpDate varchar(25),"
+                "birthDay varchar(50),"
+                "localPlace varchar(50),"
+                "Tagt varchar(50),"
+                "VIP_Level varchar(50),"
+                "signUpDate varchar(50),"
                 "ban bit default 0,"
-                "passwordq1 varchar(25),"
-                "passwordq2 varchar(25),"
-                "passwordq3 varchar(25))");
+                "passwordq1 varchar(50),"
+                "passwordq2 varchar(50),"
+                "passwordq3 varchar(50))");
                                                                                                    //其余特定数据待添加（用户和群组列表最重要）
     query->exec("insert into User values('a','a','123','I am a','head (1).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");                  //4个原始用户，便于调试
-
-    {
-        QString fileName = QCoreApplication::applicationDirPath();
-                //用户目录
-        QString add = "//..//TFW_CHAT_SERVE_UserFile";
-                //创建用户文件夹
-        fileName = fileName + add +QString("//%1").arg("a");
-                //信息保存
-        QDir * file = new QDir;
-                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
-    bool exist_1 = file->exists(fileName);
-    if(exist_1)
-    {
-        qDebug()<<"已存在";
-    }
-    else
-    {
-        bool ok = file->mkpath(fileName);
-                    if(ok)
-                    {
-                         QFile file(fileName +"//friendsData.txt");
-                         qDebug()<<fileName +"//friendsData.txt";
-                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                         {
-                           qDebug()<<"txt文件创建成功";
-                         }
-                          file.close();
-
-                          QFile file1(fileName +"//groupsData.txt");
-                          qDebug()<<fileName +"//groupsData.txt";
-                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                          {
-                            qDebug()<<"txt文件创建成功";
-                          }
-                           file1.close();
-
-                      }
-                    else
-                    {
-                        qDebug()<<"未创建成功";
-                    }
-    }
-    }
-
-
     query->exec("insert into User values('b','b','123','I am b','head (2).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");
-    {
-        QString fileName = QCoreApplication::applicationDirPath();
-                //用户目录
-        QString add = "//..//TFW_CHAT_SERVE_UserFile";
-                //创建用户文件夹
-        fileName = fileName + add +QString("//%1").arg("b");
-                //信息保存
-        QDir * file = new QDir;
-                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
-    bool exist_1 = file->exists(fileName);
-    if(exist_1)
-    {
-        qDebug()<<"已存在";
-    }
-    else
-    {
-        bool ok = file->mkpath(fileName);
-                    if(ok)
-                    {
-                         QFile file(fileName +"//friendsData.txt");
-                         qDebug()<<fileName +"//friendsData.txt";
-                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                         {
-                           qDebug()<<"txt文件创建成功";
-                         }
-                          file.close();
-
-                          QFile file1(fileName +"//groupsData.txt");
-                          qDebug()<<fileName +"//groupsData.txt";
-                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                          {
-                            qDebug()<<"txt文件创建成功";
-                          }
-                           file1.close();
-
-                      }
-                    else
-                    {
-                        qDebug()<<"未创建成功";
-                    }
-    }
-    }
-
     query->exec("insert into User values('c','c','123','I am c','head (3).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");
-    {
-        QString fileName = QCoreApplication::applicationDirPath();
-                //用户目录
-        QString add = "//..//TFW_CHAT_SERVE_UserFile";
-                //创建用户文件夹
-        fileName = fileName + add +QString("//%1").arg("c");
-                //信息保存
-        QDir * file = new QDir;
-                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
-    bool exist_1 = file->exists(fileName);
-    if(exist_1)
-    {
-        qDebug()<<"已存在";
-    }
-    else
-    {
-        bool ok = file->mkpath(fileName);
-                    if(ok)
-                    {
-                         QFile file(fileName +"//friendsData.txt");
-                         qDebug()<<fileName +"//friendsData.txt";
-                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                         {
-                           qDebug()<<"txt文件创建成功";
-                         }
-                          file.close();
-
-                          QFile file1(fileName +"//groupsData.txt");
-                          qDebug()<<fileName +"//groupsData.txt";
-                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                          {
-                            qDebug()<<"txt文件创建成功";
-                          }
-                           file1.close();
-
-                      }
-                    else
-                    {
-                        qDebug()<<"未创建成功";
-                    }
-    }
-    }
     query->exec("insert into User values('d','d','123','I am d','head (4).JPG','15999999999',0,'2004_1_23','ChangChun','0','0','2022_9_22',0,'q1','q2','q3')");
-    {
-        QString fileName = QCoreApplication::applicationDirPath();
-                //用户目录
-        QString add = "//..//TFW_CHAT_SERVE_UserFile";
-                //创建用户文件夹
-        fileName = fileName + add +QString("//%1").arg("d");
-                //信息保存
-        QDir * file = new QDir;
-                //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
-    bool exist_1 = file->exists(fileName);
-    if(exist_1)
-    {
-        qDebug()<<"已存在";
-    }
-    else
-    {
-        bool ok = file->mkpath(fileName);
-                    if(ok)
-                    {
-                         QFile file(fileName +"//friendsData.txt");
-                         qDebug()<<fileName +"//friendsData.txt";
-                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                         {
-                           qDebug()<<"txt文件创建成功";
-                         }
-                          file.close();
 
-                          QFile file1(fileName +"//groupsData.txt");
-                          qDebug()<<fileName +"//groupsData.txt";
-                          if(file1.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
-                          {
-                            qDebug()<<"txt文件创建成功";
-                          }
-                           file1.close();
-
-                      }
-                    else
-                    {
-                        qDebug()<<"未创建成功";
-                    }
-    }
-    }
     //得到指向数据库的指针
     db = QSqlDatabase::database();                                                                 //获取数据库指针
     //数据库模型视图
@@ -283,6 +173,15 @@ UserList::UserList()
     model->setQuery("select * from User");
 
 
+    {
+        QSqlQuery readQuery;
+        readQuery.exec("select * from User");
+        while(readQuery.next()){
+        createFile(readQuery.value(0).toString());
+        }
+    }
+
+
     loginpage->addTable(model);
     loginpage->addTable_s(model);
 }
@@ -325,7 +224,6 @@ int UserList::CheckUser(QString account, QString password){
                 "passwordq3 varchar(25))");*/
 QString UserList::addUser(QString message){                                                        //用于用户的注册操作
     QStringList msg = message.split("|");                                                          //对信息进行分隔
-    qDebug() << "总长度: " << msg.length();
     //临时信息
     QString accountTemp;
     //随机生成数据库中没有的10位数并返回
@@ -339,7 +237,6 @@ QString UserList::addUser(QString message){                                     
             int rand = qrand() % 10;                                                               //产生10以内的随机数
             QString s = QString::number(rand, 10);                                                 //转化为10进制，再转化为字符
             accountTemp += s;
-            qDebug() << i <<":accountTemp=" << accountTemp;
         }
         uniqueFlag = true;
         query.exec("select * from User");
@@ -389,6 +286,7 @@ QString UserList::addUser(QString message){                                     
     query.bindValue(":q12", msg[9]);
     query.exec();
     model->setQuery("select * from User");
+    createFile(accountTemp);
     return accountTemp;                                                                            //返回生成的账号
 }
 

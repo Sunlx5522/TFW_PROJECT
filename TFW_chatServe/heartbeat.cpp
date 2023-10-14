@@ -8,7 +8,7 @@ HeartBeat::HeartBeat(QObject* parent) :
     m_manager(new QNetworkAccessManager(this))
 {
     connect(&m_timer, &QTimer::timeout, this, &HeartBeat::checkNetworkStatus);
-    m_timer.start(1000);  // 每秒检查一次
+    m_timer.start(20);  // 每秒检查100次
 }
 
 void HeartBeat::checkNetworkStatus()
@@ -18,12 +18,18 @@ void HeartBeat::checkNetworkStatus()
         if (reply->error() == QNetworkReply::NoError) {
             int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             if (statusCode == 200) {
+                if(loginpage->listenFlag_news)
+                {
+                  loginpage->duxinxi();
+                }
                  loginpage->networkAbleFlag=true;
             } else {
                  loginpage->networkAbleFlag=false;
+
             }
         } else {
             loginpage->networkAbleFlag=false;
+
         }
         reply->deleteLater();
     });

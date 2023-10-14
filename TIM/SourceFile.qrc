@@ -1,19 +1,14 @@
 <RCC>
     <qresource prefix="/new/prefix1">
         <file>img2.png</file>
-        <file>user.png</file>
         <file>duck1.gif</file>
         <file>loginBackgrounf.png</file>
-        <file>qrCode.png</file>
         <file>qrCode1.png</file>
         <file>qrCode2.png</file>
-        <file>close.png</file>
         <file>close1.png</file>
         <file>close2.png</file>
-        <file>mim.png</file>
         <file>mim1.png</file>
         <file>mim2.png</file>
-        <file>ssetting.png</file>
         <file>ssetting1.png</file>
         <file>ssetting2.png</file>
         <file>duck2.gif</file>
@@ -35,6 +30,33 @@
         <file>right.png</file>
         <file>right1.png</file>
         <file>right2.png</file>
+        <file>haoyou.png</file>
+        <file>chat.png</file>
+        <file>dongtai.png</file>
+        <file>groups.png</file>
+        <file>exit.png</file>
+        <file>welcomePage.png</file>
+        <file>more.png</file>
+        <file>search1.png</file>
+        <file>search2.png</file>
+        <file>close.png</file>
+        <file>mim.png</file>
+        <file>ssetting.png</file>
+        <file>qrCode.png</file>
+        <file>user.png</file>
+        <file>biaoqing.png</file>
+        <file>wenjian.png</file>
+        <file>lishi.png</file>
+        <file>search.png</file>
+        <file>moreOperation.png</file>
+        <file>telegramBackground.png</file>
+        <file>telegramBackground_s.png</file>
+        <file>dizhi.png</file>
+        <file>yonghu2.png</file>
+        <file>riqi.png</file>
+        <file>id.png</file>
+        <file>addfriend.png</file>
+        <file>newBk.png</file>
     </qresource>
     <qresource prefix="/new/prefix2">
         <file>image/head (1).JPG</file>
@@ -69,5 +91,26 @@
         <file>image/head (30).JPG</file>
         <file>image/head (31).JPG</file>
         <file>image/head (32).JPG</file>
+        <file>image/head (33).JPG</file>
+        <file>image/head (34).JPG</file>
+        <file>image/head (35).JPG</file>
+        <file>image/head (36).JPG</file>
+        <file>image/head (37).JPG</file>
+        <file>image/head (38).JPG</file>
+        <file>image/head (39).JPG</file>
+        <file>image/head (40).JPG</file>
+        <file>image/head (41).JPG</file>
+        <file>image/head (42).JPG</file>
+        <file>image/head (43).JPG</file>
+        <file>image/head (44).JPG</file>
+        <file>image/head (45).JPG</file>
+        <file>image/head (46).JPG</file>
+        <file>image/head (47).JPG</file>
+        <file>image/head (48).JPG</file>
+        <file>image/head (49).JPG</file>
+        <file>image/head (50).JPG</file>
+        <file>image/head (51).JPG</file>
+        <file>image/head (52).JPG</file>
     </qresource>
+    <qresource prefix="/new/prefix3"/>
 </RCC>

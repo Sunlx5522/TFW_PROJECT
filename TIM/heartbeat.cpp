@@ -1,6 +1,8 @@
 #include "heartbeat.h"
 #include"address.h"
+#include "mainwindow.h"
 #include"widget.h"
+
 extern Widget* loginpage;
 extern tfwAddress* tfwaddress;
 HeartBeat::HeartBeat(QObject* parent) :
@@ -18,11 +20,14 @@ void HeartBeat::checkNetworkStatus()
             int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             if (statusCode == 200) {
                  loginpage->networkAbleFlag=true;
+
             } else {
                  loginpage->networkAbleFlag=false;
+
             }
         } else {
             loginpage->networkAbleFlag=false;
+
         }
         reply->deleteLater();
         loginpage->networkStationUpdate();

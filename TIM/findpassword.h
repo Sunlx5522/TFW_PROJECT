@@ -22,6 +22,7 @@ public:
     QRegExp rx = QRegExp("[\40]*");
     QRegExpValidator* validator = new QRegExpValidator(rx);
     bool findp=false;
+    QString flag;
 private:
     Ui::findpassword *ui;
     //network

@@ -16,10 +16,12 @@ SOURCES += \ #源文件
     MD5.cpp \ #MD5加密
     address.cpp \ #网络地址字符串
     addresssetting.cpp \ #网络地址字符串的设置
+    applicationConnectTimer.cpp \
     findpassword.cpp \ #找回密码
     heartbeat.cpp \ #心跳 间隔一定的时间执行特定的代码
     initsurface.cpp \ #初始化服务
     main.cpp \ #主函数
+    mainwindow.cpp \
     qrcode.cpp \ #二维码
     signUp.cpp \ #注册
     userlist.cpp \ #用户列表（好友列表以及群组列表）
@@ -29,9 +31,11 @@ HEADERS += \ #头文件
     MD5.h \ #MD5加密
     address.h \ #网络地址字符串
     addresssetting.h \ #网络地址字符串的设置
+    applicationConnectTimer.h \
     findpassword.h \ #找回密码
     heartbeat.h \ #心跳 间隔一定的时间执行特定的代码
     initsurface.h \ #初始化服务
+    mainwindow.h \
     qrcode.h \ #二维码
     signUp.h \ #注册
     userlist.h \ #用户列表（好友列表以及群组列表）
@@ -39,6 +43,7 @@ HEADERS += \ #头文件
 FORMS += \ #ui文件
     addresssetting.ui \ #地址设置ui
     findpassword.ui \ #找回密码ui
+    mainwindow.ui \
     qrcode.ui \ #二维码显示ui
     widget.ui #登录界面ui
 # Default rules for deployment.           default规则

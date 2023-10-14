@@ -38,9 +38,9 @@
     <string notr="true">QFrame#frame{
 /*frame是整个widget里面的容器，用于放置控件 整体拖动*/
 /*背景图片*/
-background-image: url(:/new/prefix1/loginBackgrounf.png);
+background-image: url(:/new/prefix1/newBk.png);
+border: 1px solid rgba(220,220,220, 200);
 /*边缘圆角半径设置*/
-border: 1px solid rgba(0,191,255, 255);
 border-radius:5px; 
 }</string>
    </property>
@@ -81,7 +81,7 @@ border-radius:5px;
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../TIM/SourceFile.qrc">:/new/prefix1/mim.png</pixmap>
+        <pixmap resource="Resource.qrc">:/new/prefix1/mim.png</pixmap>
        </property>
       </widget>
      </item>
@@ -106,7 +106,7 @@ border-radius:5px;
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../TIM/SourceFile.qrc">:/new/prefix1/close.png</pixmap>
+        <pixmap resource="Resource.qrc">:/new/prefix1/close.png</pixmap>
        </property>
       </widget>
      </item>
@@ -164,7 +164,8 @@ border-radius:5px;
          <property name="styleSheet">
           <string notr="true">/*放置gif 的widget窗口*/
 QWidget#widget{
-background-image: url(:/new/prefix1/introduction.png);/*设置背景图片*/
+/*background-image: url(:/new/prefix1/introduction.png);/*设置背景图片*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/ 
 border-radius:10px;/*设置圆角半径*/
 border-style:outset;/*设置边框*/
 border: 1px solid rgba(220,220,220, 200);
@@ -198,7 +199,7 @@ border: 1px solid rgba(220,220,220, 200);
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../TIM/SourceFile.qrc">:/new/prefix1/user.png</pixmap>
+              <pixmap resource="Resource.qrc">:/new/prefix1/user.png</pixmap>
              </property>
             </widget>
            </item>
@@ -253,9 +254,9 @@ QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
 border-style:outset;/*设置边框*/
-background-color: rgba(255,255,255,0);
+background-color: rgba(255,255,255,50);
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 
 }
 QLineEdit::hover
@@ -314,9 +315,9 @@ QLineEdit{
 /*非悬浮时颜色设置*/
 color:#FFFAFA;
 border-style:outset;/*设置边框*/
-background-color: rgba(255,255,255,0);
+background-color: rgba(255,255,255,50);
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 
 }
 QLineEdit::hover
@@ -380,10 +381,10 @@ background-color:rgba(135,206,250, 255);
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{
@@ -424,73 +425,6 @@ border-style:inset;/*边框设置*/
      </widget>
     </widget>
     <widget class="QWidget" name="page_2">
-     <widget class="QWidget" name="widget_3" native="true">
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>30</y>
-        <width>601</width>
-        <height>361</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">/*放置gif 的widget窗口*/
-QWidget#widget_3{
-background-image: url(:/new/prefix1/w2.png);/*设置背景图片*/
-border-radius:2px;/*设置圆角半径*/
-border-style:outset;/*设置边框*/
-border: 1px solid rgba(220,220,220, 200);
-}</string>
-      </property>
-      <widget class="QTextEdit" name="display_screen">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>581</width>
-         <height>341</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>楷体</family>
-         <pointsize>11</pointsize>
-         <italic>false</italic>
-        </font>
-       </property>
-       <property name="cursor" stdset="0">
-        <cursorShape>ArrowCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color:#FFFAFA;/*字体颜色设置*/
-background-color: rgba(255,255,255,0);
-border-style:inset;/*背景颜色设置*/
-border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);</string>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </widget>
      <widget class="QWidget" name="horizontalLayoutWidget_2">
       <property name="geometry">
        <rect>
@@ -529,10 +463,10 @@ border: 1px solid rgba(70,130,180, 80);</string>
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{
@@ -587,411 +521,46 @@ border-style:inset;/*边框设置*/
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">color:#FFFAFA;/*字体颜色设置*/
-background-color: rgba(255,255,255,0);
+          <string notr="true">
+
+/* 基于天蓝色背景的滚轮样式 */
+
+QTextEdit#message_textEdit{
+    /* 其他 QTextEdit 相关的样式可以在这里设置 */
+color:#FFFAFA;/*字体颜色设置*/
+background-color: rgba(255,255,255,50);
 border-style:inset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80);</string>
+}
+
+QTextEdit QScrollBar:vertical {
+    border: none;                   /* 移除边框 */
+    background: transparent;       /* 设置滚动条背景为透明 */
+    width: 10px;                   /* 设置滚动条宽度为10像素 */
+    margin: 0px;                   /* 移除边距 */
+}
+
+QTextEdit QScrollBar::handle:vertical {
+    background: skyblue;           /* 设置滚轮（handle）的颜色为天蓝色 */
+    min-height: 20px;              /* 设置滚轮的最小高度为20像素 */
+}
+
+QTextEdit QScrollBar::add-line:vertical, 
+QTextEdit QScrollBar::sub-line:vertical,
+QTextEdit QScrollBar::add-page:vertical,
+QTextEdit QScrollBar::sub-page:vertical {
+    height: 0px;                   /* 将上下按钮及其间的区域设置为0高度，从而隐藏它们 */
+    subcontrol-origin: margin;     
+    subcontrol-position: top right;  
+}
+
+/* 如果你还希望定制水平滚动条，你可以按照类似的方式为 QScrollBar:horizontal 和相关的子控件设置样式。 */
+
+</string>
          </property>
         </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="widget_2" native="true">
-      <property name="geometry">
-       <rect>
-        <x>9</x>
-        <y>30</y>
-        <width>141</width>
-        <height>360</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>130</width>
-        <height>360</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">/*放置gif 的widget窗口*/
-QWidget#widget_2{
-background-image: url(:/new/prefix1/w1.png);/*设置背景图片*/
-border-radius:2px;/*设置圆角半径*/
-border-style:outset;/*设置边框*/
-border: 1px solid rgba(220,220,220, 200);
-}</string>
-      </property>
-      <widget class="QWidget" name="verticalLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>0</y>
-         <width>122</width>
-         <height>361</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <spacer name="verticalSpacer_8">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_11">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>3</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="startButton">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>16</pointsize>
-           </font>
-          </property>
-          <property name="cursor">
-           <cursorShape>PointingHandCursor</cursorShape>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">/*登录按钮*/
-QPushButton{
-/*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
-border-style:outset;/*背景颜色设置*/
-border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
-}
-
-QPushButton:hover{
-/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
-background-color:rgba(135,206,250, 255);
-border-style:outset;/*边框设置*/
-}
-QPushButton:pressed{
-/*按压时设置*/
-background-color:rgba(173,216,230, 255);
-/*背景颜色设置*/
-border-style:inset;/*边框设置*/
-}</string>
-          </property>
-          <property name="text">
-           <string>开启服务</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="close_button">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>16</pointsize>
-           </font>
-          </property>
-          <property name="cursor">
-           <cursorShape>PointingHandCursor</cursorShape>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">/*登录按钮*/
-QPushButton{
-/*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
-border-style:outset;/*背景颜色设置*/
-border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
-}
-
-QPushButton:hover{
-/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
-background-color:rgba(135,206,250, 255);
-border-style:outset;/*边框设置*/
-}
-QPushButton:pressed{
-/*按压时设置*/
-background-color:rgba(173,216,230, 255);
-/*背景颜色设置*/
-border-style:inset;/*边框设置*/
-}</string>
-          </property>
-          <property name="text">
-           <string>关闭服务</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_6">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="clear_button">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>16</pointsize>
-           </font>
-          </property>
-          <property name="cursor">
-           <cursorShape>PointingHandCursor</cursorShape>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">/*登录按钮*/
-QPushButton{
-/*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
-border-style:outset;/*背景颜色设置*/
-border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
-}
-
-QPushButton:hover{
-/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
-background-color:rgba(135,206,250, 255);
-border-style:outset;/*边框设置*/
-}
-QPushButton:pressed{
-/*按压时设置*/
-background-color:rgba(173,216,230, 255);
-/*背景颜色设置*/
-border-style:inset;/*边框设置*/
-}</string>
-          </property>
-          <property name="text">
-           <string>清空屏幕</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_10">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="userView">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>16</pointsize>
-           </font>
-          </property>
-          <property name="cursor">
-           <cursorShape>PointingHandCursor</cursorShape>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">/*登录按钮*/
-QPushButton{
-/*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
-border-style:outset;/*背景颜色设置*/
-border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
-}
-
-QPushButton:hover{
-/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
-background-color:rgba(135,206,250, 255);
-border-style:outset;/*边框设置*/
-}
-QPushButton:pressed{
-/*按压时设置*/
-background-color:rgba(173,216,230, 255);
-/*背景颜色设置*/
-border-style:inset;/*边框设置*/
-}</string>
-          </property>
-          <property name="text">
-           <string>查看用户</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_7">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>45</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>16</pointsize>
-           </font>
-          </property>
-          <property name="cursor">
-           <cursorShape>PointingHandCursor</cursorShape>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">/*登录按钮*/
-QPushButton{
-/*静置时设置*/
-color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
-border-style:outset;/*背景颜色设置*/
-border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
-}
-
-QPushButton:hover{
-/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
-background-color:rgba(135,206,250, 255);
-border-style:outset;/*边框设置*/
-}
-QPushButton:pressed{
-/*按压时设置*/
-background-color:rgba(173,216,230, 255);
-/*背景颜色设置*/
-border-style:inset;/*边框设置*/
-}</string>
-          </property>
-          <property name="text">
-           <string>重置状态</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_12">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>3</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_9">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
      </widget>
      <widget class="QLabel" name="tip_Label">
       <property name="geometry">
@@ -1015,6 +584,456 @@ color:#FFE4E1;/*设置字体颜色 以备不时之需*/</string>
       </property>
       <property name="text">
        <string>服务器状态：关闭</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>0</y>
+        <width>122</width>
+        <height>381</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <spacer name="verticalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_11">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>3</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="startButton">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">/*登录按钮*/
+QPushButton{
+/*静置时设置*/
+color:#FFFAFA;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(220,220,220, 200);
+}
+
+QPushButton:hover{
+/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
+background-color:rgba(135,206,250, 255);
+border-style:outset;/*边框设置*/
+}
+QPushButton:pressed{
+/*按压时设置*/
+background-color:rgba(173,216,230, 255);
+/*背景颜色设置*/
+border-style:inset;/*边框设置*/
+}</string>
+         </property>
+         <property name="text">
+          <string>开启服务</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="close_button">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">/*登录按钮*/
+QPushButton{
+/*静置时设置*/
+color:#FFFAFA;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(220,220,220, 200);
+}
+
+QPushButton:hover{
+/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
+background-color:rgba(135,206,250, 255);
+border-style:outset;/*边框设置*/
+}
+QPushButton:pressed{
+/*按压时设置*/
+background-color:rgba(173,216,230, 255);
+/*背景颜色设置*/
+border-style:inset;/*边框设置*/
+}</string>
+         </property>
+         <property name="text">
+          <string>关闭服务</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clear_button">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">/*登录按钮*/
+QPushButton{
+/*静置时设置*/
+color:#FFFAFA;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(220,220,220, 200);
+}
+
+QPushButton:hover{
+/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
+background-color:rgba(135,206,250, 255);
+border-style:outset;/*边框设置*/
+}
+QPushButton:pressed{
+/*按压时设置*/
+background-color:rgba(173,216,230, 255);
+/*背景颜色设置*/
+border-style:inset;/*边框设置*/
+}</string>
+         </property>
+         <property name="text">
+          <string>清空屏幕</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="userView">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">/*登录按钮*/
+QPushButton{
+/*静置时设置*/
+color:#FFFAFA;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(220,220,220, 200);
+}
+
+QPushButton:hover{
+/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
+background-color:rgba(135,206,250, 255);
+border-style:outset;/*边框设置*/
+}
+QPushButton:pressed{
+/*按压时设置*/
+background-color:rgba(173,216,230, 255);
+/*背景颜色设置*/
+border-style:inset;/*边框设置*/
+}</string>
+         </property>
+         <property name="text">
+          <string>查看用户</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">/*登录按钮*/
+QPushButton{
+/*静置时设置*/
+color:#FFFAFA;/*字体颜色设置*/
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
+border-style:outset;/*背景颜色设置*/
+border-radius:2px;/*边框圆角半径设置*/
+border: 1px solid rgba(220,220,220, 200);
+}
+
+QPushButton:hover{
+/*悬停时设置*/ /*由于与内部代码有冲突 已弃用*/
+background-color:rgba(135,206,250, 255);
+border-style:outset;/*边框设置*/
+}
+QPushButton:pressed{
+/*按压时设置*/
+background-color:rgba(173,216,230, 255);
+/*背景颜色设置*/
+border-style:inset;/*边框设置*/
+}</string>
+         </property>
+         <property name="text">
+          <string>重置状态</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_12">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>3</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTextEdit" name="display_screen">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>10</y>
+        <width>601</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>楷体</family>
+        <pointsize>11</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="cursor" stdset="0">
+       <cursorShape>ArrowCursor</cursorShape>
+      </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+
+/* 基于天蓝色背景的滚轮样式 */
+
+QTextEdit {
+    /* 其他 QTextEdit 相关的样式可以在这里设置 */
+color:#666666;/*字体颜色设置*/
+background-color: rgba(255,255,255,100);
+border-style:inset;/*背景颜色设置*/
+border-radius:2px;/*边框圆角半径设置*/
+}
+
+QTextEdit QScrollBar:vertical {
+    border: none;                   /* 移除边框 */
+    background: transparent;       /* 设置滚动条背景为透明 */
+    width: 10px;                   /* 设置滚动条宽度为10像素 */
+    margin: 0px;                   /* 移除边距 */
+}
+
+QTextEdit QScrollBar::handle:vertical {
+    background: skyblue;           /* 设置滚轮（handle）的颜色为天蓝色 */
+    min-height: 20px;              /* 设置滚轮的最小高度为20像素 */
+}
+
+QTextEdit QScrollBar::add-line:vertical, 
+QTextEdit QScrollBar::sub-line:vertical,
+QTextEdit QScrollBar::add-page:vertical,
+QTextEdit QScrollBar::sub-page:vertical {
+    height: 0px;                   /* 将上下按钮及其间的区域设置为0高度，从而隐藏它们 */
+    subcontrol-origin: margin;     
+    subcontrol-position: top right;  
+}
+
+/* 如果你还希望定制水平滚动条，你可以按照类似的方式为 QScrollBar:horizontal 和相关的子控件设置样式。 */
+
+</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
@@ -1042,29 +1061,44 @@ color:#FFE4E1;/*设置字体颜色 以备不时之需*/</string>
       </property>
       <property name="font">
        <font>
-        <family>Californian FB</family>
+        <family>微软雅黑 Light</family>
         <pointsize>11</pointsize>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true">QTableView {
- background-color:rgba(152,198,230, 255);
+ background-color: rgba(255,255,255,150);
  border-style:inset;/*背景颜色设置*/
  border-radius:2px;/*边框圆角半径设置*/ 
- border: 1px solid rgba(70,130,180, 80);
- gridline-color: #DCDCDC;
+ border: 1px solid rgba(220,220,220, 200);
+ color: #666666;
 }
+
+/* 表头部分 */
 QHeaderView::section {
-    background-color: rgba(135,206,250, 255);
-    color: #FFE4E1;
-    padding: 4px;
+    background-color: deepskyblue; /* 设置表头的背景色 */
+    padding: 5px; /* 设置内边距 */
+    border-style: none; /* 去掉默认的边框样式 */
+    border-bottom: 2px solid lightblue; /* 底部边框 */
+    border-right: 1px solid lightblue; /* 右侧边框，为了在每一列之间有分隔 */
+    gridline-color: lightblue;
 }
-QTableView::item:selected {
-    background-color: rgba(135,206,250, 255);
+
+/* 当鼠标悬浮表头时的样式 */
+QHeaderView::section:hover {
+    background-color: dodgerblue; /* 鼠标悬浮时的背景色 */
 }
-QTableView::item:hover {
-    background-color: rgba(173,216,230, 255);
+
+/* 当鼠标点击表头时的样式 */
+QHeaderView::section:pressed {
+    background-color: royalblue; /* 鼠标点击时的背景色 */
 }
+
+/* 为了让表头悬浮，可以尝试去掉其下面的边框，让它看起来与主表格是分离的 */
+QTableView QHeaderView {
+    border-bottom: 0px solid transparent;
+}
+
 
 
 /* 基于天蓝色背景的滚轮样式 */
@@ -1165,10 +1199,10 @@ QTableView QScrollBar::up-arrow:vertical, QTableView QScrollBar::down-arrow:vert
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{
@@ -1218,11 +1252,12 @@ border-style:inset;/*边框设置*/
        <string notr="true"> /*文本输入框 账号输入*/
 QLineEdit{
 /*非悬浮时颜色设置*/
-color:#000000;
-background-color: rgba(255,255,255,0);
+color:#FFFAFA;
 border-style:outset;/*设置边框*/
+background-color: rgba(255,255,255,50);
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 100);
+border: 1px solid rgba(220,220,220, 200);
+
 }
 QLineEdit::hover
 {
@@ -1268,7 +1303,7 @@ background-color:rgba(135,206,250, 255);
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>:/new/prefix1/search.png</pixmap>
+       <pixmap resource="Resource.qrc">:/new/prefix1/search.png</pixmap>
       </property>
      </widget>
      <widget class="QPushButton" name="returnToSum">
@@ -1306,10 +1341,10 @@ background-color:rgba(135,206,250, 255);
 QPushButton{
 /*静置时设置*/
 color:#FFFAFA;/*字体颜色设置*/
-background-color:rgba(70,130,180, 0);/*背景颜色设置*/  
+background-color:rgba(255,255,255, 50);/*背景颜色设置*/  
 border-style:outset;/*背景颜色设置*/
 border-radius:2px;/*边框圆角半径设置*/
-border: 1px solid rgba(70,130,180, 80)
+border: 1px solid rgba(220,220,220, 200);
 }
 
 QPushButton:hover{
@@ -1332,6 +1367,8 @@ border-style:inset;/*边框设置*/
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

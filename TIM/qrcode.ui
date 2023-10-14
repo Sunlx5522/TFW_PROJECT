@@ -19,34 +19,35 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QFrame" name="frame">
+  <widget class="QFrame" name="frame_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
+     <x>0</x>
+     <y>0</y>
      <width>400</width>
      <height>200</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
-     <width>400</width>
-     <height>200</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>400</width>
-     <height>200</height>
+     <width>16777215</width>
+     <height>16777215</height>
     </size>
    </property>
    <property name="styleSheet">
-    <string notr="true">QFrame#frame{
+    <string notr="true">QFrame#frame_2{
 /*frame是整个widget里面的容器，用于放置控件 整体拖动*/
 /*背景图片*/
-background-image: url(:/new/prefix1/qrcodeBackgrond.png);
+background-color:rgba(255,255,255, 30);/*背景颜色设置*/
+/*background-color:rgba(255,255,255, 50);/*背景颜色设置*/ 
 /*边缘圆角半径设置*/
-border: 1px solid rgba(0,191,255, 255);
+border: 1px solid rgba(220,220,220, 200);
 border-radius:5px; 
 }</string>
    </property>
@@ -56,6 +57,80 @@ border-radius:5px;
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
+   <widget class="QLabel" name="signUp">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>90</y>
+      <width>131</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="font">
+     <font>
+      <family>华文琥珀</family>
+      <pointsize>15</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">/*qlable 自定义点击按钮 加入TFW*/
+color:#FFFFFF;/*设置字体颜色 以备不时之需*/</string>
+    </property>
+    <property name="text">
+     <string>扫码进入官网</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::AutoText</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="QRlabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>50</y>
+      <width>105</width>
+      <height>105</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>105</width>
+      <height>105</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>105</width>
+      <height>105</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid rgba(220,220,220, 200);
+border-radius:2px; 
+border-style: outset;/*设置边框*/</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <widget class="QLabel" name="close">
     <property name="geometry">
      <rect>
@@ -88,78 +163,6 @@ border-radius:5px;
     </property>
     <property name="pixmap">
      <pixmap resource="SourceFile.qrc">:/new/prefix1/close.png</pixmap>
-    </property>
-   </widget>
-   <widget class="QLabel" name="QRlabel">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>50</y>
-      <width>105</width>
-      <height>105</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>105</width>
-      <height>105</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>105</width>
-      <height>105</height>
-     </size>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border: 2px solid rgba(0,191,255, 255);
-border-radius:2px; 
-border-style: outset;/*设置边框*/</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="signUp">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>90</y>
-      <width>101</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>0</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>16777215</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <family>华文琥珀</family>
-      <pointsize>12</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">/*qlable 自定义点击按钮 加入TFW*/
-color:#BBFFFF;/*设置字体颜色 以备不时之需*/</string>
-    </property>
-    <property name="text">
-     <string>扫码进入官网</string>
-    </property>
-    <property name="textFormat">
-     <enum>Qt::AutoText</enum>
     </property>
    </widget>
   </widget>

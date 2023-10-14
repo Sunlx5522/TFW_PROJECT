@@ -25,6 +25,14 @@
 #include <QParallelAnimationGroup>                                                                 //动画群盒子头文件
 #include <QGraphicsDropShadowEffect>                                                               //显卡模糊显示头文件
 #include <QRegularExpressionValidator>                                                             //qt规范表达
+#include <QDateTime>
+#include <QTextStream>
+#include <QFile>
+#include <QDir>
+QString getCurrentDateTimeString() {
+    QDateTime current = QDateTime::currentDateTime();
+    return current.toString("yyyy_MM_dd_HH_mm_ss");
+}
 extern UserList * user;
 extern QApplication a;                                                                             //应用名
 
@@ -185,46 +193,101 @@ Widget::~Widget()
     delete proxyModel;
     if(listenFlag_check == false && listenFlag_news == false&&listenFlag_surface == false &&listenFlag_Chatnews == false)
     {
-        ;
+       ;
     }
     else
     {
-        listenFlag_check = false;
-        listenFlag_news = false;
-        listenFlag_surface = false;
-        listenFlag_Chatnews = false;
-        if(server_news){delete server_news;}
-        if(client_news){delete client_news;}
-        if(server_check){delete server_check;}
-        if(server_surface){delete server_surface;}
-        if(server_Chatnews){delete server_Chatnews;}
-        if(client_Chatnews){delete client_Chatnews;}
-        // 删除clients_news中的所有QTcpSocket对象
-        for (int i = 0; i < clients_news->size(); ++i) {
-            delete (*clients_news)[i];
+        /************************账号检测 5555端口********************/
+        //network
+        server_check->pauseAccepting();
+
+
+                                                                              //临时客户端
+        while (!clients_check.isEmpty()) {
+            QTcpSocket *socket = clients_check.takeFirst();
+            socket->abort();
+            delete socket;
         }
-        if(clients_news){delete clients_news;}
-        // 删除clients_surface中的所有QTcpSocket对象
-        for (int i = 0; i < clients_surface->size(); ++i) {
-            delete (*clients_surface)[i];
+
+        if(server_check)
+        {
+        delete server_check;
         }
-        if(clients_surface){delete clients_surface;}
-        // 删除clients_Chatnews中的所有QTcpSocket对象
-        for (int i = 0; i < clients_Chatnews->size(); ++i) {
-            delete (*clients_Chatnews)[i];
+
+        //标志
+        listenFlag_check = false;                                                                 //5555端口监听
+        clientJoinUp_check = false;                                                               //客户端加
+        loginSuccessFlag_check = false;                                                           //登陆成功标志
+        //反馈消息
+        /**********************转发消息 6666端口**********************/
+        //network
+        server_news->pauseAccepting();
+
+
+                                                                              //服务器
+                                                                               //临时客户
+        while(!clients_news->isEmpty()) {
+            QTcpSocket *socket = clients_news->takeFirst();
+            socket->abort();
+            delete socket;
+
+                }
+        delete clients_news;
+        if(server_news)
+        {
+        delete server_news;
         }
-        if(clients_Chatnews){delete clients_Chatnews;}
-        server_news=nullptr;
-        client_news=nullptr;
-        server_check=nullptr;
-        client_check=nullptr;
-        server_surface=nullptr;
-        client_surface=nullptr;
-        server_Chatnews=nullptr;
-        client_Chatnews=nullptr;
-        clients_news=nullptr;
-        clients_surface=nullptr;
-        clients_Chatnews=nullptr;
+        //标志
+        listenFlag_news = false;                                                                  //6666端口监听
+        clientJoinUp_news = false;                                                                //客户端加入
+        loginSuccessFlag_news = false;                                                            //登陆成功标志
+        /********************初始化界面 7777端口********************/
+        //network
+        server_surface->pauseAccepting();
+
+
+                                                                   //服务器                                                                  //临时客户端
+
+
+        while(!clients_surface->isEmpty()) {
+            QTcpSocket *socket = clients_surface->takeFirst();
+            socket->abort();
+            delete socket;
+                }
+        delete clients_surface;
+        if(server_surface)
+        {
+        delete server_surface;
+        }
+
+                                                                //客户端列表
+        //标志
+        listenFlag_surface = false;                                                               //7777端口监听
+        clientJoinUp_surface = false;                                                             //客户端加入
+        loginSuccessFlag_surface = false;                                                         //登陆成功标志
+        /*******************群聊 8888端口****************************/
+        //network
+        server_Chatnews->pauseAccepting();
+
+                                                                         //服务器                                                                   //临时客户
+
+        while(!clients_Chatnews->isEmpty()) {
+            QTcpSocket *socket = clients_Chatnews->takeFirst();
+            socket->abort();
+            delete socket;
+                }
+        delete clients_Chatnews;
+        if(server_Chatnews)
+        {
+        delete server_Chatnews;
+        }
+
+
+                                                                //客户端列表
+        //标志
+        listenFlag_Chatnews = false;                                                              //8888端口监听
+        clientJoinUp_Chatnews = false;                                                            //客户端加入
+        loginSuccessFlag_Chatnews = false;                                                        //登陆成功标志
     }
 }
 
@@ -232,7 +295,7 @@ void Widget::shouError()
 {
     QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
     QString det="数据库无法创建或寻址";
-    det = tr("<font size='6' color='white'>") + det;
+    det = tr("<font size='6' color='#999999'>") + det;
     det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
     QMessageBox msgbox(QMessageBox::Information,"",det);//将QMessageBox实例化出来，好方便后面setStyleSheet
     //下面补上Qss样式表的设置写法即可
@@ -374,7 +437,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                     {
 
                        QString det="登录成功";
-                       det = tr("<font size='6' color='white'>") + det;
+                       det = tr("<font size='6' color='#999999'>") + det;
                        det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                        QMessageBox msgbox(QMessageBox::Information,"",det);                        //将QMessageBox实例化出来，好方便后面setStyleSheet
                        //下面补上Qss样式表的设置写法即可
@@ -426,7 +489,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                     {
 
                        QString det="用户名或密码错误";
-                       det = tr("<font size='6' color='white'>") + det;
+                       det = tr("<font size='6' color='#999999'>") + det;
                        det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                        QMessageBox msgbox(QMessageBox::Information,"",det);//将QMessageBox实例化出来，好方便后面setStyleSheet
                        //下面补上Qss样式表的设置写法即可
@@ -458,7 +521,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                 else
                 {
                     QString det="互联网断开，无法部署服务器";
-                    det = tr("<font size='6' color='white'>") + det;
+                    det = tr("<font size='6' color='#999999'>") + det;
                     det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                     QMessageBox msgbox(QMessageBox::Information,"",det);                        //将QMessageBox实例化出来，好方便后面setStyleSheet
                     //下面补上Qss样式表的设置写法即可
@@ -504,19 +567,50 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             if(listenFlag_check == true && listenFlag_news == true&&listenFlag_surface == true &&listenFlag_Chatnews == true)
             {
                 ui->display_screen->append("服务器已开启");
+                ui->display_screen->append("------------------------------------------------------------------------");
             }
             else
             {
-            server_news = new QTcpServer(this);
-            client_news = new QTcpSocket(this);
-            server_check = new QTcpServer(this);
-            server_surface = new QTcpServer(this);
-            client_surface = new QTcpSocket(this);
-            server_Chatnews = new QTcpServer(this);
-            client_Chatnews = new QTcpSocket(this);
-            clients_news = new QList<QTcpSocket *>;
-            clients_surface = new QList<QTcpSocket *>;
-            clients_Chatnews =new QList<QTcpSocket *>;
+
+
+
+                    /************************账号检测 5555端口********************/
+                    //network
+                    server_check=new  QTcpServer;                                                                      //服务
+                    client_check=nullptr;                                                                      //临时客户端
+                    //标志
+                    listenFlag_check = false;                                                                 //5555端口监听
+                    clientJoinUp_check = false;                                                               //客户端加
+                    loginSuccessFlag_check = false;                                                           //登陆成功标志
+                    //反馈消息
+                    /**********************转发消息 6666端口**********************/
+                    //network
+                    server_news=new  QTcpServer;                                                                       //服务器
+                    client_news=nullptr;                                                                       //临时客户
+                    clients_news=new QList<QTcpSocket *>;                                                             //客户端列表
+                    //标志
+                    listenFlag_news = false;                                                                  //6666端口监听
+                    clientJoinUp_news = false;                                                                //客户端加入
+                    loginSuccessFlag_news = false;                                                            //登陆成功标志
+                    /********************初始化界面 7777端口********************/
+                    //network
+                    server_surface=new  QTcpServer;                                                                    //服务器
+                    client_surface=nullptr;                                                                    //临时客户端
+                    clients_surface=new QList<QTcpSocket *>;                                                          //客户端列表
+                    //标志
+                    listenFlag_surface = false;                                                               //7777端口监听
+                    clientJoinUp_surface = false;                                                             //客户端加入
+                    loginSuccessFlag_surface = false;                                                         //登陆成功标志
+                    /*******************群聊 8888端口****************************/
+                    //network
+                    server_Chatnews=new  QTcpServer;                                                                  //服务器
+                    client_Chatnews=nullptr;                                                                   //临时客户
+                    clients_Chatnews=new QList<QTcpSocket *>;                                                         //客户端列表
+                    //标志
+                    listenFlag_Chatnews = false;                                                              //8888端口监听
+                    clientJoinUp_Chatnews = false;                                                            //客户端加入
+                    loginSuccessFlag_Chatnews = false;                                                        //登陆成功标志
+
             //监听任何连接上5555端口的ip, 成功返回true, 用于账号检验
             listenFlag_check = server_check->listen(QHostAddress::Any, 5555);
             //监听任何连接上6666端口的ip，成功返回true，用于转发消息
@@ -526,13 +620,12 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             //监听所有连接8888端口上的ip，成功返回true, 用于群聊
             listenFlag_Chatnews = server_Chatnews->listen(QHostAddress::Any, 8888);
             if(listenFlag_check == true && listenFlag_news == true&&listenFlag_surface == true &&listenFlag_Chatnews == true){
-                qDebug() << "服务器已打开";
-                qDebug() << "打开端口：5555 6666 7777 8888";
+                ui->tip_Label->setText("服务器状态：开启");
+                ui->display_screen->append(getCurrentDateTimeString());
                 ui->display_screen->append("打开端口：5555(账号检测） 6666(转发消息) 7777(初始化界面) 8888(群聊)");
                 ui->display_screen->append("服务器可以正常服务");
-                ui->tip_Label->setText("服务器状态：开启");
                 ui->display_screen->append("成功开启服务器");
-                qDebug() << "服务状态：开启";
+                ui->display_screen->append("------------------------------------------------------------------------");
 
                 //新客户端连接，发射newConnect信号
                 connect(server_check, &QTcpServer::newConnection,
@@ -570,49 +663,111 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             if(listenFlag_check == false && listenFlag_news == false&&listenFlag_surface == false &&listenFlag_Chatnews == false)
             {
                 ui->display_screen->append("服务器已关闭");
+                ui->display_screen->append("------------------------------------------------------------------------");
             }
             else
             {
-            listenFlag_check = false;
-            listenFlag_news = false;
-            listenFlag_surface = false;
-            listenFlag_Chatnews = false;
-            if(server_news){delete server_news;}
-            if(client_news){delete client_news;}
-            if(server_check){delete server_check;}
-            if(server_surface){delete server_surface;}
-            if(server_Chatnews){delete server_Chatnews;}
-            if(client_Chatnews){delete client_Chatnews;}
-            // 删除clients_news中的所有QTcpSocket对象
-            for (int i = 0; i < clients_news->size(); ++i) {
-                delete (*clients_news)[i];
-            }
-            if(clients_news){delete clients_news;}
-            // 删除clients_surface中的所有QTcpSocket对象
-            for (int i = 0; i < clients_surface->size(); ++i) {
-                delete (*clients_surface)[i];
-            }
-            if(clients_surface){delete clients_surface;}
-            // 删除clients_Chatnews中的所有QTcpSocket对象
-            for (int i = 0; i < clients_Chatnews->size(); ++i) {
-                delete (*clients_Chatnews)[i];
-            }
-            if(clients_Chatnews){delete clients_Chatnews;}
-            server_news=nullptr;
-            client_news=nullptr;
-            server_check=nullptr;
-            client_check=nullptr;
-            server_surface=nullptr;
-            client_surface=nullptr;
-            server_Chatnews=nullptr;
-            client_Chatnews=nullptr;
-            clients_news=nullptr;
-            clients_surface=nullptr;
-            clients_Chatnews=nullptr;
+
+                /************************账号检测 5555端口********************/
+                //network
+                server_check->pauseAccepting();
+
+
+                                                                                      //临时客户端
+                while (!clients_check.isEmpty()) {
+                    QTcpSocket *socket = clients_check.takeFirst();
+                    socket->abort();
+                    delete socket;
+                }
+
+                if(server_check)
+                {
+                delete server_check;
+                }
+
+                //标志
+                listenFlag_check = false;                                                                 //5555端口监听
+                clientJoinUp_check = false;                                                               //客户端加
+                loginSuccessFlag_check = false;                                                           //登陆成功标志
+                //反馈消息
+                /**********************转发消息 6666端口**********************/
+                //network
+                server_news->pauseAccepting();
+
+
+                                                                                      //服务器
+                                                                                       //临时客户
+                while(!clients_news->isEmpty()) {
+                    QTcpSocket *socket = clients_news->takeFirst();
+                    socket->abort();
+                    delete socket;
+
+                        }
+                delete clients_news;
+                if(server_news)
+                {
+                delete server_news;
+                }
+                //标志
+                listenFlag_news = false;                                                                  //6666端口监听
+                clientJoinUp_news = false;                                                                //客户端加入
+                loginSuccessFlag_news = false;                                                            //登陆成功标志
+                /********************初始化界面 7777端口********************/
+                //network
+                server_surface->pauseAccepting();
+
+
+                                                                           //服务器                                                                  //临时客户端
+
+
+                while(!clients_surface->isEmpty()) {
+                    QTcpSocket *socket = clients_surface->takeFirst();
+                    socket->abort();
+                    delete socket;
+                        }
+                delete clients_surface;
+                if(server_surface)
+                {
+                delete server_surface;
+                }
+
+                                                                        //客户端列表
+                //标志
+                listenFlag_surface = false;                                                               //7777端口监听
+                clientJoinUp_surface = false;                                                             //客户端加入
+                loginSuccessFlag_surface = false;                                                         //登陆成功标志
+                /*******************群聊 8888端口****************************/
+                //network
+                server_Chatnews->pauseAccepting();
+
+                                                                                 //服务器                                                                   //临时客户
+
+                while(!clients_Chatnews->isEmpty()) {
+                    QTcpSocket *socket = clients_Chatnews->takeFirst();
+                    socket->abort();
+                    delete socket;
+                        }
+                delete clients_Chatnews;
+                if(server_Chatnews)
+                {
+                delete server_Chatnews;
+                }
+
+
+                                                                        //客户端列表
+                //标志
+                listenFlag_Chatnews = false;                                                              //8888端口监听
+                clientJoinUp_Chatnews = false;                                                            //客户端加入
+                loginSuccessFlag_Chatnews = false;                                                        //登陆成功标志
+
+
+
 
             ui->tip_Label->setText("服务器状态：关闭");
+            ui->display_screen->append(getCurrentDateTimeString());
             ui->display_screen->append("关闭端口：5555 6666 7777 8888");
             ui->display_screen->append("成功关闭服务器");
+            ui->display_screen->append("------------------------------------------------------------------------");
             }
         }
     }
@@ -638,7 +793,9 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         else if(event->type() == QEvent::MouseButtonRelease)
         {
             user->initDB();
+            ui->display_screen->append(getCurrentDateTimeString());
             ui->display_screen->append("用户状态重置成功");
+            ui->display_screen->append("------------------------------------------------------------------------");
         }
     }
 
@@ -885,24 +1042,17 @@ void Widget::changeEvent( QEvent* e )
 //新客户连接
 void Widget::newClient_check(){
     if(!listenFlag_check) return;
-    qDebug() << "新客户端登陆:";
     //设置为假，用于新客户端登陆判断
     loginSuccessFlag_check = false;
     QTcpSocket *newClient;
-
     //得到新进来的socket
     newClient = server_check->nextPendingConnection();
     //连接标志
     clientJoinUp_check = true;
-
-
-    qDebug() << "等待信息";
-
     //有可读信息，发射readyread信号
     connect(newClient, &QTcpSocket::readyRead, this, &Widget::readMessage_check);
     //断开连接，发射disconnect信号
     connect(newClient, &QTcpSocket::disconnected, this, &Widget::lostClient_check);
-
     //在客户端列表最后添加新的socket
     clients_check.push_back(newClient);
     client_check = newClient;
@@ -911,14 +1061,11 @@ void Widget::newClient_check(){
 //账号验证的反馈消息
 void Widget::feedbackMessage(QString msg){
     if(!listenFlag_check) {
-        qDebug() << "feedbackMessage:服务端未打开";
         return;
     }
     if(!clientJoinUp_check) {
-        qDebug() << "feedbackMessage:客户端未连接";
         return;
     }
-    qDebug() << "feedbackMessage:发送消息";
     //添加到显示面板
     ui->display_screen->append("登录结果:"+msg);
     ui->display_screen->moveCursor(QTextCursor::End);
@@ -939,27 +1086,22 @@ void Widget::readMessage_check(){
     QString password;
     //读取
     str = client->readAll();
-    qDebug() << "readMessage_check:" << str;
     account = str.section(' ', 0, 0);//字符串分割
     password = str.section(' ', 1, 1);
     //添加到显示面板
-    ui->display_screen->append("请求登陆");
-    ui->display_screen->append("登陆账号：" + account);
-    ui->display_screen->append("登陆密码：" + password);
+    ui->display_screen->append(getCurrentDateTimeString());
+    ui->display_screen->append("请求登录");
+    ui->display_screen->append("登录账号：" + account);
+    ui->display_screen->append("登录密码：" + password);
     ui->display_screen->moveCursor(QTextCursor::End);                                              //注意光标移动到末尾
-    qDebug() << "登陆账号：" << account;
-    qDebug() << "登陆密码：" << password;
-
     //temp = 0 时，账号密码不匹配登陆失败，temp = 1，登陆成功， temp = 2，已经在线
     int temp = user->CheckUser(account, password);
     if(temp == 0){
         loginSuccessFlag_check = false;
         feedbackMessage("loginFail");
-        qDebug() << "登陆失败";
     }else if(temp == 1){
         loginSuccessFlag_check = true;
         feedbackMessage("loginSuccess");
-        qDebug() << "登陆成功";
     }else if(temp == 2){
         loginSuccessFlag_check = true;
         feedbackMessage("AlreadyOnline");
@@ -983,7 +1125,6 @@ void Widget::sendMessage_check(){
 //新客户端连接
 void Widget::newConnect_news(){
     if(!listenFlag_news) return;
-    qDebug() << "新聊天线程：";
 
     //得到新连接进来的socket
     client_news = server_news->nextPendingConnection();
@@ -1000,32 +1141,202 @@ void Widget::newConnect_news(){
             this, SLOT(lostClient_news()));
 
 }
-
 //读取
 void Widget::readMessage_news(){
-    qDebug() << "读取信息";
-    QString message;
-    //遍历客户端列表，所有客户端
-    for(int i = 0; i < clients_news->length(); i++){
-        qDebug() << "QDataStream ";
-        //设置响应socket的输入流和版本
-        QDataStream in(clients_news->at(i));
-        in.setVersion (QDataStream::Qt_5_14);
-        //读取信息，信息写入message，
-        in >> message;
-        //每有一个可读信息，message非空，跳出 显示
-        if(!message.isEmpty()){
-            qDebug() << "break";
-            break;
+
+
+        QString message;            //全部消息
+        QString flag;               //标志
+        QString account;            //账号
+
+
+        //遍历客户端列表，所有客户端
+
+            for(int i = 0; i < clients_news->length(); i++){
+                //设置响应socket的输入流和版本
+
+                //QByteArray byteArray = clients_news->at(i)->readAll(); // 读取所有可用数据
+                //QString message = QString::fromUtf8(byteArray); // 将 QByteArray 转换为 QString
+
+                QDataStream in(clients_news->at(i));
+                in.setVersion(QDataStream::Qt_5_14);
+                //读取信息，信息写入message
+                in >> message;
+                //每一个可读信息，message非空，跳出
+
+
+
+
+                if(!message.isEmpty()){
+                    //break;
+                }
+            }
+
+
+        flag = message.section('|',0,0);
+        account = message.section('|',1,1);
+        QStringList msg = message.split("|");
+
+        if(flag=="searchUserToAdd")
+        {
+            ui->display_screen->append(getCurrentDateTimeString());
+            ui->display_screen->append("请求搜索用户或群组");
+            ui->display_screen->append("请求账号:"+account);
+            ui->display_screen->append("请求回传:"+msg[2]);
+            QString searchUserMessage;
+            {
+                QSqlQuery readQuery;
+                readQuery.exec("select * from User");
+                QSqlQuery updateQuery;
+                while(readQuery.next()){
+                    if(readQuery.value(0).toString()==msg[2])
+                    {
+                        QString accountTemp = readQuery.value(0).toString();
+                        QString nameTemp = readQuery.value(1).toString();
+                        QString tmp;
+                        char a1[512];
+                        unsigned char *a;
+                        tmp=readQuery.value(2).toString();
+                        QByteArray a2=tmp.toUtf8();
+                        a = reinterpret_cast<unsigned char*>(a2.data());
+                        MD5Function (a,a1);
+                        QString passwordTemp=QString::fromLocal8Bit(a1,512);
+                        QString signTemp = readQuery.value(3).toString();
+                        QString headTemp = readQuery.value(4).toString();
+                        QString phoneTemp = readQuery.value(5).toString();
+                        QString birthdayTemp = readQuery.value(7).toString();
+                        QString localTemp = readQuery.value(8).toString();
+                        QString tagtTemp = readQuery.value(9).toString();
+                        QString vipTemp = readQuery.value(10).toString();
+                        searchUserMessage = "searchUserToAdd|" + account+"|"+accountTemp + "|" + nameTemp + "|"
+                                + passwordTemp + "|" + signTemp+ "|"+ headTemp + "|"+ phoneTemp + "|"+ birthdayTemp + "|"+ localTemp + "|"+ tagtTemp + "|"+ vipTemp;
+                        sendMessage_news(searchUserMessage);
+                        ui->display_screen->append("回传用户:"+readQuery.value(0).toString()+"成功");
+                        ui->display_screen->append("------------------------------------------------------------------------");
+                        return ;
+                    }
+                }
+                 searchUserMessage = "searchUserToAddFalse|"+account;
+                 ui->display_screen->append("回传失败 用户:"+msg[2]+"不存在");
+                 ui->display_screen->append("------------------------------------------------------------------------");
+                 sendMessage_news(searchUserMessage);
+            }
+
         }
-    }
-    //面板显示消息
-    ui->display_screen->append(tr("新消息: '%1'").arg(message));
-    ui->display_screen->setAlignment(Qt::AlignLeft);
-    //发送到对应客户端
-    sendMessage_news(message);
-    qDebug() << "Server_read:" << message;
-    qDebug() << "readMessage_news:读取完成";
+        else if(flag=="getBaseMessage")
+        {
+
+
+            ui->display_screen->append(getCurrentDateTimeString());
+            ui->display_screen->append("请求获取用户基础信息");
+            ui->display_screen->append("请求账号:"+account);
+            ui->display_screen->append("请求回传:"+msg[2]);
+            QString searchUserMessage;
+            {
+                QSqlQuery readQuery;
+                readQuery.exec("select * from User");
+                QSqlQuery updateQuery;
+                while(readQuery.next()){
+                    if(readQuery.value(0).toString()==msg[2])
+                    {
+                        QString accountTemp = readQuery.value(0).toString();
+                        QString nameTemp = readQuery.value(1).toString();
+                        QString tmp;
+                        char a1[512];
+                        unsigned char *a;
+                        tmp=readQuery.value(2).toString();
+                        QByteArray a2=tmp.toUtf8();
+                        a = reinterpret_cast<unsigned char*>(a2.data());
+                        MD5Function (a,a1);
+                        QString passwordTemp=QString::fromLocal8Bit(a1,512);
+                        QString signTemp = readQuery.value(3).toString();
+                        QString headTemp = readQuery.value(4).toString();
+                        QString phoneTemp = readQuery.value(5).toString();
+                        QString birthdayTemp = readQuery.value(7).toString();
+                        QString localTemp = readQuery.value(8).toString();
+                        QString tagtTemp = readQuery.value(9).toString();
+                        QString vipTemp = readQuery.value(10).toString();
+                        searchUserMessage = "getBaseMessage|" + account+"|"+accountTemp + "|" + nameTemp + "|"
+                                + passwordTemp + "|" + signTemp+ "|"+ headTemp + "|"+ phoneTemp + "|"+ birthdayTemp + "|"+ localTemp + "|"+ tagtTemp + "|"+ vipTemp;
+                        sendMessage_news(searchUserMessage);
+                        ui->display_screen->append("回传用户:"+readQuery.value(0).toString()+"成功");
+                        ui->display_screen->append("------------------------------------------------------------------------");
+                        return ;
+                    }
+                }
+                 searchUserMessage = "getBaseMessageFalse|"+account;
+                 ui->display_screen->append("回传失败 用户:"+msg[2]+"不存在");
+                 ui->display_screen->append("------------------------------------------------------------------------");
+                 sendMessage_news(searchUserMessage);
+            }
+
+        }
+
+        else if(flag=="getBaseRequestMessage")
+        {
+
+
+            ui->display_screen->append(getCurrentDateTimeString());
+            ui->display_screen->append("请求获取用户基础信息");
+            ui->display_screen->append("请求账号:"+account);
+            ui->display_screen->append("请求回传:"+msg[2]);
+            QString searchUserMessage;
+            {
+                QSqlQuery readQuery;
+                readQuery.exec("select * from User");
+                QSqlQuery updateQuery;
+                while(readQuery.next()){
+                    if(readQuery.value(0).toString()==msg[2])
+                    {
+                        QString accountTemp = readQuery.value(0).toString();
+                        QString nameTemp = readQuery.value(1).toString();
+                        QString tmp;
+                        char a1[512];
+                        unsigned char *a;
+                        tmp=readQuery.value(2).toString();
+                        QByteArray a2=tmp.toUtf8();
+                        a = reinterpret_cast<unsigned char*>(a2.data());
+                        MD5Function (a,a1);
+                        QString passwordTemp=QString::fromLocal8Bit(a1,512);
+                        QString signTemp = readQuery.value(3).toString();
+                        QString headTemp = readQuery.value(4).toString();
+                        QString phoneTemp = readQuery.value(5).toString();
+                        QString birthdayTemp = readQuery.value(7).toString();
+                        QString localTemp = readQuery.value(8).toString();
+                        QString tagtTemp = readQuery.value(9).toString();
+                        QString vipTemp = readQuery.value(10).toString();
+                        searchUserMessage = "getBaseRequestMessage|" + account+"|"+accountTemp + "|" + nameTemp + "|"
+                                + passwordTemp + "|" + signTemp+ "|"+ headTemp + "|"+ phoneTemp + "|"+ birthdayTemp + "|"+ localTemp + "|"+ tagtTemp + "|"+ vipTemp;
+                        sendMessage_news(searchUserMessage);
+                        ui->display_screen->append("回传用户:"+readQuery.value(0).toString()+"成功");
+                        ui->display_screen->append("------------------------------------------------------------------------");
+                        return ;
+                    }
+                }
+                 searchUserMessage = "getBaseRequestMessage|"+account;
+                 ui->display_screen->append("回传失败 用户:"+msg[2]+"不存在");
+                 ui->display_screen->append("------------------------------------------------------------------------");
+                 sendMessage_news(searchUserMessage);
+            }
+
+        }
+
+        else if(flag=="getRequests")
+        {
+            ui->display_screen->append(getCurrentDateTimeString());
+            ui->display_screen->append("用户:"+account+"请求添加申请列表");
+            sendMessage_news(message);
+        }
+        else if(flag=="getFriends")
+        {
+            ui->display_screen->append(getCurrentDateTimeString());
+            ui->display_screen->append("用户:"+account+"请求添加好友列表");
+            sendMessage_news(message);
+        }
+
+
+
+
 }
 
 //发送
@@ -1038,28 +1349,183 @@ void Widget::sendMessage_news(QString information){
          qDebug() << "sendMessage_news:客户端未连接";
          return;
      }
-
      qDebug() << "sendMessage_news:发送消息";
+
      QString str = information;
-     QByteArray message;
-     //设置输出流只写，并设置版本
-     QDataStream out(&message,QIODevice::WriteOnly);
-     out.setVersion(QDataStream::Qt_5_14);
-     out << str;
-     //遍历客户端，嵌套字写入
-     for(int i = 0; i < clients_news->length(); i++){
-         clients_news->at(i)->write(message);
+     QString flag = str.section('|',0,0);
+     QString account = str.section('|',1,1);
+
+     if(flag=="searchUserToAdd")
+     {
+         QByteArray message;
+         //设置输出流只写，并设置版本
+         QDataStream out(&message,QIODevice::WriteOnly);
+         out.setVersion(QDataStream::Qt_5_14);
+         out << str;
+         //遍历客户端，嵌套字写入
+         for(int i = 0; i < clients_news->length(); i++){
+             clients_news->at(i)->write(message);
+         }
+         qDebug() << "Server_send:" << str;
+         qDebug() << "sendMessage_news:发送完成";
      }
-     qDebug() << "Server_send:" << str;
-     qDebug() << "sendMessage_news:发送完成";
+     else if(flag=="searchUserToAddFalse")
+     {
+         QByteArray message;
+         //设置输出流只写，并设置版本
+         QDataStream out(&message,QIODevice::WriteOnly);
+         out.setVersion(QDataStream::Qt_5_14);
+         out << str;
+         //遍历客户端，嵌套字写入
+         for(int i = 0; i < clients_news->length(); i++){
+             clients_news->at(i)->write(message);
+         }
+         qDebug() << "Server_send:" << str;
+         qDebug() << "sendMessage_news:发送完成";
+     }
+     else if(flag=="getBaseMessage")
+     {
+         QByteArray message;
+         //设置输出流只写，并设置版本
+         QDataStream out(&message,QIODevice::WriteOnly);
+         out.setVersion(QDataStream::Qt_5_14);
+         out << str;
+         //遍历客户端，嵌套字写入
+         for(int i = 0; i < clients_news->length(); i++){
+             clients_news->at(i)->write(message);
+         }
+         qDebug() << "Server_send:" << str;
+         qDebug() << "sendMessage_news:发送完成";
+     }
+     else if(flag=="getBaseMessageFalse")
+     {
+         QByteArray message;
+         //设置输出流只写，并设置版本
+         QDataStream out(&message,QIODevice::WriteOnly);
+         out.setVersion(QDataStream::Qt_5_14);
+         out << str;
+         //遍历客户端，嵌套字写入
+         for(int i = 0; i < clients_news->length(); i++){
+             clients_news->at(i)->write(message);
+         }
+         qDebug() << "Server_send:" << str;
+         qDebug() << "sendMessage_news:发送完成";
+     }
+
+
+     else if(flag=="getBaseRequestMessage")
+     {
+         QByteArray message;
+         //设置输出流只写，并设置版本
+         QDataStream out(&message,QIODevice::WriteOnly);
+         out.setVersion(QDataStream::Qt_5_14);
+         out << str;
+         //遍历客户端，嵌套字写入
+         for(int i = 0; i < clients_news->length(); i++){
+             clients_news->at(i)->write(message);
+         }
+         qDebug() << "Server_send:" << str;
+         qDebug() << "sendMessage_news:发送完成";
+     }
+     else if(flag=="getBaseRequestMessageFalse")
+     {
+         QByteArray message;
+         //设置输出流只写，并设置版本
+         QDataStream out(&message,QIODevice::WriteOnly);
+         out.setVersion(QDataStream::Qt_5_14);
+         out << str;
+         //遍历客户端，嵌套字写入
+         for(int i = 0; i < clients_news->length(); i++){
+             clients_news->at(i)->write(message);
+         }
+         qDebug() << "Server_send:" << str;
+         qDebug() << "sendMessage_news:发送完成";
+     }
+
+     else if(flag=="getRequests")
+     {
+         {
+             QString fileName = QCoreApplication::applicationDirPath();
+                     //用户目录
+             QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                     //创建用户文件夹
+             fileName = fileName + add +QString("//%1").arg(account);
+             qDebug() <<account;
+                     //信息保存
+             QDir * file = new QDir;
+                     //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+             bool exist_1 = file->exists(fileName);
+             qDebug() <<fileName;
+             if(exist_1)
+             {
+                 QFile file(fileName +"//requestData.txt");
+                 file.open(QIODevice::ReadOnly|QIODevice::Text|QIODevice::Truncate);
+                 QByteArray fileData = file.readAll();
+                 QByteArray message;
+                 QDataStream out(&message,QIODevice::WriteOnly);
+                 out.setVersion(QDataStream::Qt_5_14);
+                 out << QString("%1|%2|").arg(flag, account)+QString::fromUtf8(fileData);
+                 QString sstr = QString::fromUtf8(message);  // 使用 fromUtf8() 函数将 QByteArray 转换为 QString
+                 qDebug() <<sstr;
+                 file.close();
+                 for(int i = 0; i < clients_news->length(); i++){
+                     clients_news->at(i)->write(message);
+                     clients_news->at(i)->flush();
+                 }
+                 qDebug() << "Server_send:" << str;
+                 qDebug() << "sendMessage_news:发送完成";
+
+                 ui->display_screen->append("申请列表:"+QString("%1|%2|").arg(flag, account)+"\n"+QString::fromUtf8(fileData));
+                 ui->display_screen->append("------------------------------------------------------------------------");
+
+             }
+         }
+     }
+     else if(flag=="getFriends")
+     {
+         {
+             QString fileName = QCoreApplication::applicationDirPath();
+                     //用户目录
+             QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                     //创建用户文件夹
+             fileName = fileName + add +QString("//%1").arg(account);
+             qDebug() <<account;
+                     //信息保存
+             QDir * file = new QDir;
+                     //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+             bool exist_1 = file->exists(fileName);
+             qDebug() <<fileName;
+             if(exist_1)
+             {
+                 QFile file(fileName +"//friendsData.txt");
+                 file.open(QIODevice::ReadOnly|QIODevice::Text|QIODevice::Truncate);
+                 QByteArray fileData = file.readAll();
+                 QByteArray message;
+                 QDataStream out(&message,QIODevice::WriteOnly);
+                 out.setVersion(QDataStream::Qt_5_14);
+                 out << QString("%1|%2|").arg(flag, account)+QString::fromUtf8(fileData);
+                 QString sstr = QString::fromUtf8(message);  // 使用 fromUtf8() 函数将 QByteArray 转换为 QString
+                 qDebug() <<sstr;
+                 file.close();
+                 for(int i = 0; i < clients_news->length(); i++){
+                     clients_news->at(i)->write(message);
+                     clients_news->at(i)->flush();
+                 }
+                 qDebug() << "Server_send:" << str;
+                 qDebug() << "sendMessage_news:发送完成";
+
+                 ui->display_screen->append("好友列表:"+QString("%1|%2|").arg(flag, account)+"\n"+QString::fromUtf8(fileData));
+                 ui->display_screen->append("------------------------------------------------------------------------");
+
+             }
+         }
+     }
 }
 
 //删除
 void Widget::lostClient_news(){
-    qDebug() << "lostClient_news:关闭聊天";
     QTcpSocket *client = qobject_cast<QTcpSocket *>(sender());
     clients_news->removeOne(client);
-    qDebug() << "lostClient_news:colse";
 }
 
 /************************************群聊 端口8888*****************************************/
@@ -1157,18 +1623,13 @@ void Widget::lostClient_Chatnews(){
 //新客户端连接
 void Widget::newConnect_surface(){
     if(!listenFlag_surface) return;
-    qDebug() << "新客户端连接";
-
     //得到新连接进来的socket
     client_surface = server_surface->nextPendingConnection();
-
     //添加到聊天列表
     clients_surface->append(client_surface);
     clientJoinUp_surface = true;
-
     //有可读信息发送readyRead()信号
-    connect(client_surface,SIGNAL(readyRead()),
-            this, SLOT(readMessage_surface()));
+    connect(client_surface,SIGNAL(readyRead()),this, SLOT(readMessage_surface()));
     //断开连接时
     connect(client_surface, &QTcpSocket::disconnected,
             this, &Widget::lostClient_surface);
@@ -1176,13 +1637,11 @@ void Widget::newConnect_surface(){
 
 //读取
 void Widget::readMessage_surface(){
-    qDebug() << "readMessage_surface:读取信息";
     QString message;            //全部消息
     QString flag;               //标志
     QString account;            //账号
     //遍历客户端列表，所有客户端
     for(int i = 0; i < clients_surface->length(); i++){
-        qDebug() << "QDataStream";
         //设置响应socket的输入流和版本
         QDataStream in(clients_surface->at(i));
         in.setVersion(QDataStream::Qt_5_14);
@@ -1190,20 +1649,17 @@ void Widget::readMessage_surface(){
         in >> message;
         //每一个可读信息，message非空，跳出
         if(!message.isEmpty()){
-            qDebug() << "break";
             break;
         }
     }
-    qDebug() << "readMessage_surface:" << message;
     flag = message.section('|',0,0);
     account = message.section('|',1,1);
     //添加到显示面板
     if(flag == "initSurface"){
         //包含个人信息，和好友列表
-        qDebug() << "请求初始化界面";
+        ui->display_screen->append(getCurrentDateTimeString());
         ui->display_screen->append("请求获取界面");
-        ui->display_screen->append("登陆账号：" + account);
-
+        ui->display_screen->append("登录账号:" + account);
         QString initAccount;
         //数据库查找
         user->query->exec("select * from User");
@@ -1220,7 +1676,6 @@ void Widget::readMessage_surface(){
                 a = reinterpret_cast<unsigned char*>(a2.data());
                 MD5Function (a,a1);
                 QString passwordTemp=QString::fromLocal8Bit(a1,512);
-
                 QString signTemp = user->query->value(3).toString();
                 QString headTemp = user->query->value(4).toString();
                 QString phoneTemp = user->query->value(5).toString();
@@ -1230,13 +1685,16 @@ void Widget::readMessage_surface(){
                 QString vipTemp = user->query->value(10).toString();
                 initMsg = "initSurface|" + accountTemp + "|" + nameTemp + "|"
                         + passwordTemp + "|" + signTemp+ "|"+ headTemp + "|"+ phoneTemp + "|"+ birthdayTemp + "|"+ localTemp + "|"+ tagtTemp + "|"+ vipTemp;
-                qDebug() << "界面初始化消息:" << initMsg;
                 sendMessage_surface(initMsg);                       //发送初始化消息
+                ui->display_screen->append("phone");
+                ui->display_screen->append(phoneTemp);
+                ui->display_screen->append("登录成功");
+                ui->display_screen->append("------------------------------------------------------------------------");
                 break;
             }
         }
-        ui->display_screen->append("登录成功！");
     }else if(flag == "logout"){
+        ui->display_screen->append(getCurrentDateTimeString());
         ui->display_screen->append("请求退出");
         ui->display_screen->append("退出账号：" + account);
         QString logoutAccount;
@@ -1248,27 +1706,25 @@ void Widget::readMessage_surface(){
                 //更新模型视图
                 user->model->setQuery("update user set state = 0 where account = '" + account + "'");
                 user->model->setQuery("select * from User");
-                qDebug() << "退出成功";
+                ui->display_screen->append("退出成功");
+                ui->display_screen->append("------------------------------------------------------------------------");
                 break;
             }
         }
-        ui->display_screen->append("退出成功");
         initMsg = "logout|" + account +"|null|null|null";
     }else if(flag == "register"){
         //新用户注册，服务器生成'账号.db'的好友列表，登录时返回给用户
+        ui->display_screen->append(getCurrentDateTimeString());
         ui->display_screen->append("请求注册");
-
-
-
-
         QString accountTemp = user->addUser(message);
-        qDebug() << "注册成功";
         ui->display_screen->append("账号:"+accountTemp+"注册成功");
+        ui->display_screen->append("------------------------------------------------------------------------");
         sendMessage_surface("register|"+accountTemp);                       //发送初始化消息
     }else if(flag == "findpassword"){
+        ui->display_screen->append(getCurrentDateTimeString());
         bool find=false;
-        qDebug() << "找回密码";
         ui->display_screen->append("找回密码");
+        ui->display_screen->append("请求账号:"+account);
         QString initAccount;
         //数据库查找
         user->query->exec("select * from User");
@@ -1282,13 +1738,9 @@ void Widget::readMessage_surface(){
                 QString p3=user->query->value(15).toString();
                 initMsg = "findpassword|" + accountTemp +"|"+password+ "|" + p1 + "|"
                         + p2 + "|" + p3;
-                qDebug() << "账号:" << accountTemp;
-                qDebug() << "找回密码:" << password;
-                qDebug() << "找回操作完成";
-                ui->display_screen->append("账号:"+account);
                 ui->display_screen->append("找回密码:"+password);
-                ui->display_screen->append("返回信息");
-                ui->display_screen->append(initMsg);
+                ui->display_screen->append("成功返回信息:");
+                ui->display_screen->append("------------------------------------------------------------------------");
                 sendMessage_surface(initMsg);                       //发送初始化消息
                 find=true;
                 break;
@@ -1302,16 +1754,17 @@ void Widget::readMessage_surface(){
         {initMsg = "none|";
             sendMessage_surface(initMsg);                       //发送初始化消息
             ui->display_screen->append("未找到用户");
+            ui->display_screen->append("------------------------------------------------------------------------");
         }
     }
     else if(flag == "changepassword")
     {
+        ui->display_screen->append(getCurrentDateTimeString());
         ui->display_screen->append("修改密码");
-        ui->display_screen->append("请求信息:"+account);
         QString tmp=account;
         QStringList parts = tmp.split("___");
-        ui->display_screen->append(parts[0]);
-        ui->display_screen->append(parts[1]);
+        ui->display_screen->append("请求账号:"+parts[0]);
+        ui->display_screen->append("新密码:"+parts[1]);
         user->query->exec("select * from User");
 
 
@@ -1324,23 +1777,174 @@ void Widget::readMessage_surface(){
         while(readQuery.next()){
             if(readQuery.value(0).toString()==parts[0])
             {
-                ui->display_screen->append(readQuery.value(0).toString());
-                ui->display_screen->append(readQuery.value(1).toString());
-                ui->display_screen->append(readQuery.value(2).toString());
                 updateQuery.prepare("UPDATE User SET password = :ps WHERE account = :account");
                 updateQuery.bindValue(":ps", parts[1]);
                 updateQuery.bindValue(":account", parts[0]);
                 updateQuery.exec();
                 user->model->setQuery("select * from User");
+                ui->display_screen->append("修改成功");
+                initMsg = "changepassword|" + parts[0];
+                sendMessage_surface(initMsg);
+                ui->display_screen->append("成功返回信息");
+                ui->display_screen->append("------------------------------------------------------------------------");
+                break;
             }
 
         }
 
-       ui->display_screen->append("修改成功");
-       initMsg = "changepassword|" + parts[0];
-       sendMessage_surface(initMsg);
 
     }
+
+    else if(flag == "Uchangepassword")
+    {
+        ui->display_screen->append(getCurrentDateTimeString());
+        ui->display_screen->append("修改密码");
+        QString tmp=account;
+        QStringList parts = tmp.split("___");
+        ui->display_screen->append("请求账号:"+parts[0]);
+        ui->display_screen->append("新密码:"+parts[1]);
+        user->query->exec("select * from User");
+        QSqlQuery readQuery;
+        readQuery.exec("select * from User");
+
+        QSqlQuery updateQuery;
+
+        while(readQuery.next()){
+            if(readQuery.value(0).toString()==parts[0])
+            {
+                updateQuery.prepare("UPDATE User SET password = :ps WHERE account = :account");
+                updateQuery.bindValue(":ps", parts[1]);
+                updateQuery.bindValue(":account", parts[0]);
+                updateQuery.exec();
+                user->model->setQuery("select * from User");
+                ui->display_screen->append("修改成功");
+                initMsg = "Uchangepassword|" + parts[0];
+                sendMessage_surface(initMsg);
+                 ui->display_screen->append("成功返回信息");
+                ui->display_screen->append("------------------------------------------------------------------------");
+                break;
+            }
+
+        }
+
+    }
+    else if(flag == "UchangeMessage")
+    {
+        ui->display_screen->append(getCurrentDateTimeString());
+        ui->display_screen->append("修改信息");
+
+
+        QStringList msg = message.split("|");
+        ui->display_screen->append("请求账号:"+msg[1]);
+
+        {
+            QSqlQuery readQuery;
+            readQuery.exec("select * from User");
+
+            QSqlQuery updateQuery;
+
+            while(readQuery.next()){
+                if(readQuery.value(0).toString()==msg[1])
+                {
+
+                    updateQuery.prepare("UPDATE User SET headImage = :ps WHERE account = :account");
+                    updateQuery.bindValue(":ps", msg[2]);
+                    updateQuery.bindValue(":account", msg[1]);
+                    updateQuery.exec();
+                    user->model->setQuery("select * from User");
+                }
+
+            }
+        }
+
+        {
+            QSqlQuery readQuery;
+            readQuery.exec("select * from User");
+
+            QSqlQuery updateQuery;
+
+            while(readQuery.next()){
+                if(readQuery.value(0).toString()==msg[1])
+                {
+
+                    updateQuery.prepare("UPDATE User SET name = :ps WHERE account = :account");
+                    updateQuery.bindValue(":ps", msg[3]);
+                    updateQuery.bindValue(":account", msg[1]);
+                    updateQuery.exec();
+                    user->model->setQuery("select * from User");
+                }
+
+            }
+        }
+
+        {
+            QSqlQuery readQuery;
+            readQuery.exec("select * from User");
+
+            QSqlQuery updateQuery;
+
+            while(readQuery.next()){
+                if(readQuery.value(0).toString()==msg[1])
+                {
+
+                    updateQuery.prepare("UPDATE User SET sign = :ps WHERE account = :account");
+                    updateQuery.bindValue(":ps", msg[4]);
+                    updateQuery.bindValue(":account", msg[1]);
+                    updateQuery.exec();
+                    user->model->setQuery("select * from User");
+                }
+
+            }
+        }
+
+        {
+            QSqlQuery readQuery;
+            readQuery.exec("select * from User");
+
+            QSqlQuery updateQuery;
+
+            while(readQuery.next()){
+                if(readQuery.value(0).toString()==msg[1])
+                {
+
+                    updateQuery.prepare("UPDATE User SET birthDay = :ps WHERE account = :account");
+                    updateQuery.bindValue(":ps", msg[5]);
+                    updateQuery.bindValue(":account", msg[1]);
+                    updateQuery.exec();
+                    user->model->setQuery("select * from User");
+                }
+
+            }
+        }
+
+        {
+            QSqlQuery readQuery;
+            readQuery.exec("select * from User");
+
+            QSqlQuery updateQuery;
+
+            while(readQuery.next()){
+                if(readQuery.value(0).toString()==msg[1])
+                {
+
+                    updateQuery.prepare("UPDATE User SET localPlace = :ps WHERE account = :account");
+                    updateQuery.bindValue(":ps", msg[6]);
+                    updateQuery.bindValue(":account", msg[1]);
+                    updateQuery.exec();
+                    user->model->setQuery("select * from User");
+                }
+
+            }
+        }
+
+
+        ui->display_screen->append("修改成功");
+        ui->display_screen->append("------------------------------------------------------------------------");
+        initMsg = "UchangeMessage|" + msg[1];
+        sendMessage_surface(initMsg);
+
+    }
+
     qDebug() << "Server_read:" << message;
     qDebug() << "readMessage_surface:读取完成";
 }
@@ -1357,7 +1961,7 @@ void Widget::sendMessage_surface(QString Msg){
      QString flag;
      flag = Msg.section('|', 0, 0);
      qDebug() << "信息为：" << Msg;
-     if(flag != "initSurface" && flag != "logout" &&flag != "changepassword" &&
+     if(flag != "initSurface" && flag != "logout" &&flag != "changepassword"&&flag != "Uchangepassword"&&flag!="UchangeMessage" &&
             flag != "findpassword" && flag != "register"&& flag != "none"){
         qDebug() << "sendMessage_surface:错误信息,不发送";
         qDebug() << "信息为:" << Msg;
@@ -1380,10 +1984,8 @@ void Widget::sendMessage_surface(QString Msg){
 }
 
 void Widget::lostClient_surface(){
-    qDebug() << "lostClient_surface:销毁";
     QTcpSocket *client = qobject_cast<QTcpSocket *>(sender());
     clients_surface->removeOne(client);
-    qDebug() << "lostClient_surface:关闭";
 }
 
 /*********************************************************************************/

@@ -1,3 +1,4 @@
+
 #include "initsurface.h"
 #include <QTcpServer>
 #include<QTcpSocket>
@@ -56,6 +57,7 @@ void InitSurface::readMessage()
     currentuser->VIP_Level=msg[10];
 
 
+    {
     QString fileName = QCoreApplication::applicationDirPath();
             //用户目录
     QString add = "//..//TFWUserFile";
@@ -91,6 +93,7 @@ void InitSurface::readMessage()
         bool ok = file->mkpath(fileName);
                     if(ok)
                     {
+                        {
                         QFile file(fileName +"//data.txt");
                         if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
                         {
@@ -107,6 +110,36 @@ void InitSurface::readMessage()
                             out << currentuser->VIP_Level<<"\n";
                         }
                         file.close();
+                        }
+
+                        {
+                        QFile file(fileName +"//requests.txt");
+                        if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                        {
+                            ;
+                        }
+                        file.close();
+                        }
+
+                        {
+                        QFile file(fileName +"//friends.txt");
+                        if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                        {
+                            ;
+                        }
+                        file.close();
+                        }
+
+                        {
+                        QFile file(fileName +"//groups.txt");
+                        if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+                        {
+                            ;
+                        }
+                        file.close();
+                        }
+
+
                     }
                     else
                     {
@@ -114,6 +147,8 @@ void InitSurface::readMessage()
                     }
 
     }
+    }
+
 
 
 

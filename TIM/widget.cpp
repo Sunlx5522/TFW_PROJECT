@@ -46,19 +46,25 @@
 #include "findpassword.h"
 #include <QDate>
 #include <QRegularExpression>
+#include <QSystemTrayIcon>
 #include "signUp.h"
 #include"address.h"
+#include "mainwindow.h"
+#include <QDesktopWidget>
+extern MyFriends *myfriends;
+extern MyRequsests* myrequests;
+extern MainWindow *mainwindow;
 extern signUp* signuppage;
-
+extern QSystemTrayIcon  *ssystemtrayicon;  //系统托盘
 int imageCounter=1;
 extern Widget* loginpage;
 extern addressSetting* addresssetting;
-extern QApplication a;                                                                //外部变量声明 用于关闭应用
+extern QApplication *aa;                                                               //外部变量声明 用于关闭应用
 extern qrcode *qrcodepage;
 extern findpassword * findpasswordpage;
-
+extern CurrentUser* currentuser;
 extern tfwAddress* tfwaddress;
-
+extern QTcpSocket *client1_s;
 //用于注册
 QString nameTmp;
 QString password1Tmp;
@@ -187,6 +193,9 @@ Widget::Widget(QWidget *parent)
     setMouseTracking(true);                                                           //窗口可进行鼠标追踪，以进行拖动
 
     //登录界面lable点击功能实现
+    QIcon icon = QIcon(":/new/prefix1/img2.png");
+    //添加图标
+    setWindowIcon(icon);
 
 
     ui->leftLabel->installEventFilter(this);                                  //将qlable设置点击事件
@@ -257,7 +266,7 @@ Widget::Widget(QWidget *parent)
 
 
 
-    ui->signUp->setStyleSheet("background:rgba(85,170,255,0);color:#4169E1");         //color:#FFFAFA;字体颜色设置
+    ui->signUp->setStyleSheet("background:rgba(85,170,255,0);color:#FFEFFF");         //color:#FFFAFA;字体颜色设置
 
     ui->userImage->raise();                                                           //控件置顶显示
 
@@ -338,6 +347,9 @@ Widget::Widget(QWidget *parent)
     animation2->setDuration(0);                                                       //设置动画持续时间（毫秒）//动画效果
     animation3 = new QPropertyAnimation(this, "windowOpacity");
     animation4 = new QPropertyAnimation(this, "windowOpacity");
+    animation5 = new QPropertyAnimation(this, "windowOpacity");
+
+
 
     //gif结束动画
 
@@ -415,16 +427,63 @@ Widget::Widget(QWidget *parent)
     animation3->setKeyValueAt(1, 0);
     connect(animation3, SIGNAL(finished()), this, SLOT(showMinimized()));
 
+    animation5->setDuration(1000);
+    animation5->setKeyValueAt(0, 1);
+    animation5->setKeyValueAt(0.1, 0.9);
+    animation5->setKeyValueAt(0.2, 0.8);
+    animation5->setKeyValueAt(0.3, 0.7);
+    animation5->setKeyValueAt(0.4, 0.6);
+    animation5->setKeyValueAt(0.5, 0.5);
+    animation5->setKeyValueAt(0.6, 0.4);
+    animation5->setKeyValueAt(0.7, 0.3);
+    animation5->setKeyValueAt(0.8, 0.2);
+    animation5->setKeyValueAt(0.9, 0.1);
+    animation5->setKeyValueAt(1, 0);
+    QObject::connect(animation5, &QPropertyAnimation::finished, [=](){
+        animation5->stop();  // 停止属性动画 a
+        mainwindow =new MainWindow;
+        mainwindow->move((aa->desktop()->width() - mainwindow->width()) / 2, (aa->desktop()->height() - mainwindow->height()) / 2); //窗口居中
+        mainwindow->show(); //窗口显示
+        this->hide();
+    });
+
     blureffect1=new QGraphicsBlurEffect;                                                           //模糊特效
-    blureffect1->setBlurRadius(20);	                                                               //数值越大，越模糊
+    blureffect1->setBlurRadius(5);	                                                               //数值越大，越模糊
     ui->frame->setGraphicsEffect(blureffect1);
     QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
 
     client=new QTcpSocket(this);
     client1=new QTcpSocket(this);
+    client1_s=client1;
     connect(client,&QTcpSocket::readyRead, this, &Widget::readMessage);
 
 
+    chushihua();
+
+
+
+    think = new QMovie(":/new/prefix1/duck3.gif");
+
+    setplacehodetext(ui->accountLineEdit);
+    setplacehodetext(ui->passwordLineEdit);
+
+
+
+    //connect(m_pCloseAction,SIGNAL(triggered(bool)),this,SLOT(closewidget()));
+
+
+
+
+
+
+
+    startMovie->start();
+
+
+}
+
+void Widget::chushihua()
+{
     QString fileName = QCoreApplication::applicationDirPath();
             //用户目录
     QString add = "//..//TFWUserFile";
@@ -479,6 +538,7 @@ Widget::Widget(QWidget *parent)
                     QString tmp=":/new/prefix2/image/";
                     tmp=tmp+line4;
                     qDebug()<<tmp;
+
 
 
                     QPixmap originalPixmap(tmp);
@@ -592,75 +652,33 @@ Widget::Widget(QWidget *parent)
                     }
 
     }
-
-
-
-    think = new QMovie(":/new/prefix1/duck3.gif");
-
-    setplacehodetext(ui->accountLineEdit);
-    setplacehodetext(ui->passwordLineEdit);
-
-    systemtrayicon = new QSystemTrayIcon(this);
-    QIcon icon = QIcon(":/new/prefix1/img2_s.png");
-    //添加图标
-    systemtrayicon->setIcon(icon);
-    systemtrayicon->setToolTip(QObject::trUtf8("TFW"));
-        //显示图标
-
-    menu = new QMenu(this);
-
-    m_pCloseAction = new QAction("退出");
-
-    menu->addAction(m_pCloseAction);
-    systemtrayicon->setContextMenu(menu);
-    connect(m_pCloseAction,SIGNAL(triggered(bool)),this,SLOT(closewidget()));
-
-
-
-
-
-
-
-    systemtrayicon->show();
-
-
-
-
-
-    startMovie->start();
-
-
 }
 
 void Widget::setplacehodetext(QLineEdit *a)
 {
     QPalette palette = a->palette();
-    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#FFFAFA");
+    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#FFFFFF");
     a->setPalette(palette);
 }
 void Widget::setplacehodetextRed(QLineEdit *a)
 {
     QPalette palette = a->palette();
-    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#191970");
+    palette.setColor(QPalette::Normal, QPalette::PlaceholderText, "#6495ED");
     a->setPalette(palette);
 }
 
-void Widget::closewidget()
-{
-    this->close();
-}
 
 //析构函数
 Widget::~Widget()
 {
     delete validator;
     delete client;
-    delete client1;
     delete animation;                                                                 //启动动画前的一段动画
     delete animation1;                                                                //启动动画
     delete animation2;                                                                //拖动动画
     delete animation3;                                                                //关闭动画
     delete animation4;                                                                //最小化动画
+    delete animation5;                                                                //最小化动画
     delete startMovie;                                                                //开头gif播放
     delete duckMovie;
     delete think;
@@ -787,7 +805,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                         delete shadow_effect;
                         delete thinkLable;
                         QString det="互联网未连接";
-                        det = tr("<font size='6' color='white'>") + det;
+                        det = tr("<font size='6' color='#999999'>") + det;
                         det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                         QMessageBox msgbox(QMessageBox::Information,"",det);                        //将QMessageBox实例化出来，好方便后面setStyleSheet
                         //下面补上Qss样式表的设置写法即可
@@ -852,7 +870,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                          client->abort();
                          client->connectToHost(tfwaddress->serveRemoteAddress,tfwaddress->port5555);
                          QString det="正在链接服务器";
-                         det = tr("<font size='6' color='white'>") + det;
+                         det = tr("<font size='6' color='#999999'>") + det;
                          det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                          QMessageBox msgbox(QMessageBox::Information,"",det);                        //将QMessageBox实例化出来，好方便后面setStyleSheet
                          //下面补上Qss样式表的设置写法即可
@@ -879,7 +897,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                          if(connectFlag)
                          {
                              QString det1="链接成功";
-                             det1 = tr("<font size='6' color='white'>") + det1;
+                             det1 = tr("<font size='6' color='#999999'>") + det1;
                              det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                              QMessageBox msgbox1(QMessageBox::Information,"",det1);
                              msgbox1.setIconPixmap(QPixmap(":/new/prefix1/welcome.png"));
@@ -900,7 +918,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                              delete Lable2;
                              Lable2 = nullptr;
                              QString det2="正在检测账号与密码";
-                             det2 = tr("<font size='6' color='white'>") + det2;
+                             det2 = tr("<font size='6' color='#999999'>") + det2;
                              det2 += tr("</font>");
                              QMessageBox msgbox2(QMessageBox::Information,"",det2);
                              msgbox2.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
@@ -930,7 +948,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
                          else
                          {
                              QString det1="链接失败";
-                             det1 = tr("<font size='6' color='white'>") + det1;
+                             det1 = tr("<font size='6' color='#999999'>") + det1;
                              det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                              QMessageBox msgbox1(QMessageBox::Information,"",det1);
                              msgbox1.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
@@ -1482,6 +1500,7 @@ QString passwordq3Temp;*/
     else if(qobject_cast<QLabel*>(obj) == ui->signUp)
     {
         if(event->type() == QEvent::MouseButtonRelease){
+            ui->signUp->setStyleSheet("background:rgba(85,170,255,0);color:#FFE4E1");//color:#FFFAFA; 字体颜色设置
             ui->registerButton->setText("注册");
             ui->textEdit->clear();
             loginFlag=true;
@@ -1505,6 +1524,9 @@ QString passwordq3Temp;*/
             ui->pd1LineEdit->clear();
             ui->pd2LineEdit->clear();
             ui->pd3LineEdit->clear();
+
+            headImageTemp="head (1).JPG";
+            ui->brandName_6->setText(headImageTemp);
 
             resetQstr();
             setplacehodetext(ui->nameLineEdit);
@@ -1583,7 +1605,7 @@ QString passwordq3Temp;*/
         }
         else if(event->type() == QEvent::HoverLeave)
         {
-            ui->signUp->setStyleSheet("background:rgba(85,170,255,0);color:#4169E1");//color:#FFFAFA; 字体颜色设置
+            ui->signUp->setStyleSheet("background:rgba(85,170,255,0);color:#FFE4E1");//color:#FFFAFA; 字体颜色设置
         }
     }
     else if(qobject_cast<QLabel*>(obj) == ui->qrLabel)
@@ -1794,7 +1816,7 @@ QString passwordq3Temp;*/
             QImage img; //新建一个image对象
             img.load(":/new/prefix1/right.png"); //将图像资源载入对象img，注意路径，可点进图片右键复制路径
             ui->rightLabel->setPixmap(QPixmap::fromImage(img)); //将图片放入label，使用setPixmap,注意指针*img
-            if(imageCounter==32)
+            if(imageCounter==52                                         )
             {
                 ;
 
@@ -1907,6 +1929,13 @@ void Widget::showEvent(QShowEvent *event)
     setAttribute(Qt::WA_Mapped);
     QWidget::showEvent(event);
 }
+
+void Widget::duckshow()
+{
+    ui->duckLabel->show();
+    ui->duckLabel->update();
+}
+
 void Widget::changeEvent( QEvent* e )
 {
 
@@ -1990,7 +2019,7 @@ void Widget::readMessage(){
                 if(AlreadyOnlineFlag)
                 {
                     QString det1="禁止重复登录";
-                    det1 = tr("<font size='6' color='white'>") + det1;
+                    det1 = tr("<font size='6' color='#999999'>") + det1;
                     det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                     QMessageBox msgbox1(QMessageBox::Information,"",det1);
                     msgbox1.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
@@ -2035,7 +2064,7 @@ void Widget::readMessage(){
 
                 QIcon icon = QIcon(":/new/prefix1/img2.png");
                 //添加图标
-                systemtrayicon->setIcon(icon);
+                ssystemtrayicon->setIcon(icon);
 
                 QString fileName = QCoreApplication::applicationDirPath();
                         //用户目录
@@ -2048,6 +2077,7 @@ void Widget::readMessage(){
                 bool exist_1 = file->exists(fileName);
                 if(exist_1)
                 {
+                    {
                      QFile file(fileName +"//data.txt");
                      if(file.open(QIODevice::ReadOnly|QIODevice::Text|QIODevice::Truncate))
                      {
@@ -2066,18 +2096,19 @@ void Widget::readMessage(){
                        file.close();
                        }
                      }
+                    }
 
                 }
                 else
                 {
                     ;
                 }
-
+                currentuser->AntiMd5password=myPassword;
                 InitSurface *initsuface;
                 initsuface = new InitSurface;
                 initsuface->setAccount(myAccount);
                 initsuface->sendMessage("initSurface");
-                det1 = tr("<font size='6' color='white'>") + det1;
+                det1 = tr("<font size='6' color='#999999'>") + det1;
                 det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                 QMessageBox msgbox1(QMessageBox::Information,"",det1);
                 msgbox1.setIconPixmap(QPixmap(":/new/prefix1/welcome.png"));
@@ -2091,27 +2122,29 @@ void Widget::readMessage(){
                 msgbox1.move(globalPos1.x(),globalPos1.y());
                 //qDebug() << msgbox.rect().width()<< endl;
                 //qDebug() << msgbox.rect().height()<< endl;
-                QTimer::singleShot(3000,&msgbox1,SLOT(accept()));
+                QTimer::singleShot(2000,&msgbox1,SLOT(accept()));
                 msgbox1.addButton(QMessageBox::Ok);
                 msgbox1.button(QMessageBox::Ok)->hide();
                 msgbox1.exec();
 
                 delete Lable2;
                 Lable2 = nullptr;
-                QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
-                setEnabled(true);
-                ui->rememberPasssword->installEventFilter(this);
-                ui->signUp->installEventFilter(this);
-                ui->qrLabel->installEventFilter(this);
-                ui->mim->installEventFilter(this);
-                ui->setting->installEventFilter(this);
-                ui->close->installEventFilter(this);
-                ui->passwordBack->installEventFilter(this);
-                ui->logInButton->installEventFilter(this);
-                ui->return_back1->installEventFilter(this);
-                ui->next1->installEventFilter(this);
-                ui->duckLabel->show();
-                ui->duckLabel->update();
+
+                animation5->start();
+                //QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, false));
+                //setEnabled(true);
+                //ui->rememberPasssword->installEventFilter(this);
+                //ui->signUp->installEventFilter(this);
+                //ui->qrLabel->installEventFilter(this);
+                //ui->mim->installEventFilter(this);
+                //ui->setting->installEventFilter(this);
+                //ui->close->installEventFilter(this);
+                //ui->passwordBack->installEventFilter(this);
+                //ui->logInButton->installEventFilter(this);
+                //ui->return_back1->installEventFilter(this);
+                //ui->next1->installEventFilter(this);
+                //ui->duckLabel->show();
+                //ui->duckLabel->update();
                 }
 
             }
@@ -2119,7 +2152,7 @@ void Widget::readMessage(){
             {
 
                 QString det1="用户名或密码错误";
-                det1 = tr("<font size='6' color='white'>") + det1;
+                det1 = tr("<font size='6' color='#999999'>") + det1;
                 det1 += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
                 QMessageBox msgbox1(QMessageBox::Information,"",det1);
                 msgbox1.setIconPixmap(QPixmap(":/new/prefix1/warning.png"));
@@ -2203,7 +2236,7 @@ void Widget::shouError()
 {
     QMetaObject::invokeMethod(blureffect1, "setEnabled", Qt::QueuedConnection, Q_ARG(bool, true));
     QString det="数据库无法创建或寻址";
-    det = tr("<font size='6' color='white'>") + det;
+    det = tr("<font size='6' color='#999999'>") + det;
     det += tr("</font>");                                                       //这时候Qss写字体大小和颜色没有用了，我就在字符串里加了一些前端的写法
     QMessageBox msgbox(QMessageBox::Information,"",det);//将QMessageBox实例化出来，好方便后面setStyleSheet
     //下面补上Qss样式表的设置写法即可

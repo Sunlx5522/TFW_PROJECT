@@ -5,6 +5,8 @@
 #include <QTcpSocket>
 #include "widget.h"
 #include "address.h"
+#include <QDir>
+#include <QFile>
 extern Widget* loginpage;
 extern findpassword * findpasswordpage;
 extern tfwAddress *tfwaddress;
@@ -383,6 +385,7 @@ void findpassword::readMessage()
              ui->changePassword->setText("修改密码");
              ui->changePassword->installEventFilter(this);
              ui->display->setText("修改成功");
+
              update();
          }
 

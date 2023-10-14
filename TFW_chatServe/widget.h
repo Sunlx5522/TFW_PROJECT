@@ -33,7 +33,7 @@ public:
     Widget(QWidget *parent = nullptr);
 
     ~Widget();
-
+    bool listenFlag_news = false;                                                                  //6666端口监听
     void mousePressEvent(QMouseEvent *event) override                                              //实现窗口拖动
     {
         if (event->button() == Qt::LeftButton)
@@ -94,6 +94,10 @@ public:
      void onCopyActionTriggered();
      void showContextMenu(const QPoint &pos);
 
+     void duxinxi(void)
+     {
+         readMessage_news();
+     }
 private slots:
 
     //账号检测
@@ -151,8 +155,8 @@ private:
 
     /************************账号检测 5555端口********************/
     //network
-    QTcpServer *server_check;                                                                      //服务
-    QTcpSocket *client_check;                                                                      //临时客户端
+    QTcpServer *server_check=nullptr;                                                                      //服务
+    QTcpSocket *client_check=nullptr;                                                                      //临时客户端
     QList<QTcpSocket *> clients_check;                                                             //客户端列
     //标志
     bool listenFlag_check = false;                                                                 //5555端口监听
@@ -162,18 +166,18 @@ private:
     void feedbackMessage(QString msg);
     /**********************转发消息 6666端口**********************/
     //network
-    QTcpServer *server_news;                                                                       //服务器
-    QTcpSocket *client_news;                                                                       //临时客户
-    QList<QTcpSocket *> *clients_news;                                                             //客户端列表
+    QTcpServer *server_news=nullptr;                                                                       //服务器
+    QTcpSocket *client_news=nullptr;                                                                       //临时客户
+    QList<QTcpSocket *> *clients_news=nullptr;                                                             //客户端列表
     //标志
-    bool listenFlag_news = false;                                                                  //6666端口监听
+
     bool clientJoinUp_news = false;                                                                //客户端加入
     bool loginSuccessFlag_news = false;                                                            //登陆成功标志
     /********************初始化界面 7777端口********************/
     //network
-    QTcpServer *server_surface;                                                                    //服务器
-    QTcpSocket *client_surface;                                                                    //临时客户端
-    QList<QTcpSocket *> *clients_surface;                                                          //客户端列表
+    QTcpServer *server_surface=nullptr;                                                                    //服务器
+    QTcpSocket *client_surface=nullptr;                                                                    //临时客户端
+    QList<QTcpSocket *> *clients_surface=nullptr;                                                          //客户端列表
     QString initMsg;                                                                               //初始化界面的消息
     //标志
     bool listenFlag_surface = false;                                                               //7777端口监听
@@ -181,9 +185,9 @@ private:
     bool loginSuccessFlag_surface = false;                                                         //登陆成功标志
     /*******************群聊 8888端口****************************/
     //network
-    QTcpServer *server_Chatnews;                                                                   //服务器
-    QTcpSocket *client_Chatnews;                                                                   //临时客户
-    QList<QTcpSocket *> *clients_Chatnews;                                                         //客户端列表
+    QTcpServer *server_Chatnews=nullptr;                                                                   //服务器
+    QTcpSocket *client_Chatnews=nullptr;                                                                   //临时客户
+    QList<QTcpSocket *> *clients_Chatnews=nullptr;                                                         //客户端列表
     //标志
     bool listenFlag_Chatnews = false;                                                              //8888端口监听
     bool clientJoinUp_Chatnews = false;                                                            //客户端加入
