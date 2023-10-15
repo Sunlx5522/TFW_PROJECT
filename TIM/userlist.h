@@ -189,6 +189,7 @@ private:
 class MyRequsests
 {
 public:
+
     void addRequest(const MyRequsest& newRequest) {
         requestsList.append(newRequest);
     }
@@ -235,9 +236,62 @@ public:
                 requestsList=QList<MyRequsest>();
             }
      QList<MyRequsest> requestsList;
+
 private:
 };
 
+
+class MyChats
+{
+public:
+    void addFriend(const MyFriend& newFriend) {
+        friendsList.append(newFriend);
+    }
+    MyFriend* findFriendByAccount(const QString& searchAccount) {
+            for (MyFriend& friendObj : friendsList) {
+                if (friendObj.account == searchAccount) {
+                    return &friendObj;
+                }
+            }
+            return nullptr;  // 返回nullptr表示未找到对应的MyFriend对象
+        }
+    // 其他你可能需要的成员函数，例如removeFriend, getFriend, etc.
+
+        void friendDebug() const {
+            for (const MyFriend& friendObj : friendsList) {
+                qDebug() << "Account: " << friendObj.account;
+                qDebug() << "Name: " << friendObj.name;
+                qDebug() << "Password: " << friendObj.password;
+                qDebug() << "Sign: " << friendObj.sign;
+                qDebug() << "Head Image: " << friendObj.headImage;
+                qDebug() << "Phone Number: " << friendObj.phoneNumber;
+                qDebug() << "Birthday: " << friendObj.birthDay;
+                qDebug() << "Local Place: " << friendObj.localPlace;
+                qDebug() << "Tag: " << friendObj.Tagt;
+                qDebug() << "VIP Level: " << friendObj.VIP_Level;
+                qDebug() << "-------------------------";
+            }
+        }
+
+        void removeFriendByAccount(const QString& removeAccount) {
+                for (int i = 0; i < friendsList.size(); ++i) {
+                    if (friendsList[i].account == removeAccount) {
+                        friendsList.removeAt(i);
+                        return;
+                    }
+                }
+            }
+        void removeAllFriendByAccount() {
+
+                for (int i = 0; i < friendsList.size(); i++) {
+                        friendsList.removeAt(0);
+                }
+                friendsList=QList<MyFriend>();
+
+            }
+     QList<MyFriend> friendsList;
+private:
+};
 
 
 

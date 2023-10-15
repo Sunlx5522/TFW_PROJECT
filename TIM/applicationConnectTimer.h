@@ -19,5 +19,6 @@ private:
     QTimer m_timer;
     QTimer m_timer_s;
     QTimer m_timer_f;
+    QTimer * timer=new QTimer;
 };
 #endif // APPLICATIONCONNECTTIMER_H

@@ -1,37 +1,61 @@
 #include "applicationConnectTimer.h"
 #include"address.h"
 #include "mainwindow.h"
-
+#include "widget.h"
 #include <QDebug>
 extern tfwAddress* tfwaddress;
 extern MainWindow *mainwindow;
-
+extern Widget* loginpage;
 extern QTcpSocket *client1_s;
 HeartBeat_s::HeartBeat_s(QObject* parent) :
     QObject(parent)
 {
     connect(&m_timer, &QTimer::timeout, this, &HeartBeat_s::applicationConnection);
-    m_timer.start(60000);  // 每5秒检查一次
+    m_timer.start(20000);  // 每20秒检查一次
     connect(&m_timer_s, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_s);
-    m_timer_s.start(10000);  // 每3秒检查一次
+    m_timer_s.start(500);  // 每3秒检查一次
     connect(&m_timer_f, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_f);
     m_timer_f.start(20);  // 每5秒检查一次
 }
 void HeartBeat_s::applicationConnection()
 {
 
-    if(mainwindow==nullptr)
-    {
 
-    }
-    else
-    {
-    if(mainwindow->is_open)
+
+    if(loginpage->isMainWindowOpen)
     {
       mainwindow->appConnect();
       client1_s->abort();
       client1_s->connectToHost(tfwaddress->serveRemoteAddress,tfwaddress->port7777);
       mainwindow->updateApplication();
+      delete timer;
+      timer=new QTimer;
+      QObject::connect(timer, &QTimer::timeout, [&]() {
+          if(loginpage->isMainWindowOpen)
+          {
+              if(mainwindow->zha)
+              {
+           if(mainwindow->updateFlag)
+           {
+              mainwindow->updateItem();
+              mainwindow->updateFlag=false;
+           }
+           else
+           {
+              ;
+           }
+              }
+
+          }
+          else
+          {
+              ;
+          }
+            qDebug() << "3秒后执行的函数";
+            timer->stop();
+          });
+       timer->setSingleShot(true); // 如果只需要执行一次，设置为 true
+       timer->start(3000);
 
 
        //qDebug()<<"修改成功";
@@ -40,21 +64,18 @@ void HeartBeat_s::applicationConnection()
     {
         ;
     }
-    }
+
 
 }
 
 void HeartBeat_s::applicationConnection_s()
 {
 
-    if(mainwindow==nullptr)
+     if(loginpage->isMainWindowOpen)
     {
-
-    }
-    else
-    {
-    if(mainwindow->is_open)
-    {
+     if(mainwindow->zha)
+     {
+         qDebug() << "开闸---";
      if(mainwindow->updateFlag)
      {
         mainwindow->updateItem();
@@ -64,13 +85,13 @@ void HeartBeat_s::applicationConnection_s()
      {
         ;
      }
-
     }
     else
     {
         ;
     }
     }
+
 
 }
 
@@ -82,14 +103,10 @@ void HeartBeat_s::applicationConnection_f()
     }
     else
     {
-    if(mainwindow->is_open)
+    if(loginpage->isMainWindowOpen)
     {
 
         mainwindow->readMessage_application();
-
-
-
-
     }
     else
     {
@@ -100,6 +117,9 @@ void HeartBeat_s::applicationConnection_f()
 
 HeartBeat_s::~HeartBeat_s()
 {
- ;
+    if(timer)
+    {
+ delete timer;
+    }
 }
 

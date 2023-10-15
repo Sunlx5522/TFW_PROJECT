@@ -83,7 +83,7 @@ public:
     bool eventFilter(QObject *obj, QEvent *event);                                    //自定义一些Qlable的点击实现
     void showEvent(QShowEvent *event);                                                //窗口最小化更改回透明度为1 辅助函数
     void changeEvent( QEvent* e );                                                    //窗口最小化更改回透明度为1
-
+    bool isMainWindowOpen=false;
     QString myAccount;
     QString myPassword;
     void shouError();

@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+ #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -20,6 +20,8 @@
 #include <QPainterPath>
 #include <QDate>
 #include <QThread>
+# include <QListWidgetItem>
+#include <QTimer>
 namespace Ui {
 class MainWindow;
 }
@@ -29,6 +31,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -79,8 +82,11 @@ public:
     void setplacehodetext(QLineEdit*);
     void setplacehodetextRed(QLineEdit*);
     void changeMessage();
-    bool is_open=false;
+    void shenqingPage(const MyRequsest& friendData);
+    void haoyouPage(const MyFriend& friendData);
+    void chatPage(const MyFriend& friendData);
     bool updateFlag=false;
+    bool zha=false;
     bool readAccountsAndDisplay(const QString &filePath);
     void appConnect()
     {
@@ -133,6 +139,8 @@ private:
     QThread* thread;
     QThread* thread1;
     QThread* thread2;
+    QTimer *timer1=new QTimer;
+    QTimer *timer2=new QTimer;
 };
 
 class FriendWidgetItem : public QWidget
@@ -198,6 +206,7 @@ public:
         headImageLabel->setPixmap(roundedPixmap.scaled(headImageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         // 创建并设置昵称
         QLabel *nameLabel=new QLabel;
+        nameLabel->setStyleSheet("QLabel { color : #FFFFFF; }");
         nameLabel->resize(150,60);
         nameLabel->setText("     "+friendData.name);
         // 设置字体大小和样式
@@ -207,8 +216,10 @@ public:
         layout->addWidget(headImageLabel);
         layout->addWidget(nameLabel);
         this->setLayout(layout);
-        MyFriend itemFriend=friendData;
+        itemFriend=friendData;
     }
+    void mousePressEvent(QMouseEvent *event) override;
+    MyFriend itemFriend;
 };
 
 class RequestWidgetItem : public QWidget
@@ -219,6 +230,8 @@ public:
     explicit RequestWidgetItem(const MyRequsest& requestData, QWidget* parent = nullptr)
         : QWidget(parent)
     {
+
+
         // 使用QHBoxLayout将头像和昵称放在一行中
         this->resize(210,70);
         QHBoxLayout* layout = new QHBoxLayout;
@@ -274,6 +287,7 @@ public:
         headImageLabel->setPixmap(roundedPixmap.scaled(headImageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         // 创建并设置昵称
         QLabel *nameLabel=new QLabel;
+        nameLabel->setStyleSheet("QLabel { color : #FFFFFF; }");
         nameLabel->resize(150,60);
         nameLabel->setText("     "+requestData.name);
         // 设置字体大小和样式
@@ -283,8 +297,99 @@ public:
         layout->addWidget(headImageLabel);
         layout->addWidget(nameLabel);
         this->setLayout(layout);
-        MyRequsest itemRequest=requestData;
+        itemRequest=requestData;
+
     }
+
+    void mousePressEvent(QMouseEvent *event) override;
+     MyRequsest itemRequest;
+
 };
+
+
+class ChatWidgetItem : public QWidget
+{
+    Q_OBJECT
+public:
+
+    explicit ChatWidgetItem(const MyFriend& friendData, QWidget* parent = nullptr)
+        : QWidget(parent)
+    {
+        // 使用QHBoxLayout将头像和昵称放在一行中
+        this->resize(210,70);
+        QHBoxLayout* layout = new QHBoxLayout;
+        // 创建并设置头像
+        /*
+        QLabel* headImageLabel = new QLabel(this);
+        QPixmap originalPixmap(friendData.headImage);
+        QPixmap scaledPixmap = originalPixmap.scaled(50, 50, Qt::KeepAspectRatio);  // 设置图片大小
+        headImageLabel->setPixmap(scaledPixmap);
+        layout->addWidget(headImageLabel);*/
+
+
+        /* QString tmp=":/new/prefix2/image/";//QString::number(long_temp,10) :/new/prefix2/image/head (1).JPG
+    tmp=tmp+"head ("+QString::number(i,10);
+    tmp=tmp+").JPG";
+
+    QPixmap originalPixmap(tmp);
+    QPixmap roundedPixmap(originalPixmap.size());
+    roundedPixmap.fill(Qt::transparent); // 设置背景为透明
+    QPainter painter(&roundedPixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QPainterPath path;
+    path.addEllipse(originalPixmap.rect());
+    painter.setClipPath(path);
+    painter.drawPixmap(0, 0, originalPixmap);
+    ui->userImage_2->setPixmap(roundedPixmap);
+*/
+
+
+        QLabel *headImageLabel=new QLabel;
+        headImageLabel->resize(60,60);
+        headImageLabel->setMaximumSize(60,60);
+        headImageLabel->setMinimumSize(60,60);
+        headImageLabel->setMaximumWidth(60);
+        headImageLabel->setMaximumHeight(60);
+        headImageLabel->setMinimumWidth(60);
+        headImageLabel->setMinimumHeight(60);
+        headImageLabel->setScaledContents(true);                                           //控件图片自适应大小
+                                                   //控件图片自适应大小
+        QString tmp=":/new/prefix2/image/";
+        tmp=tmp+friendData.headImage;
+        qDebug()<<tmp;
+        QPixmap originalPixmap(tmp);
+        QPixmap roundedPixmap(originalPixmap.size());
+        roundedPixmap.fill(Qt::transparent); // 设置背景为透明
+        QPainter painter(&roundedPixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        QPainterPath path;
+        path.addEllipse(originalPixmap.rect());
+        painter.setClipPath(path);
+        painter.drawPixmap(0, 0, originalPixmap);
+        //ui->userImage->setPixmap(roundedPixmap);
+        headImageLabel->setPixmap(roundedPixmap.scaled(headImageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        // 创建并设置昵称
+        QLabel *nameLabel=new QLabel;
+        nameLabel->setStyleSheet("QLabel { color : #FFFFFF; }");
+        nameLabel->resize(150,60);
+        nameLabel->setText(" "+friendData.name+"\n"+" "+friendData.account);
+        // 设置字体大小和样式
+        QFont font("Microsoft YaHei");
+        font.setPointSize(10);  // 设置字体大小
+        nameLabel->setFont(font);
+
+
+
+
+
+        layout->addWidget(headImageLabel);
+        layout->addWidget(nameLabel);
+        this->setLayout(layout);
+        itemFriend=friendData;
+    }
+    void mousePressEvent(QMouseEvent *event) override;
+    MyFriend itemFriend;
+};
+
 
 #endif // MAINWINDOW_H

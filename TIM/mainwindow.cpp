@@ -22,8 +22,10 @@
 #include <QDate>
 #include <QStringList>
 #include <QIcon>
+#include <QTimer>
 #include <QSystemTrayIcon>
 #include <QThread>
+extern MyChats *mychats;
 extern MyRequsests* myrequests;
 extern QSystemTrayIcon  *ssystemtrayicon;  //系统托盘
 extern MyFriends *myfriends;
@@ -36,6 +38,8 @@ QString locStr;
 QString birthStr;
 QString getBaseMessageStr;
 QString getBaseRequestMessageStr;
+QString requestToBeFriendStr;
+QString agreeToBeFriendStr;
 extern MainWindow *mainwindow;
 bool MainWindow::isValidDate(const QString &dateStr) {
     // 正则表达式检测基础格式
@@ -199,6 +203,7 @@ MainWindow::MainWindow(QWidget *parent) :
         myrequests->RequestDebug();
         myfriends->removeAllFriendByAccount();
         myrequests->removeAllRequestByAccount();
+        mychats->removeAllFriendByAccount();
         myfriends->friendDebug();
         myrequests->RequestDebug();
         myfriends->friendDebug();
@@ -221,9 +226,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listWidget_chat_2->setFrameStyle(QFrame::NoFrame);
     ui->listWidget_chat_3->setFrameStyle(QFrame::NoFrame);
     ui->listWidget_chat_4->setFrameStyle(QFrame::NoFrame);
-    setplacehodetext(ui->searchLineEdit_2);
 
     ui->close->installEventFilter(this);
+    ui->sendMessage->installEventFilter(this);
+    ui->agreeToBeFriend->installEventFilter(this);
+    ui->requestToBeFriend->installEventFilter(this);
     ui->quitLogin->installEventFilter(this);
     ui->changePsword->installEventFilter(this);
     ui->changeUserMessage->installEventFilter(this);
@@ -359,17 +366,57 @@ MainWindow::MainWindow(QWidget *parent) :
     tcpsocket = new QTcpSocket(this);
     tcpsocket_s = new QTcpSocket(this);
     tcpsocket_application = new QTcpSocket(this);
-    is_open=true;
+    loginpage->isMainWindowOpen=true;
     ui->padLineEdit_2->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+$")));//输入限制
     ui->searchLineEdit_3->setValidator(new QRegExpValidator(QRegExp("[0-9]+$")));//输入限制
     ui->nameChange->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
     ui->psChange_3->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
     ui->localChange_2->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\u4e00-\u9fa5]+")));//输入限制
     setplacehodetextRed(ui->padLineEdit_2);
+    ui->listWidget_chat->setFocusPolicy(Qt::NoFocus);
+    ui->listWidget_message->setFocusPolicy(Qt::NoFocus);
     ui->listWidget_chat_2->setFocusPolicy(Qt::NoFocus);
+    ui->listWidget_chat_3->setFocusPolicy(Qt::NoFocus);
+    ui->listWidget_chat_4->setFocusPolicy(Qt::NoFocus);
     tcpServerConnect_application();
     {
         updateApplication();
+        delete timer1;
+        timer1=nullptr;
+        timer1=new QTimer;
+        delete timer2;
+        timer2=nullptr;
+        timer2=new QTimer;
+        QObject::connect(timer1, &QTimer::timeout, [&]() {
+            if(loginpage->isMainWindowOpen)
+            {
+                updateApplication();
+
+            }
+            else
+            {
+                ;
+            }
+              qDebug() << "3秒后执行的函数";
+              timer1->stop();
+            });
+        QObject::connect(timer2, &QTimer::timeout, [&]() {
+            if(loginpage->isMainWindowOpen)
+            {
+                zha=true;
+            }
+            else
+            {
+                ;
+            }
+              qDebug() << "3秒后执行的函数";
+              timer2->stop();
+            });
+         timer1->setSingleShot(true); // 如果只需要执行一次，设置为 true
+         timer1->start(5000);
+         timer2->setSingleShot(true); // 如果只需要执行一次，设置为 true
+         timer2->start(3000);
+
     }
 
 
@@ -377,6 +424,120 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
+void RequestWidgetItem::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+            // 在此处执行你的指令，例如显示详细信息或执行操作
+            qDebug() << "Item clicked: ";
+            mainwindow->shenqingPage(itemRequest);
+        }
+
+        // 让基类继续处理事件
+        QWidget::mousePressEvent(event);
+}
+
+void FriendWidgetItem::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+            // 在此处执行你的指令，例如显示详细信息或执行操作
+            qDebug() << "Item clicked: ";
+            mainwindow->haoyouPage(itemFriend);
+        }
+
+        // 让基类继续处理事件
+        QWidget::mousePressEvent(event);
+}
+
+void ChatWidgetItem::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+            // 在此处执行你的指令，例如显示详细信息或执行操作
+            qDebug() << "Item clicked: ";
+            mainwindow->chatPage(itemFriend);
+        }
+
+        // 让基类继续处理事件
+        QWidget::mousePressEvent(event);
+}
+
+void MainWindow::chatPage(const MyFriend &friendData)
+{
+    ui->stackedWidget_7->setCurrentIndex(0);
+    ui->messageChangeFlag_5->setText(friendData.name);
+}
+
+void MainWindow::haoyouPage(const MyFriend &friendData)
+{
+    ui->stackedWidget_5->setCurrentIndex(3);
+    QString tmp=":/new/prefix2/image/";
+    tmp=tmp+friendData.headImage;
+    qDebug()<<tmp;
+    QPixmap originalPixmap(tmp);
+    if (originalPixmap.isNull()) {
+        qDebug() << "Image failed to load!";
+    }
+    QPixmap roundedPixmap(originalPixmap.size());
+    roundedPixmap.fill(Qt::transparent); // 设置背景为透明
+    QPainter painter(&roundedPixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QPainterPath path;
+    path.addEllipse(originalPixmap.rect());
+    painter.setClipPath(path);
+    painter.drawPixmap(0, 0, originalPixmap);
+    //ui->userImage->setPixmap(roundedPixmap);
+    ui->userImage_6->setPixmap(roundedPixmap.scaled(ui->userImage_5->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->nameEdit_4->setText(friendData.name);
+    ui->ps_4->setText(friendData.sign);
+    ui->accountLineEdit_4->setText(friendData.account);
+    ui->birthdayLineEdit_4->setText(friendData.birthDay);
+    ui->localLineEdit_4->setText(friendData.localPlace);
+}
+
+
+void MainWindow::shenqingPage(const MyRequsest& friendData)
+{
+  ui->stackedWidget_5->setCurrentIndex(2);
+  ui->messageChangeFlag_4->clear();
+  bool flag=true;
+  //以下代码极其重要
+  for (MyFriend&  friendObj :myfriends->friendsList) {
+   if(friendObj.account==friendData.account)
+   {
+       flag=false;
+   }
+  }
+  if(flag)
+  {
+      ;
+  }
+  else
+  {
+      ui->messageChangeFlag_4->setText("已添加对方为好友");
+  }
+  ui->nameEdit_3->setText(friendData.name);
+  ui->ps_3->setText(friendData.sign);
+  ui->accountLineEdit_3->setText(friendData.account);
+  ui->birthdayLineEdit_3->setText(friendData.birthDay);
+  ui->localLineEdit_3->setText(friendData.localPlace);
+  QString tmp=":/new/prefix2/image/";
+  tmp=tmp+friendData.headImage;
+  qDebug()<<tmp;
+  QPixmap originalPixmap(tmp);
+  if (originalPixmap.isNull()) {
+      qDebug() << "Image failed to load!";
+  }
+  QPixmap roundedPixmap(originalPixmap.size());
+  roundedPixmap.fill(Qt::transparent); // 设置背景为透明
+  QPainter painter(&roundedPixmap);
+  painter.setRenderHint(QPainter::Antialiasing);
+  QPainterPath path;
+  path.addEllipse(originalPixmap.rect());
+  painter.setClipPath(path);
+  painter.drawPixmap(0, 0, originalPixmap);
+  //ui->userImage->setPixmap(roundedPixmap);
+  ui->userImage_5->setPixmap(roundedPixmap.scaled(ui->userImage_5->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+}
 bool writeStringToFile(const QString &str, const QString &filePath) {
     // 创建一个文件对象
     QFile file(filePath);
@@ -496,14 +657,7 @@ void MainWindow::updateApplication()
 
 void MainWindow::updateItem()
 {
-    if(true)
-    {
 
-    }
-    else
-    {
-         qDebug()<<"检测到变动 进行刷新";
-    }
     while(ui->listWidget_chat_2->count() > 0) {
            QListWidgetItem* item = ui->listWidget_chat_2->takeItem(0);
            QWidget* widget = ui->listWidget_chat_2->itemWidget(item);
@@ -558,6 +712,34 @@ void MainWindow::updateItem()
        ui->listWidget_chat_4->addItem(item);
        ui->listWidget_chat_4->setItemWidget(item, widgetItem);
     }
+
+    while(ui->listWidget_chat->count() > 0) {
+           QListWidgetItem* item = ui->listWidget_chat->takeItem(0);
+           QWidget* widget = ui->listWidget_chat->itemWidget(item);
+           delete widget;
+           delete item;
+       }
+    ui->listWidget_chat->clear();
+    ui->listWidget_chat->update();
+
+    for (MyFriend& friendObj :mychats->friendsList) {
+        /*
+       FriendWidgetItem fitem(friendObj);
+       QListWidgetItem item;
+       item.setSizeHint(fitem.sizeHint());
+       ui->listWidget_chat_2->addItem(&item);
+       ui->listWidget_chat_2->setItemWidget(&item,&fitem);
+       ui->listWidget_chat_2->update();*/
+       QListWidgetItem* item = new QListWidgetItem(ui->listWidget_chat);
+       ChatWidgetItem* widgetItem = new ChatWidgetItem(friendObj);
+       widgetItem->resize(210,70);
+       item->setSizeHint(widgetItem->sizeHint()); // 使item的大小适应widgetItem
+       ui->listWidget_chat->addItem(item);
+       ui->listWidget_chat->setItemWidget(item, widgetItem);
+    }
+
+
+
 
 }
 
@@ -665,10 +847,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                 ssystemtrayicon->setIcon(icon);
                 myfriends->removeAllFriendByAccount();
                 myrequests->removeAllRequestByAccount();
-                            is_open=false;
+                            loginpage->isMainWindowOpen=false;
                             mainwindow=nullptr;
                             loginpage->commitMessage1("logout");
                             loginpage->loginSuccessFlag=false;
+                            zha=false;
                         }
             animation3->start();
 
@@ -679,11 +862,122 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         }
 
     }
+    // ui->requestToBeFriend
+    else if(qobject_cast<QPushButton*>(obj) == ui->requestToBeFriend)
+    {
+        if(event->type() == QEvent::MouseButtonRelease){
+             bool flag=true;
+             for (MyFriend&  friendObj :myfriends->friendsList) {
+              if(friendObj.account==ui->accountLineEdit_2->text())
+              {
+                  flag=false;
+              }
+             }
+             if(flag)
+             {
+                 requestToBeFriendStr=ui->accountLineEdit_2->text();
+                 sendMessage_application("requestToBeFriend");
+             }
+             else
+             {
+                 ui->messageChangeFlag_2->setText("已成为好友");
+             }
+            }
+        else if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+
+    }
+
+    else if(qobject_cast<QPushButton*>(obj) == ui->sendMessage)
+    {
+        if(event->type() == QEvent::MouseButtonRelease)
+        {
+            for (MyFriend&  friendObj :myfriends->friendsList) {
+              if(friendObj.account==ui->accountLineEdit_4->text())
+              {
+                  MyFriend* mf=mychats->findFriendByAccount(friendObj.account);
+                  if(mf== nullptr)
+                  {
+                      mychats->addFriend(friendObj);
+                      mainwindow->updateFlag=true;
+                      ui->tabWidget->setCurrentIndex(0);
+                  }
+                  else
+                  {
+                      ui->tabWidget->setCurrentIndex(0);
+                  }
+
+
+              }
+            }
+
+        }
+        else if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+    }
+
+
+    else if(qobject_cast<QPushButton*>(obj) == ui->agreeToBeFriend)
+    {
+        if(event->type() == QEvent::MouseButtonRelease){
+             bool flag=true;
+             for (MyFriend&  friendObj :myfriends->friendsList) {
+              if(friendObj.account==ui->accountLineEdit_3->text())
+              {
+                  flag=false;
+              }
+             }
+             if(flag)
+             {
+                 agreeToBeFriendStr=ui->accountLineEdit_3->text();//agreeToBeFriend
+                 sendMessage_application("agreeToBeFriend");
+                 for (MyRequsest& requestObj :myrequests->requestsList) {
+
+                     if(requestObj.account==ui->accountLineEdit_3->text())
+                     {
+                         MyFriend tempFriend;
+                         tempFriend.account=requestObj.account;
+                         tempFriend.name=requestObj.name;
+                         tempFriend.password=requestObj.password;
+                         tempFriend.sign=requestObj.sign;
+                         tempFriend.headImage=requestObj.headImage;
+                         tempFriend.phoneNumber=requestObj.phoneNumber;
+                         tempFriend.birthDay=requestObj.birthDay;
+                         tempFriend.localPlace=requestObj.localPlace;
+                         tempFriend.Tagt=requestObj.Tagt;
+                         tempFriend.VIP_Level=requestObj.VIP_Level;
+                         myfriends->addFriend(tempFriend);
+                         updateItem();
+                         break;
+                     }
+                 }
+                 //requestToBeFriendStr=ui->accountLineEdit_2->text();
+                 //sendMessage_application("requestToBeFriend");
+             }
+             else
+             {
+                 ui->messageChangeFlag_4->setText("已成为好友");
+             }
+            }
+        else if(event->type() == QEvent::MouseMove)
+        {
+            return true;
+        }
+
+    }
+
 
     else if(qobject_cast<QPushButton*>(obj) == ui->friends)
     {
         if(event->type() == QEvent::MouseButtonRelease){
             ui->stackedWidget_3->setCurrentIndex(0);
+            ui->widget_button_1->setStyleSheet("QWidget#widget_button_1 { background-color:  rgba(255,255,255,150); }");
+            ui->widget_button_2->setStyleSheet("QWidget#widget_button_2 { background-color:  rgba(255,255,255,50); }");
+            ui->widget_button_3->setStyleSheet("QWidget#widget_button_3 { background-color:  rgba(255,255,255,50); }");
 
             }
         else if(event->type() == QEvent::MouseMove)
@@ -697,7 +991,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         if(event->type() == QEvent::MouseButtonRelease){
             ui->stackedWidget_3->setCurrentIndex(2);
-
+            ui->widget_button_1->setStyleSheet("QWidget#widget_button_1 { background-color:  rgba(255,255,255,50); }");
+            ui->widget_button_2->setStyleSheet("QWidget#widget_button_2 { background-color:  rgba(255,255,255,50); }");
+            ui->widget_button_3->setStyleSheet("QWidget#widget_button_3 { background-color:  rgba(255,255,255,150); }");
             }
         else if(event->type() == QEvent::MouseMove)
         {
@@ -714,6 +1010,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
            ui->stackedWidget_6->setCurrentIndex(0);
            ui->messageChangeFlag_3->clear();
            ui->messageChangeFlag_6->clear();
+           ui->messageChangeFlag_2->clear();
 
         }
         else if(event->type() == QEvent::MouseButtonPress)
@@ -740,6 +1037,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         if(event->type() == QEvent::MouseButtonRelease){
            ui->widget_search2->setStyleSheet("background: rgba(255,255,255,50)");//color:#FFFAFA;
+           ui->messageChangeFlag_2->clear();
            if(ui->searchLineEdit_3->text().isEmpty())
            {
                ui->searchLineEdit_3->setPlaceholderText("键入账号或群号搜索");
@@ -2976,9 +3274,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                 //添加图标
                 ssystemtrayicon->setIcon(icon);
                             mainwindow=nullptr;
-                            is_open=false;
+                            loginpage->isMainWindowOpen=false;
                             loginpage->commitMessage1("logout");
                             loginpage->loginSuccessFlag=false;
+                            zha=false;
                         }
             animation4->start();
 
@@ -3619,6 +3918,36 @@ void MainWindow::sendMessage_application(QString Msg)
         tcpsocket_application->write(message);
         tcpsocket_application->waitForBytesWritten();
     }
+    else if(Msg=="requestToBeFriend")
+    {
+        QString string = "requestToBeFriend|" + currentuser->account+"|"+ui->accountLineEdit_2->text();
+        QByteArray message;
+        //以只读打开QByteArray，并设置版本，服务端客户端要一致
+        QDataStream out(&message,QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_5_14);
+        //写入输出流
+        out << string;
+        qDebug() << "requestToBeFriend::sendMessage:" << string;
+        //发送信息
+        tcpsocket_application->write(message);
+        ui->messageChangeFlag_2->setText("发送成功");
+    }
+    else if(Msg=="agreeToBeFriend")
+    {
+        //agreeToBeFriend
+        QString string = "agreeToBeFriend|" + currentuser->account+"|"+ui->accountLineEdit_3->text();
+        QByteArray message;
+        //以只读打开QByteArray，并设置版本，服务端客户端要一致
+        QDataStream out(&message,QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_5_14);
+        //写入输出流
+        out << string;
+        qDebug() << "agreeToBeFriend::sendMessage:" << string;
+        //发送信息
+        tcpsocket_application->write(message);
+        tcpsocket_application->waitForBytesWritten();
+         ui->messageChangeFlag_4->setText("发送成功");
+    }
     else if(Msg == "searchUserToAdd")
     {
         QString string = "searchUserToAdd|" + currentuser->account+"|"+ui->searchLineEdit_3->text();
@@ -3858,7 +4187,6 @@ void MainWindow::readMessage_application()
     stream.setVersion(QDataStream::Qt_5_4); // 使用与发送端相同的Qt版本
     stream >> greeting;
     //读取的信息
-    qDebug() << "getRequests::readMessage:" << greeting;
     //字符串分割
     QStringList msg = greeting.split("|");
     if(msg[0] == "getRequests"){
@@ -3866,6 +4194,19 @@ void MainWindow::readMessage_application()
          if(account==currentuser->account)
          {
            qDebug() << "getRequests successfully" << greeting;
+
+           QString fileName = QCoreApplication::applicationDirPath();
+                   //用户目录
+           QString add = "//..//TFWUserFile";
+                   //创建用户文件夹
+           fileName = fileName + add +QString("//%1").arg(currentuser->account);
+           QString fileName1=fileName +"//requests.txt";
+           bool ifopen=writeStringToFile(msg[2],fileName1);
+           if(ifopen)
+           {
+               qDebug()<<"好友初始化成功";
+           }
+
          }
     }
     else if(msg[0] == "getFriends")
@@ -4008,12 +4349,6 @@ void MainWindow::readMessage_application()
                 myfriends->addFriend(tempFriend);
                 mainwindow->updateFlag=true;
 
-
-
-
-
-
-
             }
             else
             {
@@ -4050,6 +4385,18 @@ void MainWindow::readMessage_application()
     {
         ;
     }
+    else if(msg[0]=="jihuo")
+    {
+        qDebug() << "接收到激活信号";
+        account = msg[1];
+        if(account==currentuser->account)
+        {
+            qDebug() << "激活函数执行";
+            updateApplication();
+            qDebug() << "激活函数执行成功";
+
+        }
+    }
 }
 
 
@@ -4066,6 +4413,14 @@ MainWindow::~MainWindow()
     delete tcpsocket;
     delete tcpsocket_s;
     delete ui;
+    if(timer1)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       {
+        delete timer1;
+    }
+    if(timer2)
+    {
+        delete timer2;
+    }
 }
 
 

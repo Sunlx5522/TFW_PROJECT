@@ -1333,10 +1333,120 @@ void Widget::readMessage_news(){
             ui->display_screen->append("用户:"+account+"请求添加好友列表");
             sendMessage_news(message);
         }
+        else if(flag=="agreeToBeFriend")
+        {
+            //agreeToBeFriend
+            ui->display_screen->append(getCurrentDateTimeString());
+            ui->display_screen->append("用户:"+account+"同意添加"+msg[2]+"为好友");
+
+            {
+                QString fileName = QCoreApplication::applicationDirPath();
+                        //用户目录
+                QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                        //创建用户文件夹
+                fileName = fileName + add +QString("//%1").arg(msg[2]);
+                qDebug() <<account;
+                        //信息保存
+                QDir * file = new QDir;
+                        //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+                bool exist_1 = file->exists(fileName);
+                qDebug() <<fileName;
+                if(exist_1)
+                {
+                    QFile file(fileName +"//friendsData.txt");
+                    file.open(QIODevice::Append | QIODevice::Text);
+                    QTextStream stream(&file);
+                    qDebug()<<"写入内容" <<msg[2];
+                    ui->display_screen->append("写入内容"+account);
+                    if(file.size()>0)
+                    {
+                        stream << "\n";
+                    }
+                    stream << account;
+                    file.close();
+                    QString message;
+                    message="jihuo|"+msg[2];
+                    sendMessage_news(message);
+                    ui->display_screen->append("请求发送成功");
+                    ui->display_screen->append("------------------------------------------------------------------------");
+                }
+            }
 
 
 
+            {
+                QString fileName = QCoreApplication::applicationDirPath();
+                        //用户目录
+                QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                        //创建用户文件夹
+                fileName = fileName + add +QString("//%1").arg(account);
+                qDebug() <<account;
+                        //信息保存
+                QDir * file = new QDir;
+                        //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+                bool exist_1 = file->exists(fileName);
+                qDebug() <<fileName;
+                if(exist_1)
+                {
+                    QFile file(fileName +"//friendsData.txt");
+                    file.open(QIODevice::Append | QIODevice::Text);
+                    QTextStream stream(&file);
+                    qDebug()<<"写入内容" <<msg[2];
+                    ui->display_screen->append("写入内容"+msg[2]);
+                    if(file.size()>0)
+                    {
+                        stream << "\n";
+                    }
+                    stream << msg[2];
+                    file.close();
+                    QString message;
+                    message="jihuo|"+account;
+                    sendMessage_news(message);
+                    ui->display_screen->append("请求发送成功");
+                    ui->display_screen->append("------------------------------------------------------------------------");
+                }
+            }
 
+
+        }
+        else if(flag=="requestToBeFriend")
+        {
+            ui->display_screen->append(getCurrentDateTimeString());
+            ui->display_screen->append("用户:"+account+"请求添加"+msg[2]+"为好友");
+
+            {
+                QString fileName = QCoreApplication::applicationDirPath();
+                        //用户目录
+                QString add = "//..//TFW_CHAT_SERVE_UserFile";
+                        //创建用户文件夹
+                fileName = fileName + add +QString("//%1").arg(msg[2]);
+                qDebug() <<account;
+                        //信息保存
+                QDir * file = new QDir;
+                        //文件夹是否存在，若存在则表示信息已经存在，只需要更新内容即可。
+                bool exist_1 = file->exists(fileName);
+                qDebug() <<fileName;
+                if(exist_1)
+                {
+                    QFile file(fileName +"//requestData.txt");
+                    file.open(QIODevice::Append | QIODevice::Text);
+                    QTextStream stream(&file);
+                    qDebug()<<"写入内容" <<msg[2];
+                    ui->display_screen->append("写入内容"+account);
+                    if(file.size()>0)
+                    {
+                        stream << "\n";
+                    }
+                    stream << account;
+                    file.close();
+                    QString message;
+                    message="jihuo|"+msg[2];
+                    sendMessage_news(message);
+                    ui->display_screen->append("请求发送成功");
+                    ui->display_screen->append("------------------------------------------------------------------------");
+                }
+            }
+        }
 }
 
 //发送
@@ -1382,6 +1492,24 @@ void Widget::sendMessage_news(QString information){
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
+     }
+     else if(flag=="jihuo")
+     {
+         QByteArray message;
+         //设置输出流只写，并设置版本
+         QDataStream out(&message,QIODevice::WriteOnly);
+         out.setVersion(QDataStream::Qt_5_14);
+         out << str;
+         //遍历客户端，嵌套字写入
+         for(int i = 0; i < clients_news->length(); i++){
+             clients_news->at(i)->write(message);
+             clients_news->at(i)->waitForBytesWritten();
+         }
+         qDebug() << "Server_send:" << str;
+         qDebug() << "sendMessage_news:发送完成";
+         ui->display_screen->append(getCurrentDateTimeString());
+         ui->display_screen->append("激活信息发送成功");
+         ui->display_screen->append("------------------------------------------------------------------------");
      }
      else if(flag=="getBaseMessage")
      {

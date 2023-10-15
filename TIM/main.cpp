@@ -23,6 +23,7 @@ Widget* loginpage;
 CurrentUser* currentuser;
 MyFriends *myfriends;
 MyRequsests* myrequests;
+MyChats *mychats;
 signUp* signuppage;
 qrcode *qrcodepage;
 addressSetting* addresssetting;
@@ -33,7 +34,13 @@ MainWindow *mainwindow=nullptr;
 QTcpSocket *client1_s;
 void closeAppkication(void)
 {
-    aa->quit();
+    if(loginpage->loginSuccessFlag)
+    {
+        loginpage->commitMessage1("logout");
+        loginpage->client1->waitForBytesWritten();
+        loginpage->loginSuccessFlag=false;
+    }
+   aa->quit();
 }
 int main(int argc, char *argv[])                                                             /*必须规范写法 因为涉及到传值*/
 {  
@@ -65,6 +72,8 @@ int main(int argc, char *argv[])                                                
     myfriends =&myFriends;
     MyRequsests myRequests;
     myrequests=&myRequests;
+    MyChats myChats;
+    mychats=&myChats;
     signUp SingUpPage; //注册功能类的实例化
     signuppage=&SingUpPage; //指针复制 便于操作
     qrcode * QrcodePage = nullptr; //二维码页面的指针 在widget.cpp中 若点击相应按钮 则有相应的创建操作
