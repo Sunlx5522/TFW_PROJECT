@@ -84,9 +84,12 @@ public:
     void changeMessage();
     void shenqingPage(const MyRequsest& friendData);
     void haoyouPage(const MyFriend& friendData);
-    void chatPage(const MyFriend& friendData);
+    void chatPage(const MyFriend& friendData,MyMessages&);
     bool updateFlag=false;
     bool zha=false;
+    bool xinzha=false;
+    bool xinhao=false;
+    void zhixing();
     bool readAccountsAndDisplay(const QString &filePath);
     void appConnect()
     {
@@ -141,6 +144,10 @@ private:
     QThread* thread2;
     QTimer *timer1=new QTimer;
     QTimer *timer2=new QTimer;
+    QTimer *timer3=new QTimer;
+    QTimer *timer4=new QTimer;
+    QTimer *timer5=new QTimer;
+
 };
 
 class FriendWidgetItem : public QWidget
@@ -312,7 +319,7 @@ class ChatWidgetItem : public QWidget
     Q_OBJECT
 public:
 
-    explicit ChatWidgetItem(const MyFriend& friendData, QWidget* parent = nullptr)
+    explicit ChatWidgetItem(const MyChat& chatData, QWidget* parent = nullptr)
         : QWidget(parent)
     {
         // 使用QHBoxLayout将头像和昵称放在一行中
@@ -355,7 +362,7 @@ public:
         headImageLabel->setScaledContents(true);                                           //控件图片自适应大小
                                                    //控件图片自适应大小
         QString tmp=":/new/prefix2/image/";
-        tmp=tmp+friendData.headImage;
+        tmp=tmp+chatData.Friend.headImage;
         qDebug()<<tmp;
         QPixmap originalPixmap(tmp);
         QPixmap roundedPixmap(originalPixmap.size());
@@ -372,24 +379,95 @@ public:
         QLabel *nameLabel=new QLabel;
         nameLabel->setStyleSheet("QLabel { color : #FFFFFF; }");
         nameLabel->resize(150,60);
-        nameLabel->setText(" "+friendData.name+"\n"+" "+friendData.account);
+        nameLabel->setText(" "+chatData.Friend.name+"\n"+" "+chatData.Friend.account);
         // 设置字体大小和样式
         QFont font("Microsoft YaHei");
         font.setPointSize(10);  // 设置字体大小
         nameLabel->setFont(font);
 
-
-
-
-
         layout->addWidget(headImageLabel);
         layout->addWidget(nameLabel);
         this->setLayout(layout);
-        itemFriend=friendData;
+        itemChat=chatData;
     }
     void mousePressEvent(QMouseEvent *event) override;
-    MyFriend itemFriend;
+    MyMessages messages;
+    MyChat itemChat;
 };
 
+class messageWidgetItem : public QWidget
+{
+    Q_OBJECT
+public:
+
+    explicit messageWidgetItem(const MyMessage& messageData,int i,QString h1,QWidget* parent = nullptr)
+        : QWidget(parent)
+    {
+
+
+        this->resize(491,70);
+        QHBoxLayout* layout = new QHBoxLayout;
+        QLabel *headImageLabel=new QLabel;
+        headImageLabel->resize(60,60);
+        headImageLabel->setMaximumSize(60,60);
+        headImageLabel->setMinimumSize(60,60);
+        headImageLabel->setMaximumWidth(60);
+        headImageLabel->setMaximumHeight(60);
+        headImageLabel->setMinimumWidth(60);
+        headImageLabel->setMinimumHeight(60);
+        headImageLabel->setScaledContents(true);
+        QString tmp=":/new/prefix2/image/";
+        tmp=tmp+h1;
+        qDebug()<<tmp;
+        QPixmap originalPixmap(tmp);
+        QPixmap roundedPixmap(originalPixmap.size());
+        roundedPixmap.fill(Qt::transparent); // 设置背景为透明
+        QPainter painter(&roundedPixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        QPainterPath path;
+        path.addEllipse(originalPixmap.rect());
+        painter.setClipPath(path);
+        painter.drawPixmap(0, 0, originalPixmap);
+        //ui->userImage->setPixmap(roundedPixmap);
+        headImageLabel->setPixmap(roundedPixmap.scaled(headImageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+
+        // 创建并设置昵称
+        QLabel *nameLabel=new QLabel;
+        nameLabel->setStyleSheet("QLabel { color : #FFFFFF; background: rgb(89, 164, 222);border: 1px solid rgba(220,220,220, 200);border-radius:5px; }");
+        nameLabel->resize(150,60);
+        nameLabel->setMaximumSize(150,60);
+        nameLabel->setMinimumSize(150,60);
+        nameLabel->setMaximumWidth(150);
+        nameLabel->setMinimumWidth(150);
+        nameLabel->setMaximumHeight(60);
+        nameLabel->setMinimumHeight(60);
+        nameLabel->setText(messageData.message);
+        qDebug()<<messageData.message;
+        // 设置字体大小和样式
+        QFont font("Microsoft YaHei");
+        font.setPointSize(10);  // 设置字体大小
+        nameLabel->setFont(font);
+        if(i==0)
+        {
+            qDebug()<<"左";          
+            layout->addWidget(headImageLabel);
+            layout->addWidget(nameLabel);
+            layout->addStretch();
+
+        }
+        else
+        {
+            qDebug()<<"右";
+            layout->addStretch();
+            layout->addWidget(nameLabel);
+            layout->addWidget(headImageLabel);
+        }
+        itemMessage=messageData;
+        this->setLayout(layout);
+
+    }
+    MyMessage itemMessage;
+};
 
 #endif // MAINWINDOW_H

@@ -461,6 +461,29 @@ background: rgba(255,255,255,100);</string>
 /*frame是整个widget里面的容器，用于放置控件 整体拖动*/
 /*背景图片*/
 background: rgba(255,255,255,0);
+}
+
+QScrollBar:vertical {
+    border: none; /* 无边框 */
+    background: skyblue; /* 背景色与QListWidget一致 */
+    width: 15px; /* 设置宽度 */
+    margin: 15px 0 15px 0; /* 上右下左的边距 */
+}
+
+QScrollBar::handle:vertical {
+    background: lightblue; /* 滚动条颜色较浅的天蓝色 */
+    min-height: 30px; /* 最小高度 */
+    border-radius: 7px; /* 边缘圆润 */
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    border: none; /* 无边框 */
+    background: none; /* 无背景 */
+    /*height: 0; /* 高度设置为0，实际上是移除了按钮 */
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none; /* 无背景 */
 }</string>
             </property>
            </widget>
@@ -1090,7 +1113,7 @@ background: rgba(255,255,255,50);
             </rect>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="page_30">
             <widget class="QWidget" name="widget_24" native="true">

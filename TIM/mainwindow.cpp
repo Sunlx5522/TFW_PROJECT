@@ -24,13 +24,16 @@
 #include <QIcon>
 #include <QTimer>
 #include <QSystemTrayIcon>
+#include <QDateTime>
 #include <QThread>
+MyFriend currentfriend;
 extern MyChats *mychats;
 extern MyRequsests* myrequests;
 extern QSystemTrayIcon  *ssystemtrayicon;  //系统托盘
 extern MyFriends *myfriends;
 MyFriend friendSearch;
 //用于修改信息
+QString sendmymessagestr;
 QString headStr;
 QString nameStr;
 QString psStr;
@@ -41,6 +44,10 @@ QString getBaseRequestMessageStr;
 QString requestToBeFriendStr;
 QString agreeToBeFriendStr;
 extern MainWindow *mainwindow;
+QString getCurrentDateTimeString() {
+    QDateTime current = QDateTime::currentDateTime();
+    return current.toString("yyyy_MM_dd_HH_mm_ss");
+}
 bool MainWindow::isValidDate(const QString &dateStr) {
     // 正则表达式检测基础格式
     QRegularExpression regex("^(\\d{4})_(\\d{1,2})_(\\d{1,2})$");
@@ -203,7 +210,7 @@ MainWindow::MainWindow(QWidget *parent) :
         myrequests->RequestDebug();
         myfriends->removeAllFriendByAccount();
         myrequests->removeAllRequestByAccount();
-        mychats->removeAllFriendByAccount();
+        mychats->removeAllChatByAccount();
         myfriends->friendDebug();
         myrequests->RequestDebug();
         myfriends->friendDebug();
@@ -227,6 +234,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listWidget_chat_3->setFrameStyle(QFrame::NoFrame);
     ui->listWidget_chat_4->setFrameStyle(QFrame::NoFrame);
 
+    ui->sendMyMessage->installEventFilter(this);
     ui->close->installEventFilter(this);
     ui->sendMessage->installEventFilter(this);
     ui->agreeToBeFriend->installEventFilter(this);
@@ -380,6 +388,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listWidget_chat_4->setFocusPolicy(Qt::NoFocus);
     tcpServerConnect_application();
     {
+
+        /*delete timer4;
+        timer4=nullptr;
+        timer4=new QTimer;
+        QObject::connect(timer4, &QTimer::timeout, [&]() {
+              timer2->stop();
+            });
+        timer4->setSingleShot(true); // 如果只需要执行一次，设置为 true
+        timer4->start(3000);*/
+
+
+
         updateApplication();
         delete timer1;
         timer1=nullptr;
@@ -424,6 +444,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
+
+void MainWindow::zhixing()
+{
+    MyChat* temp=mychats->findChatByAccount(currentfriend.account);
+    if(temp==nullptr)
+    {
+        ;
+    }
+    else
+    {
+      mainwindow->chatPage(temp->Friend,temp->messages);
+    }
+}
+
 void RequestWidgetItem::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
@@ -452,18 +486,57 @@ void ChatWidgetItem::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
             // 在此处执行你的指令，例如显示详细信息或执行操作
-            qDebug() << "Item clicked: ";
-            mainwindow->chatPage(itemFriend);
-        }
 
+            qDebug() << "Item clicked: ";
+            currentfriend=itemChat.Friend;
+            MyChat* temp=mychats->findChatByAccount(currentfriend.account);
+            if(temp==nullptr)
+            {
+                qDebug() <<"未找到";
+            }
+            else
+            {
+                mainwindow->xinhao=true;
+                mainwindow->chatPage(temp->Friend,temp->messages);
+            }
+        }
         // 让基类继续处理事件
         QWidget::mousePressEvent(event);
 }
 
-void MainWindow::chatPage(const MyFriend &friendData)
+void MainWindow::chatPage(const MyFriend &friendData,MyMessages &msg)
 {
     ui->stackedWidget_7->setCurrentIndex(0);
     ui->messageChangeFlag_5->setText(friendData.name);
+    //界面刷新
+    ui->listWidget_message->clear();
+    ui->listWidget_message->update();
+
+    while(ui->listWidget_message->count() > 0) {
+           QListWidgetItem* item = ui->listWidget_message->takeItem(0);
+           QWidget* widget = ui->listWidget_message->itemWidget(item);
+           delete widget;
+           delete item;
+       }
+    for (MyMessage& messageObj :msg.messagesList) {
+       QListWidgetItem* item = new QListWidgetItem(ui->listWidget_message);
+       item->setFlags(item->flags()& ~Qt::ItemIsSelectable);
+        messageWidgetItem* widgetItem;
+       if(messageObj.user1==currentuser->account)
+       {
+            widgetItem = new messageWidgetItem(messageObj,1,currentuser->headImage);
+       }
+       else
+       {
+
+            widgetItem = new messageWidgetItem(messageObj,0,friendData.headImage);
+       }
+       widgetItem->resize(491,70);
+       item->setSizeHint(widgetItem->sizeHint()); // 使item的大小适应widgetItem
+       ui->listWidget_message->addItem(item);
+       ui->listWidget_message->setItemWidget(item, widgetItem);
+    }
+
 }
 
 void MainWindow::haoyouPage(const MyFriend &friendData)
@@ -722,7 +795,7 @@ void MainWindow::updateItem()
     ui->listWidget_chat->clear();
     ui->listWidget_chat->update();
 
-    for (MyFriend& friendObj :mychats->friendsList) {
+    for (MyChat& chatObj :mychats->chatList) {
         /*
        FriendWidgetItem fitem(friendObj);
        QListWidgetItem item;
@@ -731,7 +804,7 @@ void MainWindow::updateItem()
        ui->listWidget_chat_2->setItemWidget(&item,&fitem);
        ui->listWidget_chat_2->update();*/
        QListWidgetItem* item = new QListWidgetItem(ui->listWidget_chat);
-       ChatWidgetItem* widgetItem = new ChatWidgetItem(friendObj);
+       ChatWidgetItem* widgetItem = new ChatWidgetItem(chatObj);
        widgetItem->resize(210,70);
        item->setSizeHint(widgetItem->sizeHint()); // 使item的大小适应widgetItem
        ui->listWidget_chat->addItem(item);
@@ -852,6 +925,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                             loginpage->commitMessage1("logout");
                             loginpage->loginSuccessFlag=false;
                             zha=false;
+                            xinzha=false;
+                            xinhao=false;
                         }
             animation3->start();
 
@@ -897,10 +972,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             for (MyFriend&  friendObj :myfriends->friendsList) {
               if(friendObj.account==ui->accountLineEdit_4->text())
               {
-                  MyFriend* mf=mychats->findFriendByAccount(friendObj.account);
+                  MyChat* mf=mychats->findChatByAccount(friendObj.account);
                   if(mf== nullptr)
                   {
-                      mychats->addFriend(friendObj);
+                      MyChat temp(friendObj);
+                      mychats->addchat(temp);
                       mainwindow->updateFlag=true;
                       ui->tabWidget->setCurrentIndex(0);
                   }
@@ -919,6 +995,36 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
     }
+
+    else if(qobject_cast<QPushButton*>(obj) == ui->sendMyMessage)
+    {
+       if(event->type() == QEvent::MouseButtonRelease)
+       {
+           sendMessage_application("sendMyMessage");
+           sendmymessagestr=ui->message_textEdit_2->toPlainText();
+           MyChat* temp=mychats->findChatByAccount(currentfriend.account);
+           if(temp==nullptr)
+           {
+               qDebug() <<"未找到";
+           }
+           else
+           {   MyMessage msg;
+               msg.time=getCurrentDateTimeString();
+               msg.user1=currentuser->account;
+               msg.user2=currentfriend.account;
+               msg.message=ui->message_textEdit_2->toPlainText();
+               ui->message_textEdit_2->clear();
+               temp->messages.addMessage(msg);
+               mainwindow->chatPage(temp->Friend,temp->messages);
+           }
+
+       }
+       else if(event->type() == QEvent::MouseMove)
+       {
+           return true;
+       }
+    }
+
 
 
     else if(qobject_cast<QPushButton*>(obj) == ui->agreeToBeFriend)
@@ -3278,6 +3384,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                             loginpage->commitMessage1("logout");
                             loginpage->loginSuccessFlag=false;
                             zha=false;
+                            xinzha=false;
+                            xinhao=false;
                         }
             animation4->start();
 
@@ -3814,7 +3922,7 @@ void MainWindow::tcpServerConnect_application()
     //实例化socket
     tcpsocket_application = new QTcpSocket(this);
     //断开现有连接
-    //tcpsocket_application->abort();
+    tcpsocket_application->abort();
     //连接到本地的7777端口
     tcpsocket_application->connectToHost(tfwaddress->serveRemoteAddress, tfwaddress->port6666);
     //有可读信息，发送readyRead()
@@ -4005,6 +4113,19 @@ void MainWindow::sendMessage_application(QString Msg)
         //发送信息
         tcpsocket_application->write(message);
 
+    }
+    else if(Msg == "sendMyMessage")
+    {
+        QString string = "sendMyMessage|" + currentuser->account+"|"+currentfriend.account+"|"+getCurrentDateTimeString()+"|"+sendmymessagestr;
+        QByteArray message;
+        //以只读打开QByteArray，并设置版本，服务端客户端要一致
+        QDataStream out(&message,QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_5_14);
+        //写入输出流
+        out << string;
+        qDebug() << "消息发送成功" << string;
+        //发送信息
+        tcpsocket_application->write(message);
     }
     qDebug() << "getRequests::sendMessage:发送完成";
 }
@@ -4385,6 +4506,44 @@ void MainWindow::readMessage_application()
     {
         ;
     }
+    else if(msg[0]=="sendMyMessage")
+    {
+        qDebug() << "我接受到了一个信号 但不知道是不是发给我";
+        account = msg[2];
+        if(account==currentuser->account)
+        {
+            qDebug() << "它确实是发给我的";
+            MyMessage ms;
+            ms.time=msg[3];
+            ms.user1=msg[1];
+            ms.user2=msg[2];
+            ms.message=msg[4];
+            MyChat* temp=mychats->findChatByAccount(msg[1]);
+            if(temp==nullptr)
+            {
+                qDebug() <<"未找到";
+            }
+            else
+            {
+                temp->messages.addMessage(ms);
+                if(msg[1]==currentfriend.account)
+                {
+
+                          mainwindow->chatPage(temp->Friend,temp->messages);
+                          xinzha=true;
+                }
+                else
+                {
+                    ;
+                }
+
+            }
+
+
+        }
+
+
+    }
     else if(msg[0]=="jihuo")
     {
         qDebug() << "接收到激活信号";
@@ -4420,6 +4579,18 @@ MainWindow::~MainWindow()
     if(timer2)
     {
         delete timer2;
+    }
+    if(timer3)
+    {
+        delete timer3;
+    }
+    if(timer4)
+    {
+        delete timer4;
+    }
+    if(timer5)
+    {
+        delete timer5;
     }
 }
 

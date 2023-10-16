@@ -16,6 +16,10 @@ HeartBeat_s::HeartBeat_s(QObject* parent) :
     m_timer_s.start(500);  // 每3秒检查一次
     connect(&m_timer_f, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_f);
     m_timer_f.start(20);  // 每5秒检查一次
+    connect(&m_timer_ff, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_ff);
+    m_timer_ff.start(1500);  // 每5秒检查一次
+    //connect(&m_timer_fff, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_fff);
+    //m_timer_fff.start(5000);  // 每5秒检查一次
 }
 void HeartBeat_s::applicationConnection()
 {
@@ -114,6 +118,81 @@ void HeartBeat_s::applicationConnection_f()
     }
     }
 }
+
+void HeartBeat_s::applicationConnection_ff()
+{
+    if(mainwindow==nullptr)
+    {
+
+    }
+    else
+    {
+    if(loginpage->isMainWindowOpen)
+    {
+      if(mainwindow->xinhao)
+      {
+          qDebug() << "信号已激活---";
+          if(mainwindow->xinzha)
+          {
+              qDebug() << "应对当前页面进行刷新---";
+              //刷新函数
+              mainwindow->zhixing();
+              mainwindow->xinzha=false;
+          }
+      }
+      else
+      {
+
+      }
+
+    }
+    else
+    {
+        ;
+    }
+    }
+}
+
+
+
+
+
+
+
+void HeartBeat_s::applicationConnection_fff()
+{
+    if(mainwindow==nullptr)
+    {
+
+    }
+    else
+    {
+    if(loginpage->isMainWindowOpen)
+    {
+      if(mainwindow->xinhao)
+      {
+          qDebug() << "信号已激活---";
+          qDebug() << "应对当前页面进行刷新---";
+              //刷新函数
+          mainwindow->zhixing();
+
+      }
+      else
+      {
+
+      }
+
+    }
+    else
+    {
+        ;
+    }
+    }
+}
+
+
+
+
 
 HeartBeat_s::~HeartBeat_s()
 {

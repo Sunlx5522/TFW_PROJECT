@@ -241,64 +241,138 @@ private:
 };
 
 
-class MyChats
+
+
+class MyMessage
 {
 public:
-    void addFriend(const MyFriend& newFriend) {
-        friendsList.append(newFriend);
+    QString time;
+    QString user1;
+    QString user2;
+    QString message;
+    bool operator==(const MyMessage& other) const
+        {
+            return time == other.time &&
+                   user1 == other.user1 &&
+                    user2 == other.user2 &&
+                   message == other.message;
+        }
+    MyMessage& operator=(const MyMessage& other)
+       {
+           // 自赋值检查
+           if(this != &other)
+           {
+               time = other.time;
+               user1 = other.user1;
+               user2 = other.user2;
+               message = other.message;
+           }
+           return *this;
+       }
+private:
+};
+
+
+class MyMessages
+{
+public:
+    void addMessage(const MyMessage& newMessage) {
+        messagesList.append(newMessage);
     }
-    MyFriend* findFriendByAccount(const QString& searchAccount) {
-            for (MyFriend& friendObj : friendsList) {
-                if (friendObj.account == searchAccount) {
-                    return &friendObj;
+    MyMessage* findMessageByAccount(const QString& searchTime) {
+            for (MyMessage& messageObj : messagesList) {
+                if (messageObj.time == searchTime) {
+                    return &messageObj;
                 }
             }
             return nullptr;  // 返回nullptr表示未找到对应的MyFriend对象
         }
     // 其他你可能需要的成员函数，例如removeFriend, getFriend, etc.
 
-        void friendDebug() const {
-            for (const MyFriend& friendObj : friendsList) {
-                qDebug() << "Account: " << friendObj.account;
-                qDebug() << "Name: " << friendObj.name;
-                qDebug() << "Password: " << friendObj.password;
-                qDebug() << "Sign: " << friendObj.sign;
-                qDebug() << "Head Image: " << friendObj.headImage;
-                qDebug() << "Phone Number: " << friendObj.phoneNumber;
-                qDebug() << "Birthday: " << friendObj.birthDay;
-                qDebug() << "Local Place: " << friendObj.localPlace;
-                qDebug() << "Tag: " << friendObj.Tagt;
-                qDebug() << "VIP Level: " << friendObj.VIP_Level;
-                qDebug() << "-------------------------";
-            }
-        }
-
-        void removeFriendByAccount(const QString& removeAccount) {
-                for (int i = 0; i < friendsList.size(); ++i) {
-                    if (friendsList[i].account == removeAccount) {
-                        friendsList.removeAt(i);
+        void removeMessageByTime(const QString& removeTime) {
+                for (int i = 0; i < messagesList.size(); i++) {
+                    if (messagesList[i].time == removeTime) {
+                        messagesList.removeAt(i);
                         return;
                     }
                 }
             }
-        void removeAllFriendByAccount() {
-
-                for (int i = 0; i < friendsList.size(); i++) {
-                        friendsList.removeAt(0);
+        void removeAllMessageByAccount() {
+                for (int i = 0; i < messagesList.size(); i++) {
+                        messagesList.removeAt(0);
                 }
-                friendsList=QList<MyFriend>();
+                messagesList=QList<MyMessage>();
 
             }
-     QList<MyFriend> friendsList;
+     QList<MyMessage> messagesList;
 private:
 };
 
+class MyChat{
+public:
+    MyChat()
+    {
+
+    }
+    MyChat(MyFriend& t1)
+    {
+        Friend=t1;
+    }
+    MyFriend Friend;
+    MyMessages messages;
+    bool operator==(const MyChat& other) const
+        {
+            return Friend == other.Friend
+                  ;
+        }
+    MyChat& operator=(const MyChat& other)
+       {
+           // 自赋值检查
+           if(this != &other)
+           {
+               Friend = other.Friend;
+           }
+           return *this;
+       }
+private:
+};
+
+class MyChats
+{
+public:
+    void addchat(const MyChat& newChat) {
+        chatList.append(newChat);
+    }
+    MyChat* findChatByAccount(const QString& searchAccount) {
+            for (MyChat& chatObj : chatList) {
+                if (chatObj.Friend.account == searchAccount) {
+                    return &chatObj;
+                }
+            }
+            return nullptr;  // 返回nullptr表示未找到对应的MyFriend对象
+        }
+    // 其他你可能需要的成员函数，例如removeFriend, getFriend, etc.
 
 
+        void removeChatByAccount(const QString& removeAccount) {
+                for (int i = 0; i < chatList.size(); ++i) {
+                    if (chatList[i].Friend.account == removeAccount) {
+                        chatList.removeAt(i);
+                        return;
+                    }
+                }
+            }
+        void removeAllChatByAccount() {
 
+                for (int i = 0; i < chatList.size(); i++) {
+                        chatList.removeAt(0);
+                }
+                chatList=QList<MyChat>();
 
-
-
+            }
+     QList<MyChat> chatList;
+private:
+};
 
 
 

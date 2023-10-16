@@ -17,7 +17,7 @@ extern Widget *loginpage;
 #include <QFile>
 #include <QDir>
 #include"GetTime.h"
-
+QSqlDatabase *ddb;
 void createFile(QString str)
 {
     QString fileName = QCoreApplication::applicationDirPath();
@@ -32,6 +32,7 @@ bool exist_1 = file->exists(fileName);
 if(exist_1)
 {
     qDebug()<<"已存在";
+
 }
 else
 {
@@ -41,12 +42,17 @@ else
                     {
                      QFile file(fileName +"//friendsData.txt");
                      qDebug()<<fileName +"//friendsData.txt";
+
                      if(file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
                      {
                        qDebug()<<"txt文件创建成功";
                      }
                       file.close();
                     }
+
+
+
+
 
                       {
                       QFile file(fileName +"//groupsData.txt");
@@ -84,6 +90,7 @@ UserList::UserList()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("UserList.db");                                                             //如果文件中已有则不需要重复添加
+    ddb=&db;
     //打开
     if(!db.open()){
       loginpage->shouError();                                                                             //打不开 输出错误命令（此指令一般情况下不会执行）
@@ -184,6 +191,12 @@ UserList::UserList()
 
     loginpage->addTable(model);
     loginpage->addTable_s(model);
+
+    QStringList tableNames = db.tables();
+        qDebug() << "All tables in the database:";
+        for (const QString &name : tableNames) {
+            qDebug() << name;
+        }
 }
 
 int UserList::CheckUser(QString account, QString password){
