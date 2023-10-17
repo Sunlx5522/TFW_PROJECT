@@ -8,7 +8,7 @@ HeartBeat::HeartBeat(QObject* parent) :
     m_manager(new QNetworkAccessManager(this))
 {
     connect(&m_timer, &QTimer::timeout, this, &HeartBeat::checkNetworkStatus);
-    m_timer.start(20);  // 每秒检查100次
+    m_timer.start(10);  // 每秒检查100次
 }
 
 void HeartBeat::checkNetworkStatus()
@@ -26,9 +26,11 @@ void HeartBeat::checkNetworkStatus()
             } else {
                  loginpage->networkAbleFlag=false;
 
+
             }
         } else {
             loginpage->networkAbleFlag=false;
+
 
         }
         reply->deleteLater();

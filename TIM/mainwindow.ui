@@ -751,7 +751,7 @@ background: rgba(255,255,255,50);
              </widget>
             </widget>
            </widget>
-           <widget class="QTextEdit" name="message_textEdit_2">
+           <widget class="QPlainTextEdit" name="message_textEdit_2">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -762,22 +762,15 @@ background: rgba(255,255,255,50);
             </property>
             <property name="minimumSize">
              <size>
-              <width>0</width>
-              <height>0</height>
+              <width>491</width>
+              <height>101</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
-              <height>16777215</height>
+              <width>491</width>
+              <height>101</height>
              </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>楷体</family>
-              <pointsize>11</pointsize>
-              <italic>false</italic>
-             </font>
             </property>
             <property name="styleSheet">
              <string notr="true">color:#FFFFFF;/*字体颜色设置*/

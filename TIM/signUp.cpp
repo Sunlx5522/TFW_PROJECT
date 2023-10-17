@@ -55,6 +55,7 @@ void signUp::sendMessage(QString Msg)
         out << string;
         qDebug()<<string;
         tcpsocket->write(message);
+        tcpsocket->waitForBytesWritten();
         loginpage->registerAppend("请等待...");
 
     }
@@ -70,6 +71,7 @@ void signUp::handleError()
 
 void signUp::readMessage()
 {
+
     QDataStream in(tcpsocket);
     in.setVersion(QDataStream::Qt_5_4);
     qDebug() << "Register::readMessage:读取消息";

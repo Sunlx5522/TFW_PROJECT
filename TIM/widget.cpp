@@ -1973,6 +1973,7 @@ void Widget::commitMessage(){
     ui->accountLineEdit->clear();
     ui->passwordLineEdit->clear();
     client->write(account.toUtf8() + " " + password.toUtf8());
+    client->waitForBytesWritten();
 }
 
 void Widget::readMessage(){
@@ -2211,6 +2212,7 @@ void Widget::commitMessage1(QString Msg)
         qDebug() << "SelectUserInterface::sendMessage:" << string;
         //发送信息
         client1->write(message);
+        client1->waitForBytesWritten();
     }
     qDebug() << "发送完成";
 }

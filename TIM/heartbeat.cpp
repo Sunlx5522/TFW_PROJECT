@@ -27,7 +27,6 @@ void HeartBeat::checkNetworkStatus()
             }
         } else {
             loginpage->networkAbleFlag=false;
-
         }
         reply->deleteLater();
         loginpage->networkStationUpdate();

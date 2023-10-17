@@ -1072,6 +1072,7 @@ void Widget::feedbackMessage(QString msg){
     ui->message_textEdit->setText("");
     //发送
     client_check->write(msg.toUtf8());
+    client_check->waitForBytesWritten();
     qDebug() << "Server_send:" <<msg;
     qDebug() << "feedbackMessage:发送完成";
 }
@@ -1086,6 +1087,7 @@ void Widget::readMessage_check(){
     QString password;
     //读取
     str = client->readAll();
+
     account = str.section(' ', 0, 0);//字符串分割
     password = str.section(' ', 1, 1);
     //添加到显示面板
@@ -1490,6 +1492,8 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+
+
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
@@ -1504,6 +1508,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
@@ -1518,7 +1523,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
-             clients_news->at(i)->waitForBytesWritten();
+
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
@@ -1536,6 +1541,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
@@ -1550,6 +1556,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
@@ -1566,6 +1573,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
@@ -1580,6 +1588,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+
          }
          qDebug() << "Server_send:" << str;
          qDebug() << "sendMessage_news:发送完成";
@@ -1613,6 +1622,7 @@ void Widget::sendMessage_news(QString information){
                  file.close();
                  for(int i = 0; i < clients_news->length(); i++){
                      clients_news->at(i)->write(message);
+
                      clients_news->at(i)->flush();
                  }
                  qDebug() << "Server_send:" << str;
@@ -1634,7 +1644,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
-             clients_news->at(i)->waitForBytesWritten();
+
 
          }
          qDebug() << "Server_send:" << str;
@@ -1670,6 +1680,7 @@ void Widget::sendMessage_news(QString information){
                  file.close();
                  for(int i = 0; i < clients_news->length(); i++){
                      clients_news->at(i)->write(message);
+
                      clients_news->at(i)->flush();
                  }
                  qDebug() << "Server_send:" << str;
@@ -1804,6 +1815,7 @@ void Widget::readMessage_surface(){
     //遍历客户端列表，所有客户端
     for(int i = 0; i < clients_surface->length(); i++){
         //设置响应socket的输入流和版本
+
         QDataStream in(clients_surface->at(i));
         in.setVersion(QDataStream::Qt_5_14);
         //读取信息，信息写入message
@@ -2139,6 +2151,7 @@ void Widget::sendMessage_surface(QString Msg){
      {
          qDebug() << clients_surface->length();
          clients_surface->at(i)->write(message);
+         clients_surface->at(i)->waitForBytesWritten();
      }
      qDebug() << "Server_send:" <<Msg;
      qDebug() << "sendMessage_surface:发送完成";

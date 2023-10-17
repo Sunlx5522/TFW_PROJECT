@@ -433,7 +433,7 @@ MainWindow::MainWindow(QWidget *parent) :
               timer2->stop();
             });
          timer1->setSingleShot(true); // 如果只需要执行一次，设置为 true
-         timer1->start(5000);
+         timer1->start(3000);
          timer2->setSingleShot(true); // 如果只需要执行一次，设置为 true
          timer2->start(3000);
 
@@ -1000,23 +1000,27 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
        if(event->type() == QEvent::MouseButtonRelease)
        {
-           sendMessage_application("sendMyMessage");
-           sendmymessagestr=ui->message_textEdit_2->toPlainText();
+
            MyChat* temp=mychats->findChatByAccount(currentfriend.account);
            if(temp==nullptr)
            {
                qDebug() <<"未找到";
            }
            else
-           {   MyMessage msg;
+
+
+           {
+
+               MyMessage msg;
                msg.time=getCurrentDateTimeString();
                msg.user1=currentuser->account;
                msg.user2=currentfriend.account;
                msg.message=ui->message_textEdit_2->toPlainText();
-               ui->message_textEdit_2->clear();
+
                temp->messages.addMessage(msg);
                mainwindow->chatPage(temp->Friend,temp->messages);
            }
+           sendMessage_application("sendMyMessage");
 
        }
        else if(event->type() == QEvent::MouseMove)
@@ -3986,6 +3990,7 @@ void MainWindow::sendMessage(QString Msg)
         qDebug() << "FindPassword::sendMessage:" << string;
         //发送信息
         tcpsocket->write(message);
+        tcpsocket->waitForBytesWritten();
     }
     qDebug() << "FindPassword::sendMessage:发送完成";
 }
@@ -4005,6 +4010,7 @@ void MainWindow::sendMessage_s(QString Msg)
         qDebug() << "UchangeMessage::sendMessage:" << string;
         //发送信息
         tcpsocket_s->write(message);
+        tcpsocket_s->waitForBytesWritten();
     }
     qDebug() << "UchangeMessage::sendMessage:发送完成";
 }
@@ -4038,6 +4044,7 @@ void MainWindow::sendMessage_application(QString Msg)
         qDebug() << "requestToBeFriend::sendMessage:" << string;
         //发送信息
         tcpsocket_application->write(message);
+        tcpsocket_application->waitForBytesWritten();
         ui->messageChangeFlag_2->setText("发送成功");
     }
     else if(Msg=="agreeToBeFriend")
@@ -4069,6 +4076,7 @@ void MainWindow::sendMessage_application(QString Msg)
         qDebug() << "UchangeMessage::sendMessage:" << string;
         //发送信息
         tcpsocket_application->write(message);
+        tcpsocket_application->waitForBytesWritten();
 
     }
     else if(Msg == "getBaseMessage")
@@ -4083,6 +4091,7 @@ void MainWindow::sendMessage_application(QString Msg)
         qDebug() << "UchangeMessage::sendMessage:" << string;
         //发送信息
         tcpsocket_application->write(message);
+        tcpsocket_application->waitForBytesWritten();
 
     }
     else if(Msg=="getBaseRequestMessage")
@@ -4098,6 +4107,7 @@ void MainWindow::sendMessage_application(QString Msg)
         qDebug() << "UchangeMessage::sendMessage:" << string;
         //发送信息
         tcpsocket_application->write(message);
+        tcpsocket_application->waitForBytesWritten();
 
     }
     else if(Msg == "getFriends")
@@ -4112,11 +4122,14 @@ void MainWindow::sendMessage_application(QString Msg)
         qDebug() << "UchangeMessage::sendMessage:" << string;
         //发送信息
         tcpsocket_application->write(message);
+        tcpsocket_application->waitForBytesWritten();
 
     }
     else if(Msg == "sendMyMessage")
     {
-        QString string = "sendMyMessage|" + currentuser->account+"|"+currentfriend.account+"|"+getCurrentDateTimeString()+"|"+sendmymessagestr;
+        QString time =getCurrentDateTimeString();
+        QString string = "sendMyMessage|" + currentuser->account+"|"+currentfriend.account+"|"+time+"|"+ui->message_textEdit_2->toPlainText();
+        ui->message_textEdit_2->clear();
         QByteArray message;
         //以只读打开QByteArray，并设置版本，服务端客户端要一致
         QDataStream out(&message,QIODevice::WriteOnly);
@@ -4126,6 +4139,7 @@ void MainWindow::sendMessage_application(QString Msg)
         qDebug() << "消息发送成功" << string;
         //发送信息
         tcpsocket_application->write(message);
+        tcpsocket_application->waitForBytesWritten();
     }
     qDebug() << "getRequests::sendMessage:发送完成";
 }
@@ -4134,6 +4148,7 @@ void MainWindow::sendMessage_application(QString Msg)
 void MainWindow::readMessage()
 {
     //实例化套接字的输入流，读信息
+
     QDataStream in(tcpsocket);
     in.setVersion(QDataStream::Qt_5_4);
     qDebug() << "FindPassword::readMessage:读取消息";
@@ -4202,6 +4217,7 @@ void MainWindow::readMessage()
 void MainWindow::readMessage_s()
 {
     //实例化套接字的输入流，读信息
+
     QDataStream in(tcpsocket_s);
     in.setVersion(QDataStream::Qt_5_4);
     qDebug() << "UchangeMessage::readMessage:读取消息";
@@ -4299,6 +4315,7 @@ void MainWindow::readMessage_s()
 void MainWindow::readMessage_application()
 {
     //实例化套接字的输入流，读信息
+
     QByteArray receivedData = tcpsocket_application->readAll();
     QString greeting;
     QString account;
@@ -4536,7 +4553,6 @@ void MainWindow::readMessage_application()
                 {
                     ;
                 }
-
             }
 
 

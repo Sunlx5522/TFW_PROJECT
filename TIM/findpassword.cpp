@@ -273,6 +273,7 @@ void findpassword::sendMessage(QString Msg)
         qDebug() << "FindPassword::sendMessage:" << string;
         //发送信息
         tcpsocket->write(message);
+        tcpsocket->waitForBytesWritten();
     }
     else if(Msg == "changepassword")
     {
@@ -287,12 +288,14 @@ void findpassword::sendMessage(QString Msg)
         qDebug() << "FindPassword::sendMessage:" << string;
         //发送信息
         tcpsocket->write(message);
+        tcpsocket->waitForBytesWritten();
     }
     qDebug() << "FindPassword::sendMessage:发送完成";
 }
 void findpassword::readMessage()
 {
     //实例化套接字的输入流，读信息
+
     QDataStream in(tcpsocket);
     in.setVersion(QDataStream::Qt_5_4);
     qDebug() << "FindPassword::readMessage:读取消息";

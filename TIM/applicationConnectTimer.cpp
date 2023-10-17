@@ -13,9 +13,9 @@ HeartBeat_s::HeartBeat_s(QObject* parent) :
     connect(&m_timer, &QTimer::timeout, this, &HeartBeat_s::applicationConnection);
     m_timer.start(20000);  // 每20秒检查一次
     connect(&m_timer_s, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_s);
-    m_timer_s.start(500);  // 每3秒检查一次
+    m_timer_s.start(500);  // 每0.5秒检查一次
     connect(&m_timer_f, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_f);
-    m_timer_f.start(20);  // 每5秒检查一次
+    m_timer_f.start(10);  // 每5秒检查一次
     connect(&m_timer_ff, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_ff);
     m_timer_ff.start(1500);  // 每5秒检查一次
     //connect(&m_timer_fff, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_fff);
