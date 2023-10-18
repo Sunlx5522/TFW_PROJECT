@@ -389,14 +389,7 @@ MainWindow::MainWindow(QWidget *parent) :
     tcpServerConnect_application();
     {
 
-        /*delete timer4;
-        timer4=nullptr;
-        timer4=new QTimer;
-        QObject::connect(timer4, &QTimer::timeout, [&]() {
-              timer2->stop();
-            });
-        timer4->setSingleShot(true); // 如果只需要执行一次，设置为 true
-        timer4->start(3000);*/
+
 
 
 
@@ -433,9 +426,9 @@ MainWindow::MainWindow(QWidget *parent) :
               timer2->stop();
             });
          timer1->setSingleShot(true); // 如果只需要执行一次，设置为 true
-         timer1->start(3000);
+         timer1->start(5000);
          timer2->setSingleShot(true); // 如果只需要执行一次，设置为 true
-         timer2->start(3000);
+         timer2->start(5000);
 
     }
 
@@ -951,6 +944,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
              if(flag)
              {
                  requestToBeFriendStr=ui->accountLineEdit_2->text();
+                 tcpServerConnect_application();
                  sendMessage_application("requestToBeFriend");
              }
              else
@@ -1020,6 +1014,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                temp->messages.addMessage(msg);
                mainwindow->chatPage(temp->Friend,temp->messages);
            }
+           tcpServerConnect_application();
            sendMessage_application("sendMyMessage");
 
        }
@@ -1044,6 +1039,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
              if(flag)
              {
                  agreeToBeFriendStr=ui->accountLineEdit_3->text();//agreeToBeFriend
+                 tcpServerConnect_application();
                  sendMessage_application("agreeToBeFriend");
                  for (MyRequsest& requestObj :myrequests->requestsList) {
 
@@ -1164,6 +1160,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                else
                {
            applicationOperation="searchUserToAdd";
+           tcpServerConnect_application();
            sendMessage_application("searchUserToAdd");
                }
            }
@@ -4568,6 +4565,25 @@ void MainWindow::readMessage_application()
         {
             qDebug() << "激活函数执行";
             updateApplication();
+            delete timer4;
+            timer4=nullptr;
+            timer4=new QTimer;
+            QObject::connect(timer4, &QTimer::timeout, [&]() {
+                if(mainwindow->updateFlag)
+                {
+                   mainwindow->updateApplication();
+                   mainwindow->updateItem();
+                   mainwindow->updateFlag=false;
+                }
+                else
+                {
+                   ;
+                }
+                  timer4->stop();
+                });
+            timer4->setSingleShot(true); // 如果只需要执行一次，设置为 true
+            timer4->start(5000);
+
             qDebug() << "激活函数执行成功";
 
         }

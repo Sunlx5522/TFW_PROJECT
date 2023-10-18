@@ -11,13 +11,13 @@ HeartBeat_s::HeartBeat_s(QObject* parent) :
     QObject(parent)
 {
     connect(&m_timer, &QTimer::timeout, this, &HeartBeat_s::applicationConnection);
-    m_timer.start(20000);  // 每20秒检查一次
+    m_timer.start(3600000);  // 每20秒检查一次 云同步
     connect(&m_timer_s, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_s);
     m_timer_s.start(500);  // 每0.5秒检查一次
     connect(&m_timer_f, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_f);
-    m_timer_f.start(10);  // 每5秒检查一次
+    m_timer_f.start(20);  // 每5秒检查一次
     connect(&m_timer_ff, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_ff);
-    m_timer_ff.start(1500);  // 每5秒检查一次
+    m_timer_ff.start(20);  // 每5秒检查一次
     //connect(&m_timer_fff, &QTimer::timeout, this, &HeartBeat_s::applicationConnection_fff);
     //m_timer_fff.start(5000);  // 每5秒检查一次
 }
@@ -28,7 +28,7 @@ void HeartBeat_s::applicationConnection()
 
     if(loginpage->isMainWindowOpen)
     {
-      mainwindow->appConnect();
+      //mainwindow->appConnect();
       client1_s->abort();
       client1_s->connectToHost(tfwaddress->serveRemoteAddress,tfwaddress->port7777);
       mainwindow->updateApplication();
@@ -41,6 +41,7 @@ void HeartBeat_s::applicationConnection()
               {
            if(mainwindow->updateFlag)
            {
+              mainwindow->updateApplication();
               mainwindow->updateItem();
               mainwindow->updateFlag=false;
            }
@@ -59,7 +60,7 @@ void HeartBeat_s::applicationConnection()
             timer->stop();
           });
        timer->setSingleShot(true); // 如果只需要执行一次，设置为 true
-       timer->start(3000);
+       timer->start(4000);
 
 
        //qDebug()<<"修改成功";
@@ -82,6 +83,7 @@ void HeartBeat_s::applicationConnection_s()
          qDebug() << "开闸---";
      if(mainwindow->updateFlag)
      {
+        mainwindow->updateApplication();
         mainwindow->updateItem();
         mainwindow->updateFlag=false;
      }

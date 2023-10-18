@@ -1523,6 +1523,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+             clients_news->at(i)->waitForBytesWritten();
 
          }
          qDebug() << "Server_send:" << str;
@@ -1644,6 +1645,7 @@ void Widget::sendMessage_news(QString information){
          //遍历客户端，嵌套字写入
          for(int i = 0; i < clients_news->length(); i++){
              clients_news->at(i)->write(message);
+             clients_news->at(i)->waitForBytesWritten();
 
 
          }
