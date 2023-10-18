@@ -90,6 +90,7 @@ public:
     bool xinzha=false;
     bool xinhao=false;
     void zhixing();
+    void jiHuo();
     bool readAccountsAndDisplay(const QString &filePath);
     void appConnect()
     {

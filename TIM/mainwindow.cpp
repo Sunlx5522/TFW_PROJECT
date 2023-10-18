@@ -26,6 +26,7 @@
 #include <QSystemTrayIcon>
 #include <QDateTime>
 #include <QThread>
+QString timeTemp;
 MyFriend currentfriend;
 extern MyChats *mychats;
 extern MyRequsests* myrequests;
@@ -386,7 +387,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listWidget_chat_2->setFocusPolicy(Qt::NoFocus);
     ui->listWidget_chat_3->setFocusPolicy(Qt::NoFocus);
     ui->listWidget_chat_4->setFocusPolicy(Qt::NoFocus);
-    tcpServerConnect_application();
+
     {
 
 
@@ -403,6 +404,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QObject::connect(timer1, &QTimer::timeout, [&]() {
             if(loginpage->isMainWindowOpen)
             {
+
                 updateApplication();
 
             }
@@ -436,7 +438,29 @@ MainWindow::MainWindow(QWidget *parent) :
     animation1->start();
 
 }
+void MainWindow::jiHuo()
+{
+    updateApplication();
+    delete timer1;
+    timer1=nullptr;
+    timer1=new QTimer;
+    QObject::connect(timer1, &QTimer::timeout, [&]() {
+        if(loginpage->isMainWindowOpen)
+        {
 
+            updateApplication();
+
+        }
+        else
+        {
+            ;
+        }
+          qDebug() << "3秒后执行的函数";
+          timer1->stop();
+        });
+    timer1->setSingleShot(true); // 如果只需要执行一次，设置为 true
+    timer1->start(5000);
+}
 
 void MainWindow::zhixing()
 {
@@ -630,6 +654,7 @@ bool MainWindow::readAccountsAndDisplay(const QString &filePath) {
 }
 void MainWindow::updateApplication()
 {
+    tcpServerConnect_application();
     sendMessage_application("getRequests");
     //tcpsocket_application->waitForBytesWritten();
     sendMessage_application("getFriends");
@@ -4539,7 +4564,15 @@ void MainWindow::readMessage_application()
             }
             else
             {
-                temp->messages.addMessage(ms);
+                if(timeTemp==msg[3])
+                {
+                    ;
+                }
+                else
+                {
+                    timeTemp=msg[3];
+                    temp->messages.addMessage(ms);
+                }
                 if(msg[1]==currentfriend.account)
                 {
 
@@ -4564,27 +4597,7 @@ void MainWindow::readMessage_application()
         if(account==currentuser->account)
         {
             qDebug() << "激活函数执行";
-            updateApplication();
-            delete timer4;
-            timer4=nullptr;
-            timer4=new QTimer;
-            QObject::connect(timer4, &QTimer::timeout, [&]() {
-                if(mainwindow->updateFlag)
-                {
-                   mainwindow->updateApplication();
-                   mainwindow->updateItem();
-                   mainwindow->updateFlag=false;
-                }
-                else
-                {
-                   ;
-                }
-                  timer4->stop();
-                });
-            timer4->setSingleShot(true); // 如果只需要执行一次，设置为 true
-            timer4->start(5000);
-
-            qDebug() << "激活函数执行成功";
+            jiHuo();
 
         }
     }
